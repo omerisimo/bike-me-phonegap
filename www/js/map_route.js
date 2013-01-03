@@ -5,6 +5,7 @@ $("div.my_location").on("click", function() {
   try
     {
       navigator.geolocation.getCurrentPosition(onSuccess, onError);
+      $('#loading').show(); 
     }
   catch(err)
     {
@@ -20,13 +21,14 @@ function showMap() {
                       zoom: 8,
                       mapTypeId: google.maps.MapTypeId.ROADMAP };
   map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
+  $('#loading').hide();
 };
 
 // onSuccess Callback
 //   This method accepts a `Position` object, which contains
 //   the current GPS coordinates
 var onSuccess = function(position) {
-  alert("Yeyy!!!");
+  $('#loading').hide();
   var mapOptions = { center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
                       zoom: 16,
                       mapTypeId: google.maps.MapTypeId.ROADMAP };
@@ -42,4 +44,5 @@ var onSuccess = function(position) {
 function onError(error) {
     alert('code: '    + error.code    + '\n' +
           'message: ' + error.message + '\n');
+    $('#loading').hide();
 }

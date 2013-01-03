@@ -24,6 +24,7 @@ var app = {
         document.addEventListener('deviceready', this.deviceready, false);
     },
     deviceready: function() {
+      navigator.splashscreen.hide();
         // This is an event handler function, which means the scope is the event.
         // So, we must explicitly called `app.report()` instead of `this.report()`.
         app.report('deviceready');
@@ -40,3 +41,14 @@ var app = {
         completeElem.className = completeElem.className.split('hide').join('');
     }
 };
+
+function showInPageMap() {
+  $('.map_container').removeClass('hide');
+  $('.app').addClass('hide');
+ showMap(); 
+};
+
+$('.back').on('click', function() {
+  $('.map_container').addClass('hide');
+  $('.app').removeClass('hide');
+});

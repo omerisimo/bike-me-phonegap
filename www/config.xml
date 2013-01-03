@@ -16,9 +16,10 @@
     <feature name="http://api.phonegap.com/1.0/device" />
 
     <preference name="phonegap-version" value="2.1.0" />
-    <preference name="orientation"      value="portrait" />
+    <preference name="orientation"      value="default" />
     <preference name="target-device"    value="handset" />
     <preference name="fullscreen"       value="false" />
+    <preference name="auto-hide-splash-screen" value="false" />
 
     <icon src="icon.png" />
     <icon src="res/icon/android/icon-36-ldpi.png"   gap:platform="android"    gap:density="ldpi" />

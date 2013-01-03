@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<link rel="stylesheet" type="text/css" href="../css/map_route.css" />
+	<link rel="stylesheet" type="text/css" href="../css/map_route.css"/>
 	<title>הצג מסלול</title>
 </head>
 <body onload="showMap()">
   <div class="map_container">
+    <div id="loading">
+      <img id="loading-image" src="../img/ajax-loader.gif" alt="Loading..." />
+    </div>
     <div class="my_location">
         <image src="../img/GPS_Location_icon_100x100.png">
     </div>
