@@ -39,9 +39,10 @@
     <gap:splash src="res/screen/ios/screen-ipad-portrait.png"      gap:platform="ios"     width="768" height="1024" />
     <gap:splash src="res/screen/ios/screen-ipad-landscape.png"     gap:platform="ios"     width="1024" height="768" />
     
-    <access origin="http://*.google.com"/>
-    <access origin="http://*.googleapis.com"/>
-    <access origin="http://*.gstatic.com"/>
+    <access origin="https://*.google.com"/>
+    <access origin="https://*.googleapis.com"/>
+    <access origin="https://*.gstatic.com"/>
+    <access origin="https://google-maps-utility-library-v3.googlecode.com"/>
     
     <feature name="http://api.phonegap.com/1.0/geolocation"/>
 </widget>

@@ -1,4 +1,4 @@
-var map;
+var map, GeoMarker;
 
 $("div.my_location").on("click", function() {
   alert("Getting location...");
@@ -26,15 +26,16 @@ function showMap() {
 //   This method accepts a `Position` object, which contains
 //   the current GPS coordinates
 var onSuccess = function(position) {
-    alert('Latitude: '          + position.coords.latitude          + '\n' +
-          'Longitude: '         + position.coords.longitude         + '\n' +
-          'Altitude: '          + position.coords.altitude          + '\n' +
-          'Accuracy: '          + position.coords.accuracy          + '\n' +
-          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-          'Heading: '           + position.coords.heading           + '\n' +
-          'Speed: '             + position.coords.speed             + '\n' +
-          'Timestamp: '         + position.timestamp                + '\n');
-    map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 13);
+  alert("Yeyy!!!");
+  var mapOptions = { center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                      zoom: 16,
+                      mapTypeId: google.maps.MapTypeId.ROADMAP };
+   map.setOptions(mapOptions);
+
+   GeoMarker = new GeolocationMarker();
+   GeoMarker.setCircleOptions({fillColor: '#808080'});
+
+   GeoMarker.setMap(map);
 };
 
 // onError Callback receives a PositionError object
