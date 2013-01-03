@@ -1,4 +1,5 @@
 var map, GeoMarker;
+var isMapInitialized = false;
 
 $("div.my_location").on("click", function() {
   alert("Getting location...");
@@ -17,11 +18,15 @@ $("div.my_location").on("click", function() {
 });
 
 function showMap() {
-  var mapOptions = { center: new google.maps.LatLng(-34.397, 150.644),
-                      zoom: 8,
-                      mapTypeId: google.maps.MapTypeId.ROADMAP };
-  map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
-  $('#loading').hide();
+  if(isMapInitialized == false)
+  {
+    var mapOptions = { center: new google.maps.LatLng(-34.397, 150.644),
+                        zoom: 8,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP };
+    map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
+    $('#loading').hide();
+  isMapInitialized = true;
+  }
 };
 
 // onSuccess Callback
