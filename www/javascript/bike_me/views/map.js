@@ -1,10 +1,10 @@
-telOFun.namespace('Views');
+bikeMe.namespace('Views');
 
-telOFun.Views.Map = function () {
+bikeMe.Views.Map = function () {
   this.initialize();
 };
 
-telOFun.Views.Map.prototype = {
+bikeMe.Views.Map.prototype = {
   initialize: function () {
     this.$el = $('#map');
 

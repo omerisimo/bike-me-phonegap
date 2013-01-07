@@ -2,9 +2,9 @@ function createNamespace (namespace, context) {
   return namespace[context] || (namespace[context] = {});
 }
 
-telOFun = {
+bikeMe = {
   initialize: function () {
-    this.mapView = new telOFun.Views.Map();
+    this.mapView = new bikeMe.Views.Map();
   },
 
   namespace: function (namespace) {
@@ -13,5 +13,5 @@ telOFun = {
 };
 
 $(document).ready(function () {
-  telOFun.initialize();
+  bikeMe.initialize();
 });
