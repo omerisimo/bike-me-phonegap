@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no' />
+    <link rel='stylesheet' type='text/css' href='stylesheet/bike_me.css'>
+    <link rel='stylesheet' type='text/css' href='stylesheet/jquery.mobile-1.2.0.min.css' />
+
+    <script type='text/javascript' src='phonegap.js'></script>
+    <script type='text/javascript'
+      src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBPO_GuJp6k-Gh38dnCKesmWa7ypVqTPFk&sensor=true'>
+    </script>
+
+    <script type='text/javascript' src='javascript/plugins/jquery-1.8.3.min.js'></script>
+    <script type='text/javascript' src='javascript/plugins/jquery.mobile-1.2.0.min.js'></script>
+    <script type='text/javascript' src='javascript/plugins/underscore-min.js'></script>
+    <script type='text/javascript' src='javascript/plugins/radio.min.js'></script>
+
+    <script type='text/javascript' src='javascript/bike_me/app.js'></script>
+    <script type='text/javascript' src='javascript/bike_me/views/search.js'></script>
+    <script type='text/javascript' src='javascript/bike_me/views/map.js'></script>
+    <script type='text/javascript' src='javascript/bike_me/models/location.js'></script>
+    <script type='text/javascript' src='javascript/bike_me/models/station.js'></script>
+  </head>
+  <body>
+    <div data-role='page' id='search'>
+      <div data-theme='a' data-role='header' data-position='fixed'>
+        <h3>BikeMe</h3>
+      </div>
+      <div data-role='content'>
+        <div data-role='fieldcontain'>
+          <fieldset data-role='controlgroup' data-mini='true'>
+            <label for='from'>From</label>
+            <input name='from' id='from' placeholder='' value='' type='text' />
+          </fieldset>
+        </div>
+        <div data-role='fieldcontain'>
+          <fieldset data-role='controlgroup' data-mini='true'>
+            <label for='to'>To</label>
+            <input name='to' id='to' placeholder='' value='' type='text' />
+          </fieldset>
+        </div>
+
+        <input type='submit' data-theme='b' value='Search' data-mini='true' />
+
+        <ul data-role='listview' data-divider-theme='a' data-inset='true'>
+          <li data-role='list-divider' role='heading'>History</li>
+          <li data-theme='c'>
+            <a href='#page2' data-transition='slide'>Current location &gt; Yigal Alon 98</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!--<div id='map'></div>-->
+    <script type='text/javascript'>
+      $(document).ready(function () {
+        bikeMe.initialize();
+      });
+    </script>
+  </body>
+</html>
