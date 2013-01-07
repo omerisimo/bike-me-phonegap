@@ -22,7 +22,7 @@ bikeMe.Views.Search.prototype = {
     var to   = this.$to.val();
 
     //router.search(from, to);
-
+    console.log('hello');
     radio('onSearchSuccess').broadcast();
   },
 
