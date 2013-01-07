@@ -4,14 +4,10 @@ function createNamespace (namespace, context) {
 
 bikeMe = {
   initialize: function () {
-    this.mapView = new bikeMe.Views.Map();
+    this.searchView = new bikeMe.Views.Search();
   },
 
   namespace: function (namespace) {
     return _.reduce(namespace.split('.'), createNamespace, this);
   }
 };
-
-$(document).ready(function () {
-  bikeMe.initialize();
-});
