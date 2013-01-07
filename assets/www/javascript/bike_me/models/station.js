@@ -12,25 +12,22 @@ bikeMe.Models.Station.nearestStations = function (location, maxResults) {
 		var nearestStations = [];
 
 		//soap request to get nearest stations
-		var body = '<?xml version="1.0" encoding="utf-8"?>\
-        <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">\
-  <soap12:Body>\
-    <GetNearestStations xmlns="http://tempuri.org/">\
-      <longitude>' + location.longitude +'</longitude>\
-      <langitude>' + location.latitude + '</langitude>\
-      <radius>2000</radius>\
-      <maxResults>' + maxResults +'</maxResults>\
-    </GetNearestStations>\
-  </soap12:Body>\
-</soap12:Envelope>';
-
-
-		
-		
+        var body = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">\
+  <soapenv:Header/>\
+  <soapenv:Body>\
+     <tem:GetNearestStations>\
+        <tem:longitude>32.079956</tem:longitude>\
+        <tem:langitude>34.775759</tem:langitude>\
+        <tem:radius>2000</tem:radius>\
+        <tem:maxResults>5</tem:maxResults>\
+     </tem:GetNearestStations>\
+  </soapenv:Body>\
+</soapenv:Envelope>';
 		$.ajax({
-            url: 'http://www.tel-o-fun.co.il:2470/ExternalWS/Geo.asmx?WSDL', 
-            type: "POST",
-            dataType: "xml", 
+            url: 'http://www.tel-o-fun.co.il:2470/ExternalWS/Geo.asmx', 
+            type: "GET",
+            dataType: "jsonp", 
+            processData: false,
             data: body, 
             contentType: "text/xml; charset=\"utf-8\"",
             success: bikeMe.Models.Station.OnSuccess, 
