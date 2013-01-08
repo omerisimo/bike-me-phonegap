@@ -10,56 +10,43 @@ bikeMe.Models.Station.nearestStations = function (location, maxResults) {
 			maxResults = 5;
 		}
 		var nearestStations = [];
-
-		//soap request to get nearest stations
+        
         var body = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">\
-  <soapenv:Header/>\
-  <soapenv:Body>\
-     <tem:GetNearestStations>\
-        <tem:longitude>32.079956</tem:longitude>\
-        <tem:langitude>34.775759</tem:langitude>\
-        <tem:radius>2000</tem:radius>\
-        <tem:maxResults>5</tem:maxResults>\
-     </tem:GetNearestStations>\
-  </soapenv:Body>\
-</soapenv:Envelope>';
-
-            
-
+                        <soapenv:Header/>\
+                            <soapenv:Body>\
+                             <tem:GetNearestStations>\
+                                <tem:longitude>32.079956</tem:longitude>\
+                                <tem:langitude>34.775759</tem:langitude>\
+                                <tem:radius>2000</tem:radius>\
+                                <tem:maxResults>5</tem:maxResults>\
+                             </tem:GetNearestStations>\
+                            </soapenv:Body>\
+                    </soapenv:Envelope>';
 		$.ajax({
             url: 'http://www.tel-o-fun.co.il:2470/ExternalWS/Geo.asmx', 
             type: "POST",
             dataType: "xml", 
-            data: body, 
+            data: body,
+            async: false, 
             contentType: "text/xml; charset=\"utf-8\"",
-            success: bikeMe.Models.Station.OnSuccess, 
+            success: function (data, status) {
+                alert('Success');
+                var stationsResult = data.getElementsByTagName('Station');
+                $.each(stationsResult, function (index,value) {
+                    var stationData = {};
+                    for (var i=0; i< value.attributes.length; i++){
+                        stationData[value.attributes[i].name] = value.attributes[i].value;
+                    }
+                    var station = new bikeMe.Models.Station(stationData);
+                    nearestStations.push(station);
+                });
+            },
             error: bikeMe.Models.Station.OnError
         });
-
-
-
-		// var response;
-		
-		// response.body['get_nearest_stations_response']['get_nearest_stations_result']['stations_close_by']['station'].each do | station |
-		// 	nearest_stations << Station.new(station)
-		// end
-
-
+        
+        return nearestStations;
     };
-    bikeMe.Models.Station.OnSuccess = function (data, status) {
-        var stationsResult = data.getElementsByTagName('Station');
-        var stations = [];
-        $.each(stationsResult, function (index,value) {
-            var stationData = {};
-            for (var i=0; i< value.attributes.length; i++){
-                stationData[value.attributes[i].name] = value.attributes[i].value;
-            }
-            var station = new bikeMe.Models.Station(stationData);
-            stations.push(station);
-        });
 
-		alert('Success');
-    };
 
     bikeMe.Models.Station.OnError = function (request, status, error) {
 		alert('error');
