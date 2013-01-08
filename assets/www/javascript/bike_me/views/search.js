@@ -22,8 +22,11 @@ bikeMe.Views.Search.prototype = {
     var to   = this.$to.val();
 
     //router.search(from, to);
-    console.log('hello');
-    radio('onSearchSuccess').broadcast();
+    var routes = JSON.parse(window.localStorage.getItem("routes3")) || [];
+    routes.push({from: from, to: to});
+    window.localStorage.setItem("routes3", JSON.stringify(routes));
+    alert(routes.length);
+    //radio('onSearchSuccess').broadcast();
   },
 
   onSearchSuccess: function () {
