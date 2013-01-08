@@ -7,8 +7,8 @@ bikeMe.Models.Location = function (location) {
 
 bikeMe.Models.Location.prototype = {
     initialize: function (location) {
-        this.longitude = location.longitude;
-        this.latitude  = location.latitude;
-        this.address   = location.address;
+        this.longitude = location.Longitude;
+        this.latitude  = location.Latitude;
+        this.address   = location.Eng_Address;
     }
 };

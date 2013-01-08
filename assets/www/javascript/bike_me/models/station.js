@@ -23,11 +23,13 @@ bikeMe.Models.Station.nearestStations = function (location, maxResults) {
      </tem:GetNearestStations>\
   </soapenv:Body>\
 </soapenv:Envelope>';
+
+            
+
 		$.ajax({
             url: 'http://www.tel-o-fun.co.il:2470/ExternalWS/Geo.asmx', 
-            type: "GET",
-            dataType: "jsonp", 
-            processData: false,
+            type: "POST",
+            dataType: "xml", 
             data: body, 
             contentType: "text/xml; charset=\"utf-8\"",
             success: bikeMe.Models.Station.OnSuccess, 
@@ -45,6 +47,17 @@ bikeMe.Models.Station.nearestStations = function (location, maxResults) {
 
     };
     bikeMe.Models.Station.OnSuccess = function (data, status) {
+        var stationsResult = data.getElementsByTagName('Station');
+        var stations = [];
+        $.each(stationsResult, function (index,value) {
+            var stationData = {};
+            for (var i=0; i< value.attributes.length; i++){
+                stationData[value.attributes[i].name] = value.attributes[i].value;
+            }
+            var station = new bikeMe.Models.Station(stationData);
+            stations.push(station);
+        });
+
 		alert('Success');
     };
 
@@ -54,10 +67,10 @@ bikeMe.Models.Station.nearestStations = function (location, maxResults) {
 
 bikeMe.Models.Station.prototype = {
     initialize: function (stationData) {
-        this.id 				 = stationData.station_id;
+        this.id 				 = stationData.Station_id;
         this.location  			 = new bikeMe.Models.Location(stationData);
-        this.distanceFromStation = stationData.distance_from_station_in_meters;
-        this.availableBikes 	 = stationData.num_of_available_bikes;
-        this.availableDocks 	 = stationData.num_of_available_docks;
+        this.distanceFromStation = stationData.DistanceFromStationInMeters;
+        this.availableBikes 	 = stationData.NumOfAvailableBikes;
+        this.availableDocks 	 = stationData.NumOfAvailableDocks;
     }
 };
