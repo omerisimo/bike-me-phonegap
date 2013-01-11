@@ -5,27 +5,6 @@ bikeMe.Models.Route = function (routeData) {
     this.initialize(routeData);
 };
 
-bikeMe.Models.Route.calculateBestRoutes = function (source, target) {
-	var sourceStations = bikeMe.Models.Station.nearestStations(source, 5);
-	var targetStations = bikeMe.Models.Station.nearestStations(target, 3);	
-	var potentialRoutes = [];
-
-	_.each(sourceStations, function(sourceStation) {
-		_.each(targetStations, function(targetStation) {
-			potentialRoutes.push(new bikeMe.Models.Route(
-				{
-					source 				: source,
-					sourceStation : sourceStation,
-					targetStation : targetStation,
-					target 				: target
-				}
-			));
-		});
-	});
-
-	return (_.sortBy(potentialRoutes, function(route) {return route.getRouteTime();}));
-};
-
 
 
 bikeMe.Models.Route.prototype = {
