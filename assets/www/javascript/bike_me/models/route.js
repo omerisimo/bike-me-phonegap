@@ -5,8 +5,31 @@ bikeMe.Models.Route = function (routeData) {
     this.initialize(routeData);
 };
 
-bikeMe.Models.Route.prototyperouteData = {
-  initialize: function () {
+bikeMe.Models.Route.calculateBestRoutes = function (source, target) {
+	var sourceStations = bikeMe.Models.Station.nearestStations(source, 5);
+	var targetStations = bikeMe.Models.Station.nearestStations(target, 3);	
+	var potentialRoutes = [];
+
+	_.each(sourceStations, function(sourceStation) {
+		_.each(targetStations, function(targetStation) {
+			potentialRoutes.push(new bikeMe.Models.Route(
+				{
+					source 				: source,
+					sourceStation : sourceStation,
+					targetStation : targetStation,
+					target 				: target
+				}
+			));
+		});
+	});
+
+	return (_.sortBy(potentialRoutes, function(route) {return route.getRouteTime();}));
+};
+
+
+
+bikeMe.Models.Route.prototype = {
+  initialize: function (routeData) {
     this.source = routeData.source;
 		this.sourceStation = routeData.sourceStation;
 		this.targetStation = routeData.targetStation;
@@ -14,55 +37,41 @@ bikeMe.Models.Route.prototyperouteData = {
 		this.distanceMap = {};
   },
 
+
+	getRouteTime: function () {
+		if (_.isUndefined(this.routeTime)) {
+			var distances = this.calculateRouteDistances();
+
+			this.routeTime = this.calculateTime(distances['walkingDistance1']) + 
+												this.calculateTime(distances['cyclingDistance'], 'cycling') +
+												this.calculateTime(distances['walkingDistance2']);
+
+			}
+
+		return this.routeTime;
+	},
+
   calculateTime: function (distanceMeters, transportMode) {
-		if (_.Undefined(transportMode) || transportMode === 'walking') {
+		if (_.isUndefined(transportMode) || transportMode === 'walking') {
 			return (distanceMeters * (60.0/5000.0));
 		} else {
 			return (distanceMeters * (60.0/5000.0) / 3);
 		}
 	},
 
-	routeTime: function () {
-		if (_.Undefined(this.routeTime)) {
-			this.routeTime = this.calculateTime();
+	calculateRouteDistances: function () {
+		if (_.isUndefined(this.routeDistances)){
+			this.routeDistances = {
+				'walkingDistance1' : this.calculateDistance(this.source, this.sourceStation.location),
+				'cyclingDistance'  : this.calculateDistance(this.sourceStation.location, this.targetStation.location),
+				'walkingDistance2' : this.calculateDistance(this.targetStation.location, this.target)
+			};
 		}
-		return this.routeTime;
+		return this.routeDistances;
 	},
 
-	calculateRouteTime: function () {
-		var distances = this.routeDistance();
-
-		this.routeTime = this.calculateTime(distance['walkingDistance1']) + 
-											this.calculateTime(distance['cyclingDistance'], 'cycling') +
-											this.calculateTime(distance['walkingDistance2']);
-		return this.routeTime;
-	},
-
-	calculateRouteDistance: function () {
-		var distances = {
-			'walkingDistance1' : this.getDistance(this.source, this.sourceStation.location),
-			'cyclingDistance'  : this.getDistance(this.sourceStation.location, this.targetStation.location),
-			'walkingDistance2' : this.getDistance(this.targetStation.location, this.target)
-		};
-		return distances;
-	},
-
-	routeDistance: function () {
-		if (_.Undefined(this.routeDistance)){
-			this.routeDistance = this.calculateRouteDistance();
-		}
-		return this.routeDistance;
-	},
-
-	getDistance : function (sourceLocation, targetLocation) {
-		if (_.Undefind(this.distanceMap[[sourceLocation, targetLocation]])) {
-			this.distanceMap[[sourceLocation, targetLocation]] = calculateDistance(sourceLocation, targetLocation);
-		}
-		return this.distanceMap[[sourceLocation, targetLocation]];
-	},
-		
-  calculateDistance: function (sourceLocation, targetLocation) {
-  	var strParams = "?origins=" + sourceLocation.latitude + "," + sourceLocation.longitude + 
+	calculateDistance: function (sourceLocation, targetLocation) {
+		var strParams = "?origins=" + sourceLocation.latitude + "," + sourceLocation.longitude + 
 					"&destinations=" + targetLocation.latitude + "," + targetLocation.longitude +
 					"&mode=walking&sensor=false";
 		var url = "http://maps.googleapis.com/maps/api/distancematrix/json" + strParams;
@@ -74,38 +83,23 @@ bikeMe.Models.Route.prototyperouteData = {
 	          type: "GET",
 	          dataType: "json", 
 	          async: false, 
-	          contentType: "text/xml; charset=\"utf-8\"",
 	          success: function (data) {
-	          	var jsonResult = JSON.parse(data);
+	          	var jsonResult = data;
 							distanceMeters = jsonResult["rows"][0]["elements"][0]["distance"]["value"];
 	          }, 
 	          error: this.OnError
 	      });
 
 		return distanceMeters;
-  },
+	},
 
-  OnError: function () {
-  	alert('error');
-  }
+	OnError: function () {
+		alert('error');
+	}
+
+	// getDistance : function (sourceLocation, targetLocation) {
+	// 	//maybe add caching...
+	// 	return this.calculateDistance(sourceLocation, targetLocation);
+	// },
+
 };
-
-	
-		
-	
-
-	// def self.calculate_best_routes(source, target)
-	// 	source_stations = Station.nearest_stations(source, 5)
-	// 	target_stations = Station.nearest_stations(target, 3)
-		
-	// 	potential_routes = []
-		
-
-	// 	source_stations.each do | source_station |
-	// 		target_stations.each do | target_station |
-	// 			potential_routes << Route.new(source, source_station, target_station, target)
-	// 		end
-	// 	end
-
-	// 	potential_routes.sort!{|x,y| x.route_time <=> y.route_time}
-	// end
