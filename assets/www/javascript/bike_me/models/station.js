@@ -55,7 +55,7 @@ bikeMe.Models.Station.nearestStations = function (location, maxResults) {
 bikeMe.Models.Station.prototype = {
     initialize: function (stationData) {
         this.id 				 = stationData.Station_id;
-        this.location  			 = new bikeMe.Models.Location(stationData);
+        this.location  			 = new bikeMe.Models.Location(stationData.Latitude, stationData.Longitude, stationData.Eng_Address);
         this.distanceFromStation = stationData.DistanceFromStationInMeters;
         this.availableBikes 	 = stationData.NumOfAvailableBikes;
         this.availableDocks 	 = stationData.NumOfAvailableDocks;
