@@ -1,14 +1,18 @@
 bikeMe.namespace('Models');
 
-bikeMe.Models.Location = function (location) {
+bikeMe.Models.Location = function (latitude, longitude, address) {
 
-    this.initialize(location);
+    this.initialize(latitude, longitude, address);
 };
 
 bikeMe.Models.Location.prototype = {
-    initialize: function (location) {
-        this.longitude = location.Longitude;
-        this.latitude  = location.Latitude;
-        this.address   = location.Eng_Address;
+    initialize: function (latitude, longitude, address) {
+        this.longitude = longitude;
+        this.latitude  = latitude;
+        this.address   = address;
+        return this;
+    },
+    toString: function () {
+        return this.address + " (" + this.latitude.toString() + ", " + this.longitude.toString() + ")";
     }
 };
