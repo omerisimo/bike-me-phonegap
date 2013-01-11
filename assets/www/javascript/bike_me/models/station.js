@@ -15,10 +15,10 @@ bikeMe.Models.Station.nearestStations = function (location, maxResults) {
                         <soapenv:Header/>\
                             <soapenv:Body>\
                              <tem:GetNearestStations>\
-                                <tem:longitude>32.079956</tem:longitude>\
-                                <tem:langitude>34.775759</tem:langitude>\
+                                <tem:longitude>' + location.latitude + '</tem:longitude>\
+                                <tem:langitude>' + location.longitude + '</tem:langitude>\
                                 <tem:radius>2000</tem:radius>\
-                                <tem:maxResults>5</tem:maxResults>\
+                                <tem:maxResults>' + maxResults + '</tem:maxResults>\
                              </tem:GetNearestStations>\
                             </soapenv:Body>\
                     </soapenv:Envelope>';
