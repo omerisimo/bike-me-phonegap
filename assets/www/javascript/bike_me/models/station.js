@@ -47,7 +47,6 @@ bikeMe.Models.Station.nearestStations = function (location, maxResults, type) {
         type: "POST",
         dataType: "xml", 
         data: body,
-        async: false, 
         contentType: "text/xml; charset=\"utf-8\"",
         success: onSuccess,
         error: onError

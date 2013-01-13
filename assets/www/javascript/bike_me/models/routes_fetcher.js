@@ -7,16 +7,31 @@ bikeMe.Models.RoutesFetcher = function (source, target) {
 
 bikeMe.Models.RoutesFetcher.prototype = {
   initialize: function (source, target) {
-  	this.source = source;
-  	this.target = target;
+    this.source = source;
+    this.target = target;
 
-		radio('nearestStationsFetched').subscribe([this.onNearestStationsFetched, this]);
-		bikeMe.Models.Station.nearestStations(source, 4, 'source');
-		bikeMe.Models.Station.nearestStations(target, 4, 'target');
+    radio('nearestStationsFetched').subscribe([this.onNearestStationsFetched, this]);
+    radio('distanceMetersSuccess').subscribe([this.onDistanceMetersSuccess, this]);
+    bikeMe.Models.Station.nearestStations(source, 4, 'source');
+    bikeMe.Models.Station.nearestStations(target, 4, 'target');
   },
+  
+	onNearestStationsFetched: function(nearestStations, type) {
+		if (type === 'source') {
+			this.sourceStations = nearestStations;
+		} else {
+			this.targetStations = nearestStations;
+		}
+
+		if (_.isUndefined(this.sourceStations) || _.isUndefined(this.targetStations)) {
+			return;
+		}
+
+		this.routes = this.calculateBestRoutes();
+	},
 
   calculateBestRoutes: function () {
-		var sourceStationsLocations = [];
+    var sourceStationsLocations = [];
     var targetStationsLocations = [];
 
     _.each(this.sourceStations, function(sourceStation) {
@@ -28,18 +43,25 @@ bikeMe.Models.RoutesFetcher.prototype = {
       targetStationsLocations.push(targetStation.location)
     });
 
-    var originToStationsDistances = this.calculateDistance([this.source], sourceStationsLocations);
-    var stationsToStationsDistances = this.calculateDistance(sourceStationsLocations, targetStationsLocations);
-    var stationsToTargetDistances = this.calculateDistance(targetStationsLocations, [this.target]);
+    this.calculateDistance([this.source], sourceStationsLocations, 'originToStation');
+    this.calculateDistance(sourceStationsLocations, targetStationsLocations, 'stationToStation');
+    this.calculateDistance(targetStationsLocations, [this.target], 'stationToTarget');
+  },
 
-    var potentialRoutes = this.createRoutesArray(originToStationsDistances, stationsToStationsDistances, stationsToTargetDistances);
+  calculateDistance: function (sourceLocations, targetLocations, type) {
+    var onSuccess = function (data) {
+      var distanceMeters = [];
+      var jsonResult = data;
+      _.each(jsonResult["rows"], function(sourceData){
+          var distances = [];
+          _.each(sourceData["elements"], function(targetData){
+            distances.push(targetData["distance"]["value"]);
+          });
+          distanceMeters.push(distances)
+      });
+      radio('distanceMetersSuccess').broadcast(distanceMeters, type);
+    };
 
-		return (_.sortBy(potentialRoutes, function(route) {
-			return route.getRouteTime();
-		}));
-	},
-
-	calculateDistance: function (sourceLocations, targetLocations) {
     var sourcesParam = "";
     var targetsParam = "";
 
@@ -53,34 +75,43 @@ bikeMe.Models.RoutesFetcher.prototype = {
     });
     targetsParam = targetsParam.substring(0, targetsParam.length - 1);
 
-  	var strParams = "?origins=" + sourcesParam  +
-  				"&destinations=" + targetsParam +
-  				"&mode=walking&sensor=false";
-  	var url = "http://maps.googleapis.com/maps/api/distancematrix/json" + strParams;
+    var strParams = "?origins=" + sourcesParam  +
+          "&destinations=" + targetsParam +
+          "&mode=walking&sensor=false";
+    var url = "http://maps.googleapis.com/maps/api/distancematrix/json" + strParams;
 
-  	var distanceMeters = [];
+    
 
-  	$.ajax({
+    $.ajax({
             url: url,
             type: "GET",
             dataType: "json",
-            async: false,
-            success: function (data) {
-            	var jsonResult = data;
-            	_.each(jsonResult["rows"], function(sourceData){
-            	    var distances = [];
-          	      _.each(sourceData["elements"], function(targetData){
-            	      distances.push(targetData["distance"]["value"]);
-          	      });
-          	      distanceMeters.push(distances)
-            	});
-            },
+            success: onSuccess,
             error: function () {
-            	alert('error');
+              alert('error');
             }
         });
+  },
 
-  	return distanceMeters;
+  onDistanceMetersSuccess: function(distanceMeters, type) {
+    if (type === 'originToStation'){
+      this.originToStation = distanceMeters;
+    } else if (type === 'stationToStation') {
+      this.stationToStation = distanceMeters;
+    } else if (type === 'stationToTarget') {
+      this.stationToTarget = distanceMeters;
+    }
+
+    if (_.isUndefined(this.originToStation) || _.isUndefined(this.stationToStation) || _.isUndefined(this.stationToTarget)){
+      return;
+    }
+
+    var potentialRoutes = this.createRoutesArray(this.originToStation, this.stationToStation, this.stationToTarget);
+
+    this.sortedRoutes = (_.sortBy(potentialRoutes, function(route) {
+      return route.getRouteTime();
+    }));
+    radio('routesSuccess').broadcast(this.sortedRoutes);
   },
 
   createRoutesArray: function (originToStationsDistances, stationsToStationsDistances, stationsToTargetDistances){
@@ -103,20 +134,5 @@ bikeMe.Models.RoutesFetcher.prototype = {
     }
     
     return routes;
-  },
-
-	onNearestStationsFetched: function(nearestStations, type) {
-		if (type === 'source') {
-			this.sourceStations = nearestStations;
-		} else {
-			this.targetStations = nearestStations;
-		}
-
-		if (_.isUndefined(this.sourceStations) || _.isUndefined(this.targetStations)) {
-			return;
-		}
-
-		this.routes = this.calculateBestRoutes();
-	}
-
+  }
 };
