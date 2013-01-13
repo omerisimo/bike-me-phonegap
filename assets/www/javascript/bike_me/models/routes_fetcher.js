@@ -27,7 +27,8 @@ bikeMe.Models.RoutesFetcher.prototype = {
 			return;
 		}
 
-		this.routes = this.calculateBestRoutes();
+    radio('nearestStationsFetched').unsubscribe(this.onNearestStationsFetched);
+    this.routes = this.calculateBestRoutes();
 	},
 
   calculateBestRoutes: function () {
@@ -105,6 +106,8 @@ bikeMe.Models.RoutesFetcher.prototype = {
     if (_.isUndefined(this.originToStation) || _.isUndefined(this.stationToStation) || _.isUndefined(this.stationToTarget)){
       return;
     }
+
+    radio('distanceMetersSuccess').unsubscribe(this.onDistanceMetersSuccess);
 
     var potentialRoutes = this.createRoutesArray(this.originToStation, this.stationToStation, this.stationToTarget);
 
