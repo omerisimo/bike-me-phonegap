@@ -6,14 +6,29 @@ bikeMe.Views.Map = function () {
 
 bikeMe.Views.Map.prototype = {
   initialize: function () {
-    this.$el = $('#map');
+    this.$el        = $('#map');
+    this.$googleMap = $('#googleMap');
 
-    this.googleMap = new google.maps.Map(this.$el[0], this.options);
+    radio('routesFound').subscribe([this.onRoutesFound, this]);
+  },
+
+  initializeGoogleMap: function () {
+    this.googleMap = new google.maps.Map(this.$googleMap[0], this.options);
   },
 
   options: {
-    center    : new google.maps.LatLng(-34.397, 150.644),
-    zoom      : 8,
-    mapTypeId : google.maps.MapTypeId.ROADMAP
+    center           : new google.maps.LatLng(-34.397, 150.644),
+    zoom             : 8,
+    disableDefaultUI : true,
+    mapTypeId        : google.maps.MapTypeId.ROADMAP
+  },
+
+  onRoutesFound: function (routes) {
+    this.show();
+  },
+
+  show: function () {
+    $.mobile.changePage(this.$el);
+    this.initializeGoogleMap();
   }
 };
