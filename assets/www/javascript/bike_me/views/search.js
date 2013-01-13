@@ -17,6 +17,7 @@ bikeMe.Views.Search.prototype = {
     var to   = this.$el.find('input#to').val();
 
     //bikeMe.Models.RouteFinder(from, to);
+    radio('routesFound').broadcast([]); // As an example for now.
   },
 
   unbind: function () {
