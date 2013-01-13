@@ -9,7 +9,7 @@ bikeMe.Views.Map.prototype = {
     this.$el        = $('#map');
     this.$googleMap = $('#googleMap');
 
-    radio('routesFound').subscribe([this.onRoutesFound, this]);
+    radio('routesSuccess').subscribe([this.onRoutesFound, this]);
   },
 
   initializeGoogleMap: function () {
