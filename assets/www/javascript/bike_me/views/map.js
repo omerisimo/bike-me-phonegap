@@ -13,10 +13,12 @@ bikeMe.Views.Map.prototype = {
   },
 
   initializeGoogleMap: function () {
-    this.googleMap = new google.maps.Map(this.$googleMap[0], this.options);
-    this.googleDirectionsService = new google.maps.DirectionsService();
-    this.directionsRenderer = new google.maps.DirectionsRenderer();
-    this.directionsRenderer.setMap(this.googleMap);
+    if (_.isUndefined(this.googleMap)){
+      this.googleMap = new google.maps.Map(this.$googleMap[0], this.options);
+      this.googleDirectionsService = new google.maps.DirectionsService();
+      this.directionsRenderer = new google.maps.DirectionsRenderer();
+      this.directionsRenderer.setMap(this.googleMap);
+    }
   },
 
   options: {
