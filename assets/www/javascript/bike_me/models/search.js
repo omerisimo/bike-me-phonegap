@@ -1,47 +1,49 @@
-//bikeMe.namespace('Models');
+bikeMe.namespace('Models');
 
-//bikeMe.Models.Search = function (origin, destination) {
-    //this.originString      = origin;
-    //this.destinationString = destination;
-    //this.origin            = null;
-    //this.destination       = null;
-//};
+bikeMe.Models.Search = function (origin, destination) {
+  this.initialize(origin, destination);
+};
 
-//bikeMe.Models.Search.prototype = {
-    //findLocations: function() {
-      //this.origin = new bikeMe.Models.Location({
-        //address: this.originString
-      //}).locate();
+bikeMe.Models.Search.prototype = {
+  initialize: function (origin, destination) {
+    this.originString        = origin;
+    this.destinationString   = destination;
+    this.originLocation      = null;
+    this.destinationLocation = null;
 
-      //this.destination = new bikeMe.Models.Location({
-        //address: this.destinationString
-      //}).locate();
-            //var geoCodeParams = {},
-              //url = "https://maps.googleapis.com/maps/api/geocode/json";
+    radio('locationFound').subscribe([this.onLocationFound, this]);
+    radio('routesFound').subscribe([this.onRoutesFound, this]);
+  },
 
+  find: function() {
+    this.originLocation = new bikeMe.Models.Location({
+      address: this.originString
+    });
 
-            //if (address === "Current Location") {
-              //bikeMe.Models.Location.current();
-            //} else {
-                //geoCodeParams.address    = address;
-                //geoCodeParams.components = "country:IL";
-                //geoCodeParams.language   = "en";
-                //geoCodeParams.region     = "il";
-                //geoCodeParams.sensor     = false;
+    this.originLocation.locate();
 
-                //$.get(url, $.param(geoCodeParams), , 'json');
+    this.destinationLocation = new bikeMe.Models.Location({
+      address: this.destinationString
+    });
 
-                //$.ajax({
-                    //url: url + "?" + $.param(geoCodeParams),
-                    //type: "GET",
-                    //dataType: "json",
-                    //success: _.bind(function (geocodeResult) {
-                        //if (geocodeResult.status === "OK") {
-                            //latlng = geocodeResult.results[0].geometry.location;
-                //});
+    this.destinationLocation.locate();
+  },
 
+  onLocationFound: function () {
+    if (this.originLocation.found && this.destinationLocation.found) {
 
+      this.routeFinder = new bikeMe.Models.RoutesFinder(
+        this.originLocation,
+        this.destinationLocation
+      );
 
+      this.routeFinder.find();
+    }
+  },
 
-    //}
-//};
+  onRoutesFound: function (routes) {
+    this.routes = routes;
+
+    radio('searchSuccess').broadcast(routes);
+  }
+};

@@ -9,7 +9,7 @@ bikeMe.Views.Map.prototype = {
     this.$el        = $('#map');
     this.$googleMap = $('#googleMap');
 
-    radio('routesSuccess').subscribe([this.onRoutesFound, this]);
+    radio('searchSuccess').subscribe([this.onSearchSuccess, this]);
   },
 
   initializeGoogleMap: function () {
@@ -23,12 +23,12 @@ bikeMe.Views.Map.prototype = {
 
   options: {
     center           : new google.maps.LatLng(-34.397, 150.644),
-    zoom             : 8,
     disableDefaultUI : true,
-    mapTypeId        : google.maps.MapTypeId.ROADMAP
+    mapTypeId        : google.maps.MapTypeId.ROADMAP,
+    zoom             : 8
   },
 
-  onRoutesFound: function (routes) {
+  onSearchSuccess: function (routes) {
     this.show();
     this.renderRoute(routes[0]);
   },
@@ -37,22 +37,22 @@ bikeMe.Views.Map.prototype = {
     $.mobile.changePage(this.$el);
     this.initializeGoogleMap();
   },
-  
+
   renderRoute: function (route) {
     var start = new google.maps.LatLng(route.source.latitude, route.source.longitude);
-    var end = new google.maps.LatLng(route.target.latitude, route.target.longitude);
-    
+    var end   = new google.maps.LatLng(route.target.latitude, route.target.longitude);
+
     var waypts = [{ location:new google.maps.LatLng(route.sourceStation.location.latitude, route.sourceStation.location.longitude), stopover:true },
-                  { location:new google.maps.LatLng(route.targetStation.location.latitude, route.targetStation.location.longitude), stopover:true }
-                 ];
-      
+      { location:new google.maps.LatLng(route.targetStation.location.latitude, route.targetStation.location.longitude), stopover:true }
+    ];
+
     var request = { origin:start,
-                    destination:end,
-                    waypoints: waypts,
-                    optimizeWaypoints: true,
-                    travelMode: google.maps.TravelMode.WALKING
-                  };
-                  
+      destination:end,
+      waypoints: waypts,
+      optimizeWaypoints: true,
+      travelMode: google.maps.TravelMode.WALKING
+    };
+
     var renderer = this.directionsRenderer;
 
     this.googleDirectionsService.route(request, function(result, status) {

@@ -1,36 +1,55 @@
 bikeMe.namespace('Models');
 
-bikeMe.Models.Station = function (stationData) {
-  this.initialize(stationData);
+bikeMe.Models.Station = function (attributes) {
+  this.initialize(attributes);
 };
 
-bikeMe.Models.Station.nearestStations = function (location, maxResults, type) {
+bikeMe.Models.Station.prototype = {
+  initialize: function (attributes) {
+    this.availableBikes      = attributes.availableBikes;
+    this.availableDocks      = attributes.availableDocks;
+    this.distanceFromStation = attributes.distanceFromStation;
+    this.id                  = attributes.id;
 
-  var onSuccess = function (data, status) {
-    var nearestStations = [];
-    var stationsResult = data.getElementsByTagName('Station');
+    this.location = new bikeMe.Models.Location({
+      address   : attributes.address,
+      latitude  : attributes.latitude,
+      longitude : attributes.longitude
+    });
+  }
+};
 
-    $.each(stationsResult, function (index,value) {
-      var stationData = {};
-      for (var i=0; i< value.attributes.length; i++){
-        stationData[value.attributes[i].name] = value.attributes[i].value;
-      }
-      var station = new bikeMe.Models.Station(stationData);
-      nearestStations.push(station);
+bikeMe.Models.Station.findNearestStations = function (options) {
+  var location   = options.location;
+  var maxResults = options.maxResults || 5;
+  var type       = options.type;
+
+  function onSuccess (data) {
+    var stationResults = $(data).find('Station');
+
+    var nearestStations = _.map(stationResults, function (stationResult) {
+
+      var station = new bikeMe.Models.Station({
+        address             : $(stationResult).attr('Eng_Address'),
+        availableBikes      : $(stationResult).attr('NumOfAvailableBikes'),
+        availableDocks      : $(stationResult).attr('NumOfAvailableDocks'),
+        distanceFromStation : $(stationResult).attr('DistanceFromStationInMeters'),
+        id                  : $(stationResult).attr('Station_id'),
+        latitude            : $(stationResult).attr('Latitude'),
+        longitude           : $(stationResult).attr('Longitude')
+      });
+
+      return station;
     });
 
-    radio('nearestStationsFetched').broadcast(nearestStations, type);
-  };
-
-  var onError = function (request, status, error) {
-    alert('error');
-  };
-
-  if (_.isUndefined(maxResults)) {
-    maxResults = 5;
+    radio('nearestStationsFound').broadcast(nearestStations, type);
   }
 
-  var body = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">\
+  function onError () {
+    alert('error');
+  }
+
+  var data = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">\
   <soapenv:Header/>\
   <soapenv:Body>\
   <tem:GetNearestStations>\
@@ -43,22 +62,13 @@ bikeMe.Models.Station.nearestStations = function (location, maxResults, type) {
   </soapenv:Envelope>';
 
   $.ajax({
-    url: 'http://www.tel-o-fun.co.il:2470/ExternalWS/Geo.asmx',
-    type: "POST",
-    dataType: "xml",
-    data: body,
-    contentType: "text/xml; charset=\"utf-8\"",
-    success: onSuccess,
-    error: onError
+    contentType : 'text/xml; charset=\"utf-8\"',
+    data        : data,
+    dataType    : 'xml',
+    error       : onError,
+    success     : onSuccess,
+    type        : 'POST',
+    url         : 'http://www.tel-o-fun.co.il:2470/ExternalWS/Geo.asmx'
   });
 };
 
-bikeMe.Models.Station.prototype = {
-  initialize: function (stationData) {
-    this.availableBikes      = stationData.NumOfAvailableBikes;
-    this.availableDocks      = stationData.NumOfAvailableDocks;
-    this.distanceFromStation = stationData.DistanceFromStationInMeters;
-    this.id                  = stationData.Station_id;
-    this.location            = new bikeMe.Models.Location(stationData.Latitude, stationData.Longitude, stationData.Eng_Address);
-  }
-};

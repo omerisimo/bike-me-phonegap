@@ -16,16 +16,13 @@ bikeMe.Views.Search.prototype = {
     var from = this.$el.find('input#from').val();
     var to   = this.$el.find('input#to').val();
 
-    var search = new bikeMe.Models.Search(from, to);
-    search.findLocations({success: this.onSearchSuccess, error: this.onSearchError});
-  },
+    this.searchModel = new bikeMe.Models.Search(from, to);
+    this.searchModel.find();
 
-  onSearchSuccess: function (originLocation, destinationLocation) {
-    var routesFinder = new bikeMe.Models.RoutesFetcher(originLocation, destinationLocation);
-  },
-
-  onSearchError: function () {
-    alert('could not find the address you typed');
+    $.mobile.loading('show', {
+      text        : 'Looking for the best route',
+      textVisible : true
+    });
   },
 
   unbind: function () {
