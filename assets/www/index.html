@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name='viewport' content='initial-scale=1.0, user-scalable=no, width=device-width' />
-
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no' />
     <link rel='stylesheet' type='text/css' href='stylesheet/bike_me.css'>
     <link rel='stylesheet' type='text/css' href='stylesheet/jquery.mobile-1.2.0.min.css' />
 
@@ -13,7 +12,7 @@
     </script>
 
     <script type='text/javascript' src='javascript/plugins/jquery-1.8.3.min.js'></script>
-    <script type='text/javascript' src='javascript/plugins/jquery.mobile-1.2.0.js'></script>
+    <script type='text/javascript' src='javascript/plugins/jquery.mobile-1.2.0.min.js'></script>
     <script type='text/javascript' src='javascript/plugins/underscore-min.js'></script>
     <script type='text/javascript' src='javascript/plugins/radio.min.js'></script>
 
@@ -24,23 +23,29 @@
     <script type='text/javascript' src='javascript/bike_me/models/search.js'></script>
     <script type='text/javascript' src='javascript/bike_me/models/station.js'></script>
     <script type='text/javascript' src='javascript/bike_me/models/route.js'></script>
-    <script type='text/javascript' src='javascript/bike_me/models/routes_finder.js'></script>
+    <script type='text/javascript' src='javascript/bike_me/models/routes_fetcher.js'></script>
+
   </head>
   <body>
-
     <div data-role='page' id='search'>
       <div data-theme='a' data-role='header' data-position='fixed'>
         <h3>BikeMe</h3>
       </div>
       <div data-role='content'>
         <div data-role='fieldcontain'>
-          <input name='from' id='from' placeholder='From' value='' type='text' />
+          <fieldset data-role='controlgroup' data-mini='true'>
+            <label for='from'>From</label>
+            <input name='from' id='from' placeholder='' value='' type='text' />
+          </fieldset>
         </div>
         <div data-role='fieldcontain'>
-          <input name='to' id='to' placeholder='To' value='' type='text' />
+          <fieldset data-role='controlgroup' data-mini='true'>
+            <label for='to'>To</label>
+            <input name='to' id='to' placeholder='' value='' type='text' />
+          </fieldset>
         </div>
 
-        <input type='submit' data-theme='b' data-transition='none' value='Search' />
+        <input type='submit' data-theme='b' value='Search' />
 
         <ul data-role='listview' data-divider-theme='a' data-inset='true'>
           <li data-role='list-divider' role='heading'>History</li>
@@ -50,17 +55,7 @@
         </ul>
       </div>
     </div>
-
-    <div data-role='page' id='map'>
-      <div data-theme='a' data-role='header' data-position='fixed'>
-        <a href="#" data-role='button' data-icon='arrow-l' data-rel='back'>Back</a>
-        <h3>BikeMe</h3>
-      </div>
-      <div data-role='content'>
-        <div id='googleMap'></div>
-      </div>
-    </div>
-
+    <!--<div id='map'></div>-->
     <script type='text/javascript'>
       $(document).ready(function () {
         bikeMe.initialize();
