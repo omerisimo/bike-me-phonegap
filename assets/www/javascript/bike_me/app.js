@@ -4,6 +4,7 @@ function createNamespace (namespace, context) {
 
 bikeMe = {
   initialize: function () {
+    document.addEventListener('deviceready', this.onDeviceReady, false);
     this.setJqueryMobileDefaults();
 
     this.searchView = new bikeMe.Views.Search();
@@ -16,6 +17,10 @@ bikeMe = {
 
   setJqueryMobileDefaults: function () {
     $.mobile.defaultPageTransition = 'none';
+  },
+
+  onDeviceReady: function() {
+    navigator.splashscreen.hide();
   }
 };
 
