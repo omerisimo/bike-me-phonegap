@@ -19,6 +19,10 @@ bikeMe.Views.Search.prototype = {
     this.searchModel = new bikeMe.Models.Search(from, to);
     this.searchModel.find();
 
+    this.showLoadingIndicator();
+  },
+
+  showLoadingIndicator: function () {
     $.mobile.loading('show', {
       text        : 'Looking for the best route',
       textVisible : true
