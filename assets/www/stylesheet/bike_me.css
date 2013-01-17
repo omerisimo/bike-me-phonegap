@@ -37,9 +37,10 @@ body {
 }
 
 #location-button, .ui-btn {
-	width: 49px;
+	width: 61px;
 	position: absolute;
 	right: 40px;
+	font-weight: normal;
 }
 
 #googleMap {
