@@ -3,8 +3,8 @@
   <head>
     <meta name='viewport' content='initial-scale=1.0, user-scalable=no, width=device-width' />
 
-    <link rel='stylesheet' type='text/css' href='stylesheet/bike_me.css'>
     <link rel='stylesheet' type='text/css' href='stylesheet/jquery.mobile-1.2.0.min.css' />
+    <link rel='stylesheet' type='text/css' href='stylesheet/bike_me.css'>
 
     <script type='text/javascript' src='phonegap.js'></script>
     <script type='text/javascript' src='javascript/plugins/cordova-2.2.0.js'></script>
@@ -32,15 +32,17 @@
       <div data-theme='a' data-role='header' data-position='fixed'>
         <h3>BikeMe</h3>
       </div>
-      <div data-role='content'>
-        <div data-role='fieldcontain'>
-          <input name='from' id='from' placeholder='From' value='' type='text' />
-        </div>
+      <div id='search-box' data-role='content'>
+        <span>
+          <div data-role='fieldcontain'>
+            <input name='from' id='from' placeholder='From' value='' type='text' />
+          </div>
+          <input id='search-button' type='submit' data-theme='b' data-transition='none' value='Go' />
+        </span>
         <div data-role='fieldcontain'>
           <input name='to' id='to' placeholder='To' value='' type='text' />
         </div>
 
-        <input type='submit' data-theme='b' data-transition='none' value='Search' />
 
         <ul data-role='listview' data-divider-theme='a' data-inset='true'>
           <li data-role='list-divider' role='heading'>History</li>
