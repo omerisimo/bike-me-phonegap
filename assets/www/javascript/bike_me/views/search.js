@@ -16,16 +16,24 @@ bikeMe.Views.Search.prototype = {
     var from = this.$el.find('input#from').val();
     var to   = this.$el.find('input#to').val();
 
+    this.unsubscribePreviousSearchModel();
+
     this.searchModel = new bikeMe.Models.Search(from, to);
     this.searchModel.find();
 
+    this.showLoadingIndicator();
+  },
+
+  showLoadingIndicator: function () {
     $.mobile.loading('show', {
       text        : 'Looking for the best route',
       textVisible : true
     });
   },
 
-  unbind: function () {
-    this.$el.unbind();
+  unsubscribePreviousSearchModel: function () {
+    if (this.searchModel) {
+      this.searchModel.unsubscribe();
+    }
   }
 };

@@ -8,6 +8,23 @@ body {
     padding : 0;
 }
 
+#from, #to {
+	background: #ffffff;
+}
+
+#search-button {
+}
+
+#search-box {
+	background: #6bb838;
+}
+
+/* overriding jquery-mobile background color*/
+.ui-body-c, .ui-overlay-c {
+	background: #e2e2e3;
+}
+
 #googleMap {
     height: 500px;
 }
+
