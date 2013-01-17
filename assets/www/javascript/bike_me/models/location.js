@@ -5,6 +5,8 @@ bikeMe.Models.Location = function (attributes) {
 };
 
 bikeMe.Models.Location.prototype = {
+  CURRENT_LOCATION: "Current Location",
+
   initialize: function (attributes) {
     this.longitude = attributes.longitude;
     this.latitude  = attributes.latitude;
@@ -16,7 +18,7 @@ bikeMe.Models.Location.prototype = {
   },
 
   locate: function () {
-    if (this.address === 'Current Location') {
+    if (this.address === this.CURRENT_LOCATION) {
       this.currentCoordinates();
     } else {
       this.fetchCoordinates();
@@ -27,11 +29,12 @@ bikeMe.Models.Location.prototype = {
     var geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
 
     var data = {
-      address    : this.address,
+      address    : this.address + ", Tel Aviv",
       components : 'country:IL',
       language   : 'en',
       region     : 'il',
-      sensor     : false
+      sensor     : false,
+      bounds     : "32.02925310,34.74251590|32.1466110,34.85197610"
     };
 
     $.ajax({

@@ -44,6 +44,7 @@ bikeMe.Views.Map.prototype = {
                                                           new google.maps.Point(4, 43));
       this.mapMarkers = []
     }
+    google.maps.event.trigger(this.googleMap, 'resize');
   },
 
   options: {
