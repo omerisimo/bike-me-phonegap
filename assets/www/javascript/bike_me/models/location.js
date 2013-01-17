@@ -29,7 +29,7 @@ bikeMe.Models.Location.prototype = {
     var geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
 
     var data = {
-      address    : this.address + ", Tel Aviv",
+      address    : this.address,
       components : 'country:IL',
       language   : 'en',
       region     : 'il',
