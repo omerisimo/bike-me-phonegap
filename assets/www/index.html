@@ -25,6 +25,8 @@
     <script type='text/javascript' src='javascript/bike_me/models/station.js'></script>
     <script type='text/javascript' src='javascript/bike_me/models/route.js'></script>
     <script type='text/javascript' src='javascript/bike_me/models/routes_finder.js'></script>
+
+    <icon src="res/icon/android/search_navigate_icon.png" />
   </head>
   <body>
 
@@ -32,22 +34,23 @@
       <div data-theme='a' data-role='header' data-position='fixed'>
         <h3>BikeMe</h3>
       </div>
-      <div data-role='content'>
-        <div data-role='fieldcontain'>
-          <input name='from' id='from' placeholder='From' value='' type='text' />
-        </div>
-        <div data-role='fieldcontain'>
-          <input name='to' id='to' placeholder='To' value='' type='text' />
-        </div>
-
-        <input type='submit' data-theme='b' data-transition='none' value='Search' />
-
-        <ul data-role='listview' data-divider-theme='a' data-inset='true'>
-          <li data-role='list-divider' role='heading'>History</li>
-          <li data-theme='c'>
-            <a href='#page2' data-transition='slide'>Current location &gt; Yigal Alon 98</a>
-          </li>
-        </ul>
+      <div id='search-box' data-role='content'>
+        <span>
+          <div data-role='fieldcontain'>
+            <input name='from' id='from' placeholder='From' value='' type='text' />
+          </div>
+          <div id='location-button'>
+            <img src="res/icon/android/search_navigate_icon.png">
+          </div>
+        </span>
+        <span>
+          <div data-role='fieldcontain'>
+            <input name='to' id='to' placeholder='To' value='' type='text' />
+          </div>
+          <div>
+            <input id='search-button' type='submit' data-theme='b' data-transition='none' value='Go' />
+          </div>
+        </span>
       </div>
     </div>
 
