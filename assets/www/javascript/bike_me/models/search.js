@@ -45,5 +45,14 @@ bikeMe.Models.Search.prototype = {
     this.routes = routes;
 
     radio('searchSuccess').broadcast(routes);
+  },
+
+  unsubscribe: function () {
+    radio('locationFound').unsubscribe(this.onLocationFound);
+    radio('routesFound').unsubscribe(this.onRoutesFound);
+
+    this.originLocation.unsubscribe();
+    this.destinationLocation.unsubscribe();
+    this.routeFinder.unsubscribe();
   }
 };

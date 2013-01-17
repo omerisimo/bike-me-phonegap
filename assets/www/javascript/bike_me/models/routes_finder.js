@@ -160,5 +160,19 @@ bikeMe.Models.RoutesFinder.prototype = {
     }
 
     return routes;
+  },
+
+  unsubscribe: function () {
+    radio('nearestStationsFound').unsubscribe(this.onNearestStationsFound);
+    radio('distanceMetersSuccess').unsubscribe(this.onDistanceMetersSuccess);
+
+    this.unsubscribeStations(this.sourceStations);
+    this.unsubscribeStations(this.targetStations);
+  },
+
+  unsubscribeStations: function (stations) {
+    _.each(stations, function (station) {
+      station.unsubscribe();
+    });
   }
 };
