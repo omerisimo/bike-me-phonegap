@@ -19,6 +19,7 @@ bikeMe.Views.Map.prototype = {
       this.directionsRenderer = new google.maps.DirectionsRenderer();
       this.directionsRenderer.setMap(this.googleMap);
     }
+    google.maps.event.trigger(this.googleMap, 'resize');
   },
 
   options: {
