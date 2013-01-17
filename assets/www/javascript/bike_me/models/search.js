@@ -44,7 +44,11 @@ bikeMe.Models.Search.prototype = {
   onRoutesFound: function (routes) {
     this.routes = routes;
 
-    radio('searchSuccess').broadcast(routes);
+    if (routes.length === 0) {
+      radio('searchError').broadcast();
+    } else {
+      radio('searchSuccess').broadcast(routes);
+    }
   },
 
   unsubscribe: function () {

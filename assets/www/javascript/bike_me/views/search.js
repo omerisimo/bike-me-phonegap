@@ -10,6 +10,8 @@ bikeMe.Views.Search.prototype = {
 
     this.search = _.bind(this.search, this);
     this.$el.on('click', 'input[type="submit"]', this.search);
+
+    radio('searchError').subscribe([this.onRoutingError, this]);
   },
 
   search: function () {
@@ -29,6 +31,16 @@ bikeMe.Views.Search.prototype = {
       text        : 'Looking for the best route',
       textVisible : true
     });
+  },
+
+  onRoutingError: function () {
+    $.mobile.loading('hide');
+    var msg = "No reasonable route was found.";
+    if (navigator.notification) {
+      navigator.notification.alert(msg, null, "Oh Noes!");
+    } else {
+      alert(msg);
+    }
   },
 
   unsubscribePreviousSearchModel: function () {

@@ -46,6 +46,7 @@ bikeMe.Views.Map.prototype = {
     }
 
     this.googleMap.setCenter(this.options.center);
+    google.maps.event.trigger(this.googleMap, 'resize');
   },
 
   options: {

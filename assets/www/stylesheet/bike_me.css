@@ -3,25 +3,44 @@ html {
 }
 
 body {
-    height  : 100%;
-    margin  : 0;
-    padding : 0;
+	  height  : 100%;
+	  margin  : 0;
+	  padding : 0;
 }
 
 #from, #to {
 	background: #ffffff;
 }
 
-#search-button {
-}
-
 #search-box {
 	background: #6bb838;
+	margin: 30px;
+	border-radius: 5px;
+}
+
+#search-box div {
+	float: left;
+}
+
+.ui-field-contain, .ui-btn {
+	height: 37px;
+	margin: 5px;
+}
+
+.ui-btn {
+	text-align: center;
 }
 
 /* overriding jquery-mobile background color*/
 .ui-body-c, .ui-overlay-c {
 	background: #e2e2e3;
+}
+
+#location-button, .ui-btn {
+	width: 61px;
+	position: absolute;
+	right: 40px;
+	font-weight: normal;
 }
 
 #googleMap {
