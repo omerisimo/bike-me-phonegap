@@ -22,7 +22,7 @@ bikeMe.Views.Map.prototype = {
   },
 
   options: {
-    center           : new google.maps.LatLng(-34.397, 150.644),
+    center           : new google.maps.LatLng(32.0833, 34.8000),
     disableDefaultUI : true,
     mapTypeId        : google.maps.MapTypeId.ROADMAP,
     zoom             : 8
