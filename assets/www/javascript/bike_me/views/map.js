@@ -44,11 +44,14 @@ bikeMe.Views.Map.prototype = {
                                                           new google.maps.Point(4, 43));
       this.mapMarkers = []
     }
+
+    this.googleMap.setCenter(this.options.center);
   },
 
   options: {
-    center           : new google.maps.LatLng(-34.397, 150.644),
+    center           : new google.maps.LatLng(32.066181,34.77761),
     disableDefaultUI : true,
+    zoomControl      : true,
     mapTypeId        : google.maps.MapTypeId.ROADMAP,
     zoom             : 8
   },
