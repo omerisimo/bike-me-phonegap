@@ -69,6 +69,10 @@ bikeMe.Models.Location.prototype = {
 
   toString: function () {
     return this.address + " (" + this.latitude.toString() + ", " + this.longitude.toString() + ")";
+  },
+
+  unsubscribe: function () {
+    // Nothing to unsubscribe from for now.
   }
 
 };

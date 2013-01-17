@@ -16,6 +16,10 @@ bikeMe.Models.Station.prototype = {
       latitude  : attributes.latitude,
       longitude : attributes.longitude
     });
+  },
+
+  unsubscribe: function () {
+    this.location.unsubscribe();
   }
 };
 
