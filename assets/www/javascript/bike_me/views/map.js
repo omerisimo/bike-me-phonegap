@@ -42,6 +42,7 @@ bikeMe.Views.Map.prototype = {
                                                           new google.maps.Size(32, 42),
                                                           new google.maps.Point(0,0),
                                                           new google.maps.Point(4, 43));
+      this.mapMarkers = []
     }
   },
 
@@ -60,6 +61,7 @@ bikeMe.Views.Map.prototype = {
   show: function () {
     $.mobile.changePage(this.$el);
     this.initializeGoogleMap();
+    this.clearMarkers();
   },
 
   renderRoute: function (route) {
@@ -96,17 +98,14 @@ bikeMe.Views.Map.prototype = {
   },
 
   renderMarkers: function (route, start, end, startStation, endStation){
-    var marker = new google.maps.Marker({position: start, title:"Origin", icon: this.originIcon});
-    marker.setMap(this.googleMap);
-
-    marker = new google.maps.Marker({position: end, title:"Destiantion", icon: this.destinationIcon});
-    marker.setMap(this.googleMap);
-
-    marker = new google.maps.Marker({position: startStation, title:"Origin Station", icon: this.getStationIcon(route.sourceStation.availableBikes)});
-    marker.setMap(this.googleMap);
-
-    marker = new google.maps.Marker({position: endStation, title:"Destiantion Station", icon: this.getStationIcon(route.targetStation.availableDocks)});
-    marker.setMap(this.googleMap);
+    var marker = new google.maps.Marker({map: this.googleMap, position: start, title:"Origin", icon: this.originIcon});
+    this.mapMarkers.push(marker);
+    marker = new google.maps.Marker({map: this.googleMap, position: end, title:"Destiantion", icon: this.destinationIcon});
+    this.mapMarkers.push(marker);
+    marker = new google.maps.Marker({map: this.googleMap, position: startStation, title:"Origin Station", icon: this.getStationIcon(route.sourceStation.availableBikes)});
+    this.mapMarkers.push(marker);
+    marker = new google.maps.Marker({map: this.googleMap, position: endStation, title:"Destiantion Station", icon: this.getStationIcon(route.targetStation.availableDocks)});
+    this.mapMarkers.push(marker);
   },
 
   getStationIcon: function (availableCount) {
@@ -117,5 +116,12 @@ bikeMe.Views.Map.prototype = {
     } else {
       return this.stationIcons.noneAvailableStation;
     }
+  },
+
+  clearMarkers: function () {
+    for (var i = 0; i < this.mapMarkers.length; i++ ) {
+        this.mapMarkers[i].setMap(null);
+    }
+    this.mapMarkers = [];
   }
 };
