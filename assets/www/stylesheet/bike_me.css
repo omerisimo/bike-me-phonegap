@@ -14,20 +14,13 @@ body {
 
 #search-box {
 	background: #6bb838;
-	margin: 30px;
+	margin: 4%;
 	border-radius: 5px;
+	padding: 3%;
 }
 
-#search-box div {
-	float: left;
-}
 
-.ui-field-contain, .ui-btn {
-	height: 37px;
-	margin: 5px;
-}
-
-.ui-btn {
+.ui-field-contain{
 	text-align: center;
 }
 
@@ -36,11 +29,10 @@ body {
 	background: #e2e2e3;
 }
 
-#location-button, .ui-btn {
-	width: 61px;
-	position: absolute;
-	right: 40px;
-	font-weight: normal;
+#location-button {
+  /*position: absolute;*/
+  position: relative;
+
 }
 
 #googleMap {
