@@ -75,6 +75,7 @@ bikeMe.Views.Map.prototype = {
     center           : new google.maps.LatLng(32.066181,34.77761),
     disableDefaultUI : true,
     zoomControl      : true,
+    zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_TOP },
     mapTypeId        : google.maps.MapTypeId.ROADMAP,
     zoom             : 15,
   },

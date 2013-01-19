@@ -69,7 +69,9 @@ body {
 #routeInfo {
   z-index: 4;
   background: #EDEDED;
-  border-color: #EDEDED;
+  border-color: rgb(202, 202, 202);
+  border-left-width: 1px;
+  border-right-width: 1px;
   border-radius: 8px 8px 0 0;
   left: 5%;
   width: 90%;
