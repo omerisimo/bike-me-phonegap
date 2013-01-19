@@ -51,5 +51,13 @@ bikeMe.Models.Route.prototype = {
     } else {
       return (distanceMeters * this.cyclingSpeed);
     }
+  },
+
+  totalWalkinDistance: function() {
+    return ((this.routeDistances.walkingDistanceFromOrigin + this.routeDistances.walkingDistanceToDestination)/1000).toFixed(1);
+  },
+
+  totalCyclingDistance: function() {
+    return ((this.routeDistances.cyclingDistance)/1000).toFixed(1);
   }
 };

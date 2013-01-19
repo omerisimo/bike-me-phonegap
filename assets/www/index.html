@@ -26,7 +26,7 @@
     <script type='text/javascript' src='javascript/bike_me/models/route.js'></script>
     <script type='text/javascript' src='javascript/bike_me/models/routes_finder.js'></script>
 
-    <icon src="res/icon/android/search_navigate_icon.png" />
+    <icon src="images/search_navigate_icon.png" />
   </head>
   <body>
 
@@ -37,17 +37,17 @@
       <div id='search-box' data-role='content'>
         <span>
           <div data-role='fieldcontain' id='location-button'>
-            <img src="res/icon/android/search_navigate_icon.png">
+            <img src="images/search_navigate_icon.png">
           </div>
         </span>
         <span>
           <div data-role='fieldcontain'>
-            <input name='from' id='from' placeholder='From' value='' type='text' />
+            <input name='from' id='from' placeholder='From' value='Nahmani 50' type='text' />
           </div>
         </span>
         <span>
           <div data-role='fieldcontain'>
-            <input name='to' id='to' placeholder='To' value='' type='text' />
+            <input name='to' id='to' placeholder='To' value='Yigal Alon 98' type='text' />
           </div>
         </span>
         <span>
@@ -65,6 +65,11 @@
       </div>
       <div data-role='content'>
         <div id='googleMap'></div>
+      </div>
+      <div data-theme='b' data-role='footer' data-position='fixed' id="routeInfo">
+        <span id="walkingDistance" class="routeInfo seperator">0.2 km</span>
+        <span id="cyclingDistance" class="routeInfo seperator">2.1 km</span>
+        <span id="totalTime" class="routeInfo">22 min</span>
       </div>
     </div>
 

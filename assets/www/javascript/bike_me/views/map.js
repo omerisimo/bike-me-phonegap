@@ -8,6 +8,9 @@ bikeMe.Views.Map.prototype = {
   initialize: function () {
     this.$el        = $('#map');
     this.$googleMap = $('#googleMap');
+    this.$walkingDistanceInfo = $('#walkingDistance');
+    this.$cyclingDistanceInfo = $('#cyclingDistance');
+    this.$totalTimeInfo = $('#totalTime');
 
     radio('searchSuccess').subscribe([this.onSearchSuccess, this]);
   },
@@ -16,7 +19,9 @@ bikeMe.Views.Map.prototype = {
     if (_.isUndefined(this.googleMap)){
       this.googleMap = new google.maps.Map(this.$googleMap[0], this.options);
       this.googleDirectionsService = new google.maps.DirectionsService();
-      var rendererOptions = { suppressMarkers: true };
+      var rendererOptions = { suppressMarkers     : true,
+                              suppressInfoWindows : true
+                            };
       this.directionsRenderer = new google.maps.DirectionsRenderer(rendererOptions);
       this.directionsRenderer.setMap(this.googleMap);
 
@@ -37,7 +42,7 @@ bikeMe.Views.Map.prototype = {
       this.originIcon = new google.maps.MarkerImage("images/path_green_arrow_icon.png",
                                                       new google.maps.Size(32, 42),
                                                       new google.maps.Point(0,0),
-                                                      new google.maps.Point(16, 34));
+                                                      new google.maps.Point(16, 32));
       this.destinationIcon = new google.maps.MarkerImage("images/path_flag_icon.png",
                                                           new google.maps.Size(32, 42),
                                                           new google.maps.Point(0,0),
@@ -71,7 +76,7 @@ bikeMe.Views.Map.prototype = {
     disableDefaultUI : true,
     zoomControl      : true,
     mapTypeId        : google.maps.MapTypeId.ROADMAP,
-    zoom             : 8
+    zoom             : 15,
   },
 
   onSearchSuccess: function (routes) {
@@ -112,6 +117,8 @@ bikeMe.Views.Map.prototype = {
                             result.routes[0].legs[2].start_location);
       }
     });
+
+    this.updateRouteInfo(route);
   },
 
   renderMarkers: function (route, start, end, startStation, endStation){
@@ -170,6 +177,11 @@ bikeMe.Views.Map.prototype = {
     if (!_.isUndefined(this.infoWindow)){
         this.infoWindow.close();
     }
-  }
+  },
 
+  updateRouteInfo: function (route) {
+    this.$walkingDistanceInfo[0].innerHTML = route.totalWalkinDistance().toString() + " km";
+    this.$cyclingDistanceInfo[0].innerHTML = route.totalCyclingDistance().toString() + " km";
+    this.$totalTimeInfo[0].innerHTML = route.routeTime.toFixed().toString() + " min";
+  }
 };
