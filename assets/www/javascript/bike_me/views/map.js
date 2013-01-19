@@ -42,7 +42,10 @@ bikeMe.Views.Map.prototype = {
                                                           new google.maps.Size(32, 42),
                                                           new google.maps.Point(0,0),
                                                           new google.maps.Point(4, 43));
-      this.mapMarkers = []
+      this.mapMarkers = [];
+      this.infoWindow = new google.maps.InfoWindow();
+      var onMapClicked = _.bind(this.closeInfoWindow, this);
+      google.maps.event.addListener(this.googleMap, 'click', onMapClicked);
     }
 
     this.googleMap.setCenter(this.options.center);
@@ -85,31 +88,36 @@ bikeMe.Views.Map.prototype = {
       travelMode: google.maps.TravelMode.WALKING
     };
 
-    var succ = function(result, status) {
+    this.googleDirectionsService.route(request, function(result, status) {
       if (status == google.maps.DirectionsStatus.OK) {
-        this.directionsRenderer.setDirections(result);
-        this.renderMarkers(route,
+        bikeMe.mapView.directionsRenderer.setDirections(result);
+        bikeMe.mapView.renderMarkers(route,
                             result.routes[0].legs[0].start_location,
                             result.routes[0].legs[2].end_location,
                             result.routes[0].legs[0].end_location,
                             result.routes[0].legs[2].start_location);
       }
-    }
-
-    var succ = _.bind(succ, this);
-
-    this.googleDirectionsService.route(request, succ);
+    });
   },
 
   renderMarkers: function (route, start, end, startStation, endStation){
-    var marker = new google.maps.Marker({map: this.googleMap, position: start, title:"Origin", icon: this.originIcon});
+    this.displayMarker(start, "Origin", this.originIcon, "Origin");
+    this.displayMarker(end, "Destiantion", this.destinationIcon, "Destiantion");
+    this.displayMarker(startStation, "Origin Station", this.getStationIcon(route.sourceStation.availableBikes), "Origin Station");
+    this.displayMarker(endStation, "Destiantion Station", this.getStationIcon(route.targetStation.availableDocks), "Destiantion Station");
+  },
+
+  displayMarker: function (position, title, icon, infoContent) {
+    var marker = new google.maps.Marker({map: this.googleMap, position: position, title: title, icon: icon});
     this.mapMarkers.push(marker);
-    marker = new google.maps.Marker({map: this.googleMap, position: end, title:"Destiantion", icon: this.destinationIcon});
-    this.mapMarkers.push(marker);
-    marker = new google.maps.Marker({map: this.googleMap, position: startStation, title:"Origin Station", icon: this.getStationIcon(route.sourceStation.availableBikes)});
-    this.mapMarkers.push(marker);
-    marker = new google.maps.Marker({map: this.googleMap, position: endStation, title:"Destiantion Station", icon: this.getStationIcon(route.targetStation.availableDocks)});
-    this.mapMarkers.push(marker);
+
+    var onMarkerClicked = function (event) {
+      bikeMe.mapView.infoWindow.setContent(infoContent);
+      bikeMe.mapView.infoWindow.open(bikeMe.mapView.googleMap,this);
+    }
+    onMarkerClicked = _.bind(onMarkerClicked, marker);
+
+    google.maps.event.addListener(marker, 'click', onMarkerClicked);
   },
 
   getStationIcon: function (availableCount) {
@@ -127,5 +135,13 @@ bikeMe.Views.Map.prototype = {
         this.mapMarkers[i].setMap(null);
     }
     this.mapMarkers = [];
+    this.closeInfoWindow();
+  },
+
+  closeInfoWindow: function () {
+    if (!_.isUndefined(this.infoWindow)){
+        this.infoWindow.close();
+    }
   }
+
 };
