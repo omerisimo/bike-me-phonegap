@@ -43,7 +43,21 @@ bikeMe.Views.Map.prototype = {
                                                           new google.maps.Point(0,0),
                                                           new google.maps.Point(4, 43));
       this.mapMarkers = [];
-      this.infoWindow = new google.maps.InfoWindow();
+      this.infoWindow = new InfoBubble({
+                map: this.googleMap,
+                shadowStyle: 1,
+                padding: 0,
+                backgroundColor: 'rgb(57,57,57)',
+                borderRadius: 4,
+                arrowSize: 10,
+                borderWidth: 1,
+                borderColor: '#2c2c2c',
+                hideCloseButton: true,
+                arrowPosition: 40,
+                backgroundClassName: 'infoWondowBackground',
+                arrowStyle: 0
+              });
+
       var onMapClicked = _.bind(this.closeInfoWindow, this);
       google.maps.event.addListener(this.googleMap, 'click', onMapClicked);
     }
@@ -101,10 +115,24 @@ bikeMe.Views.Map.prototype = {
   },
 
   renderMarkers: function (route, start, end, startStation, endStation){
-    this.displayMarker(start, "Origin", this.originIcon, "Origin");
-    this.displayMarker(end, "Destiantion", this.destinationIcon, "Destiantion");
-    this.displayMarker(startStation, "Origin Station", this.getStationIcon(route.sourceStation.availableBikes), "Origin Station");
-    this.displayMarker(endStation, "Destiantion Station", this.getStationIcon(route.targetStation.availableDocks), "Destiantion Station");
+    this.displayMarker(start, "Origin", this.originIcon, route.source.address);
+    this.displayMarker(end, "Destiantion", this.destinationIcon, route.target.address);
+    this.displayMarker(startStation,
+                        "Origin Station",
+                        this.getStationIcon(route.sourceStation.availableBikes),
+                        this.stationInfoHtml(route.sourceStation));
+    this.displayMarker(endStation,
+                        "Destiantion Station",
+                        this.getStationIcon(route.targetStation.availableDocks),
+                        this.stationInfoHtml(route.targetStation));
+  },
+
+  stationInfoHtml: function (station){
+    return "<div class='infowWindowHeader'>"+station.location.address+"</div>\
+    <br>\
+    <div>Available bikes: "+station.availableBikes+"</div>\
+    <br>\
+    <div>Available docks: "+station.availableDocks+"</div>"
   },
 
   displayMarker: function (position, title, icon, infoContent) {
@@ -112,7 +140,7 @@ bikeMe.Views.Map.prototype = {
     this.mapMarkers.push(marker);
 
     var onMarkerClicked = function (event) {
-      bikeMe.mapView.infoWindow.setContent(infoContent);
+      bikeMe.mapView.infoWindow.setContent('<div class="infoWondowText">'+infoContent+'</div>');
       bikeMe.mapView.infoWindow.open(bikeMe.mapView.googleMap,this);
     }
     onMarkerClicked = _.bind(onMarkerClicked, marker);
