@@ -11,8 +11,17 @@ bikeMe.Views.Map.prototype = {
     this.$walkingDistanceInfo = $('#walkingDistance');
     this.$cyclingDistanceInfo = $('#cyclingDistance');
     this.$totalTimeInfo = $('#totalTime');
+    this.$previousRouteButton = $('#previousRoute');
+    this.$nextRouteButton = $('#nextRoute');
+
+    this.currentRouteIndex = 0;
+    this.routes = [];
 
     radio('searchSuccess').subscribe([this.onSearchSuccess, this]);
+    var nextRoute = _.bind(this.nextRoute, this);
+    this.$nextRouteButton.on('click', nextRoute);
+    var previousRoute = _.bind(this.previousRoute, this);
+    this.$previousRouteButton.on('click', previousRoute);
   },
 
   initializeGoogleMap: function () {
@@ -82,6 +91,8 @@ bikeMe.Views.Map.prototype = {
 
   onSearchSuccess: function (routes) {
     this.show();
+    this.currentRouteIndex = 0;
+    this.routes = routes;
     this.renderRoute(routes[0]);
   },
 
@@ -92,6 +103,8 @@ bikeMe.Views.Map.prototype = {
   },
 
   renderRoute: function (route) {
+    this.clearMarkers();
+
     var start = new google.maps.LatLng(route.source.latitude, route.source.longitude);
     var end   = new google.maps.LatLng(route.target.latitude, route.target.longitude);
     var startStation = new google.maps.LatLng(route.sourceStation.location.latitude, route.sourceStation.location.longitude);
@@ -120,6 +133,7 @@ bikeMe.Views.Map.prototype = {
     });
 
     this.updateRouteInfo(route);
+    this.showRouteButtons();
   },
 
   renderMarkers: function (route, start, end, startStation, endStation){
@@ -184,5 +198,29 @@ bikeMe.Views.Map.prototype = {
     this.$walkingDistanceInfo[0].innerHTML = route.totalWalkinDistance().toString() + " km";
     this.$cyclingDistanceInfo[0].innerHTML = route.totalCyclingDistance().toString() + " km";
     this.$totalTimeInfo[0].innerHTML = route.routeTime.toFixed().toString() + " min";
+  },
+
+  showRouteButtons: function () {
+    if (this.currentRouteIndex > 0 ) {
+      this.$previousRouteButton.removeClass('hide');
+    } else {
+      this.$previousRouteButton.addClass('hide');
+    }
+
+    if (this.currentRouteIndex < this.routes.length &&  this.currentRouteIndex < 8) {
+      this.$nextRouteButton.removeClass('hide');
+    } else {
+      this.$nextRouteButton.addClass('hide');
+    }
+  },
+
+  nextRoute: function () {
+    this.currentRouteIndex = this.currentRouteIndex + 1;
+    this.renderRoute(this.routes[this.currentRouteIndex]);
+  },
+
+  previousRoute: function () {
+    this.currentRouteIndex = this.currentRouteIndex - 1;
+    this.renderRoute(this.routes[this.currentRouteIndex]);
   }
 };

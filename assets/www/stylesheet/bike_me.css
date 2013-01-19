@@ -40,9 +40,36 @@ body {
   width:100%;
   height:100%;
   left: 0%;
-  top: 6%;
+  top: 6.5%;
   z-index: 1;
 }
+
+.header {
+  text-align:center;
+}
+
+.hide {
+ visibility: hidden;
+}
+
+.routeButton {
+  position: absolute;
+  top: 80%;
+  margin: 0;
+}
+
+#previousRoute {
+  left: 0%;
+}
+
+#nextRoute {
+  right: 0%;
+}
+
+.routeButton span {
+  padding: 0;
+}
+
 
 .infoWondowBackground {
   background: url(../images/path_speach_bubble.png) 100% 0% no-repeat;

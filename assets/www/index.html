@@ -31,8 +31,8 @@
   <body>
 
     <div data-role='page' id='search'>
-      <div data-theme='a' data-role='header' data-position='fixed'>
-        <h3>BikeMe</h3>
+      <div data-theme='a' data-role='header' data-position='fixed' class="header">
+        <img src="images/bikeme_header.png">
       </div>
       <div id='search-box' data-role='content'>
         <span>
@@ -59,14 +59,20 @@
     </div>
 
     <div data-role='page' id='map'>
-      <div data-theme='a' data-role='header' data-position='fixed'>
+      <div data-theme='a' data-role='header' data-position='fixed' class='header'>
         <a href="#" data-role='button' data-icon='arrow-l' data-rel='back'>Back</a>
-        <h3>BikeMe</h3>
+        <img src="images/search_navigate.png">
       </div>
       <div data-role='content'>
         <div id='googleMap'></div>
+        <div id="previousRoute" data-role="button" data-inline="true" class="routeButton hide">
+          <img src="images/path_arrow_left.png">
+        </div>
+        <div id="nextRoute" data-role="button" data-inline="true" class="routeButton hide">
+          <img src="images/path_arrow_right.png">
+        </div>
       </div>
-      <div data-theme='b' data-role='footer' data-position='fixed' id="routeInfo">
+      <div data-role='footer' data-position='fixed' id="routeInfo">
         <span id="walkingDistance" class="routeInfo seperator">0.2 km</span>
         <span id="cyclingDistance" class="routeInfo seperator">2.1 km</span>
         <span id="totalTime" class="routeInfo">22 min</span>
