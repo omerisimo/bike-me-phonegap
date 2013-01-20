@@ -4,8 +4,9 @@ bikeMe.Models.Location = function (attributes) {
   this.initialize(attributes);
 };
 
+bikeMe.Models.Location.CURRENT_LOCATION = "Current Location";
+
 bikeMe.Models.Location.prototype = {
-  CURRENT_LOCATION: "Current Location",
 
   initialize: function (attributes) {
     this.longitude = attributes.longitude;
@@ -18,7 +19,7 @@ bikeMe.Models.Location.prototype = {
   },
 
   locate: function () {
-    if (this.address === this.CURRENT_LOCATION) {
+    if (this.address.trim() === bikeMe.Models.Location.CURRENT_LOCATION) {
       this.currentCoordinates();
     } else {
       this.fetchCoordinates();

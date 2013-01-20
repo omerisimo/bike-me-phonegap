@@ -6,7 +6,7 @@ bikeMe.Models.Search = function (origin, destination) {
 
 bikeMe.Models.Search.prototype = {
   initialize: function (origin, destination) {
-    this.originString        = origin;
+    this.originString        = origin || bikeMe.Models.Location.CURRENT_LOCATION;
     this.destinationString   = destination;
     this.originLocation      = null;
     this.destinationLocation = null;
