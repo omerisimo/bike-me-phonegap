@@ -9,12 +9,14 @@ bikeMe.Views.Search.prototype = {
     this.$el = $('#search');
 
     this.search = _.bind(this.search, this);
-    this.$el.on('click', 'input[type="submit"]', this.search);
+    this.$el.submit(this.search);
 
     radio('searchError').subscribe([this.onRoutingError, this]);
   },
 
   search: function () {
+    this.enableAutoCompleteForm();
+
     var from = this.$el.find('input#from').val();
     var to   = this.$el.find('input#to').val();
 
@@ -24,6 +26,7 @@ bikeMe.Views.Search.prototype = {
     this.searchModel.find();
 
     this.showLoadingIndicator();
+    return false;
   },
 
   showLoadingIndicator: function () {
@@ -47,5 +50,15 @@ bikeMe.Views.Search.prototype = {
     if (this.searchModel) {
       this.searchModel.unsubscribe();
     }
+  },
+
+  // This code is a hack to enable autocomplete history of the form above.
+  // http://stackoverflow.com/questions/8400269/browser-native-autocomplete-for-ajaxed-forms
+  enableAutoCompleteForm: function () {
+    var iFrameWindow = document.getElementById("iframe-for_autocomplete").contentWindow;
+    iFrameWindow.document.body.appendChild(document.getElementById("search").cloneNode(true));
+    var frameForm = iFrameWindow.document.getElementById("search");
+    frameForm.onsubmit = null;
+    frameForm.submit();
   }
 };

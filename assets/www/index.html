@@ -30,26 +30,30 @@
     <icon src="images/search_navigate_icon.png" />
   </head>
   <body>
-    <div data-role='page' id='search'>
+    <div data-role='page'>
       <div data-theme='a' data-role='header' data-position='fixed' class="header">
         <h1><img src="images/bikeme_header_small.png"></h1>
       </div>
       <div id='search-box' data-role='content'>
-        <span>
-          <div data-role='fieldcontain'>
-            <input name='from' id='from' placeholder='From' value='Current Location' type='text' />
-          </div>
-        </span>
-        <span>
-          <div data-role='fieldcontain'>
-            <input name='to' id='to' placeholder='To: (e.g. Rothchild 10)' value='' type='text' />
-          </div>
-        </span>
-        <span>
-          <div data-role='fieldcontain'>
-            <input id='search-button' type='submit' data-theme='b' data-transition='none' data-corners='false' value='Go' />
-          </div>
-        </span>
+        <form id='search' autocomplete='on'>
+          <span>
+            <div data-role='fieldcontain'>
+              <input name='from' id='from' placeholder='From' value='Current Location' type='text' />
+            </div>
+          </span>
+          <span>
+            <div data-role='fieldcontain'>
+              <input name='to' id='to' placeholder='To: (e.g. Rothchild 10)' value='' type='text' />
+            </div>
+          </span>
+          <span>
+            <div data-role='fieldcontain'>
+              <input id='search-button' type='submit' data-theme='b' data-transition='none' data-corners='false' value='Go' />
+            </div>
+          </span>
+        </form>
+        <!--This iframe is a hack to enable autocomplete history of the form above. (http://stackoverflow.com/questions/8400269/browser-native-autocomplete-for-ajaxed-forms) -->
+        <iframe id="iframe-for_autocomplete" src="" class="hide" style="width: 0px; height:0px;"></iframe>
       </div>
       <div id='search-image' data-theme='a' data-role="footer" data-position="fixed" class="footer">
         <img src='images/search_image_small.png'/>
