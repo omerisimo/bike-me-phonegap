@@ -14,7 +14,9 @@ body {
 
 #search-box {
 	background: #6bb838;
-	margin: 10%;
+	margin-top: 10%;
+  margin-left: 10%;
+  margin-right: 10%;
 	border-radius: 5px;
 	padding: 3%;
 }
@@ -48,6 +50,11 @@ body {
   text-align:center;
   background: url(../images/search_navigate_bg.png);
   border-color: #B0AFAB;
+}
+
+#search-image {
+  text-align: center;
+  bottom: 0;
 }
 
 #backButton {
