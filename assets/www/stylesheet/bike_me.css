@@ -12,6 +12,10 @@ body {
     background: #ffffff;
 }
 
+#search {
+  z-index: 1;
+}
+
 #search-box {
     margin-top: 10%;
 }
@@ -48,9 +52,11 @@ body {
 }
 
 #search-image {
-  text-align: center;
+  z-index: -1;
+  position: fixed;
   bottom: 0;
-  background: #e2e2e3;
+  height: 194px;
+  background: #e2e2e3 url(../images/search_image_small.png) center;
   border: none;
 }
 
