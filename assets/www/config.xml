@@ -2,15 +2,15 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "co.il.bikeme.www"
-        version   = "2.0.0">
-    <name>BikeMe</name>
+        version   = "1.0.0">
+    <name>BikeMe!</name>
 
     <description>
         Helps you to find the best route to use with TLV telOfan shared bikes project
     </description>
 
     <author href="http://phonegap.com" email="support@phonegap.com">
-        Awesome Klarna TelOfan Team
+        Awesome Klarna BikeMe! Team
     </author>
 
     <feature name="http://api.phonegap.com/1.0/device" />
@@ -22,7 +22,6 @@
     <preference name="splash-screen-duration" value="10000" />
 
     <icon src="icon.png" />    
-    <icon src="res/icon/android/icon-36-ldpi.png"   gap:platform="android"    gap:density="ldpi" />
     <icon src="res/icon/android/icon-48-mdpi.png"   gap:platform="android"    gap:density="mdpi" />
     <icon src="res/icon/android/icon-72-hdpi.png"   gap:platform="android"    gap:density="hdpi" />
     <icon src="res/icon/android/icon-96-xhdpi.png"  gap:platform="android"    gap:density="xhdpi" />

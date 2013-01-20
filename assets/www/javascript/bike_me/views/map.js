@@ -48,14 +48,26 @@ bikeMe.Views.Map.prototype = {
                                                                                     new google.maps.Point(13, 38))
                           };
 
+      this.stationShadow = new google.maps.MarkerImage("images/shadow-path_bike_spot_icon.png",
+                                                        new google.maps.Size(45.0, 39.0),
+                                                        new google.maps.Point(0, 0),
+                                                        new google.maps.Point(10, 38));
       this.originIcon = new google.maps.MarkerImage("images/path_green_arrow_icon.png",
                                                       new google.maps.Size(32, 42),
                                                       new google.maps.Point(0,0),
                                                       new google.maps.Point(16, 32));
+      this.originShadow = new google.maps.MarkerImage("images/shadow-path_green_arrow_icon.png",
+                                                        new google.maps.Size(45.0, 39.0),
+                                                        new google.maps.Point(0, 0),
+                                                        new google.maps.Point(16, 32));
       this.destinationIcon = new google.maps.MarkerImage("images/path_flag_icon.png",
                                                           new google.maps.Size(32, 42),
                                                           new google.maps.Point(0,0),
                                                           new google.maps.Point(4, 43));
+      this.destinationShadow = new google.maps.MarkerImage("images/shadow-path_flag_icon.png",
+                                                        new google.maps.Size(45.0, 39.0),
+                                                        new google.maps.Point(0, 0),
+                                                        new google.maps.Point(4, 43));
       this.mapMarkers = [];
       this.infoWindow = new InfoBubble({
                 map: this.googleMap,
@@ -68,7 +80,7 @@ bikeMe.Views.Map.prototype = {
                 borderColor: '#2c2c2c',
                 hideCloseButton: true,
                 arrowPosition: 40,
-                backgroundClassName: 'infoWondowBackground',
+                backgroundClassName: 'infoWindowBackground',
                 arrowStyle: 0
               });
 
@@ -84,7 +96,7 @@ bikeMe.Views.Map.prototype = {
     center           : new google.maps.LatLng(32.066181,34.77761),
     disableDefaultUI : true,
     zoomControl      : true,
-    zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_TOP },
+    zoomControlOptions: { position: google.maps.ControlPosition.LEFT_CENTER },
     mapTypeId        : google.maps.MapTypeId.ROADMAP,
     zoom             : 15,
   },
@@ -137,15 +149,17 @@ bikeMe.Views.Map.prototype = {
   },
 
   renderMarkers: function (route, start, end, startStation, endStation){
-    this.displayMarker(start, "Origin", this.originIcon, route.source.address);
-    this.displayMarker(end, "Destiantion", this.destinationIcon, route.target.address);
+    this.displayMarker(start, "Origin", this.originIcon, this.originShadow, route.source.address);
+    this.displayMarker(end, "Destiantion", this.destinationIcon, this.destinationShadow, route.target.address);
     this.displayMarker(startStation,
                         "Origin Station",
                         this.getStationIcon(route.sourceStation.availableBikes),
+                        this.stationShadow,
                         this.stationInfoHtml(route.sourceStation));
     this.displayMarker(endStation,
                         "Destiantion Station",
                         this.getStationIcon(route.targetStation.availableDocks),
+                        this.stationShadow,
                         this.stationInfoHtml(route.targetStation));
   },
 
@@ -157,8 +171,8 @@ bikeMe.Views.Map.prototype = {
     <div>Available docks: "+station.availableDocks+"</div>"
   },
 
-  displayMarker: function (position, title, icon, infoContent) {
-    var marker = new google.maps.Marker({map: this.googleMap, position: position, title: title, icon: icon});
+  displayMarker: function (position, title, icon, shadow, infoContent) {
+    var marker = new google.maps.Marker({map: this.googleMap, position: position, title: title, icon: icon, shadow: shadow});
     this.mapMarkers.push(marker);
 
     var onMarkerClicked = function (event) {
