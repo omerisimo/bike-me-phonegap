@@ -3,173 +3,236 @@ html {
 }
 
 body {
-	  height  : 100%;
-	  margin  : 0;
-	  padding : 0;
+    height  : 100%;
+    margin  : 0;
+    padding : 0;
 }
 
 #from, #to {
-	background: #ffffff;
+    background: #ffffff;
 }
 
 #search-box {
-	background: #6bb838;
-	margin-top: 10%;
-  margin-left: 10%;
-  margin-right: 10%;
-	border-radius: 5px;
-	padding: 3%;
+    background: #6bb838;
+    margin-top: 10%;
+    margin-left: 10%;
+    margin-right: 10%;
+    border-radius: 5px;
+    padding: 3%;
 }
 
 
 .ui-field-contain{
-	text-align: center;
+    text-align: center;
 }
 
 /* overriding jquery-mobile background color*/
 .ui-body-c, .ui-overlay-c {
-	background: #e2e2e3;
+    background: #e2e2e3;
 }
 
 #location-button {
-  /*position: absolute;*/
-  position: relative;
+    /*position: absolute;*/
+    position: relative;
 
 }
 
 #googleMap {
-  position:absolute;
-  width:100%;
-  height: 92%;
-  left: 0%;
-  top: 8%;
-  z-index: 1;
+    position:absolute;
+    width:100%;
+    height: 92%;
+    left: 0%;
+    top: 8%;
+    z-index: 1;
 }
 
 .header {
-  text-align:center;
-  background: url(../images/search_navigate_bg.png);
-  border-color: #B0AFAB;
+    text-align:center;
+    background: url(../images/search_navigate_bg.png);
+    border-color: #B0AFAB;
 }
 
 #search-image {
-  text-align: center;
-  bottom: 0;
+    text-align: center;
+    bottom: 0;
 }
 
 #backButton {
-  position: absolute;
-  top: 13%;
+    position: absolute;
+    top: 13%;
 }
 
 .hide {
- visibility: hidden;
+    visibility: hidden;
 }
 
 .routeButton {
-  position: absolute;
-  bottom: 25%;
-  margin: 0;
+    position: absolute;
+    bottom: 25%;
+    margin: 0;
 }
 
 #previousRoute {
-  left: 0%;
+    left: 0%;
 }
 
 #nextRoute {
-  right: 0%;
+    right: 0%;
 }
 
 .routeButton span {
-  padding: 0;
+    padding: 0;
 }
 
 
 .infoWindowBackground {
-  background: url(../images/path_speach_bubble.png) 100% 0% no-repeat;
-  opacity: 0.85;
+    background: url(../images/path_speach_bubble.png) 100% 0% no-repeat;
+    opacity: 0.85;
 }
 
 .infoWondowText {
-  text-shadow: 0 -1px 0 #000;
-  color: #fff;
-  font-family: Helvetica Neue, Helvetica, arial;
-  font-size: 11px;
-  line-height: 12px;
-  padding: 3px 3px 7px 3px;
-  font-weight: normal;
-  max-width: 150px;
-  /*background: url(../images/arrow.png) 95% 50% no-repeat;*/
+    text-shadow: 0 -1px 0 #000;
+    color: #fff;
+    font-family: Helvetica Neue, Helvetica, arial;
+    font-size: 11px;
+    line-height: 12px;
+    padding: 3px 3px 7px 3px;
+    font-weight: normal;
+    max-width: 150px;
+    /*background: url(../images/arrow.png) 95% 50% no-repeat;*/
 }
 
 .infowWindowHeader {
-  text-decoration: underline;
-  font-weight: bold;
+    text-decoration: underline;
+    font-weight: bold;
 }
 
 #routeInfo {
-  z-index: 4;
-  background: #EDEDED;
-  border-color: rgb(202, 202, 202);
-  border-left-width: 1px;
-  border-right-width: 1px;
-  border-radius: 8px 8px 0 0;
-  left: 5%;
-  width: 90%;
-  height: 35px;
-  max-height: 35px;
+    z-index: 4;
+    background: #EDEDED;
+    border-color: rgb(202, 202, 202);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-radius: 8px 8px 0 0;
+    left: 5%;
+    width: 90%;
+    height: 35px;
+    max-height: 35px;
 }
 
 
 #routeInfo span.routeInfo {
-  font-family: Helvetica Neue, Helvetica, arial;
-  color: #5A595A;
-  font-weight: normal;
-  font-size: 13px;
-  position: relative;
-  float: left;
-  text-align: center;
-  width: 28%;
-  padding-top: 10px;
-  padding-left: 5%;
+    font-family: Helvetica Neue, Helvetica, arial;
+    color: #5A595A;
+    font-weight: normal;
+    font-size: 13px;
+    position: relative;
+    float: left;
+    text-align: center;
+    width: 28%;
+    padding-top: 10px;
+    padding-left: 5%;
 }
 
 #routeInfo span.routeInfo#cyclingDistance {
-  padding-left: 6%;
+    padding-left: 6%;
 }
 
 #routeInfo span.seperator {
-  overflow: hidden;
-  height: 70%;
+    overflow: hidden;
+    height: 70%;
 }
 
 #routeInfo span.seperator:after {
-  content: url(../images/path_tab_seperator.png);
-  position: absolute;
-  right: 0.5%;
-  top: 0%;
+    content: url(../images/path_tab_seperator.png);
+    position: absolute;
+    right: 0.5%;
+    top: 0%;
 }
 
 #walkingDistance:before {
-  content: url(../images/path_feet_icon.png) 100% 0% no-repeat;
-  display: block;
-  position: absolute;
-  top: 20%;
-  left: 3%;
+    content: url(../images/path_feet_icon.png) 100% 0% no-repeat;
+    display: block;
+    position: absolute;
+    top: 20%;
+    left: 3%;
 }
 
 #cyclingDistance:before {
-  content: url(../images/path_bike_icon.png) 100% 0% no-repeat;
-  display: block;
-  position: absolute;
-  top: 0%;
-  left: 3%;
+    content: url(../images/path_bike_icon.png) 100% 0% no-repeat;
+    display: block;
+    position: absolute;
+    top: 0%;
+    left: 3%;
 }
 
 #totalTime:before {
-  content: url(../images/path_clock_icon.png) 100% 0% no-repeat;
-  display: block;
-  position: absolute;
-  top: 25%;
-  left: 3%;
+    content: url(../images/path_clock_icon.png) 100% 0% no-repeat;
+    display: block;
+    position: absolute;
+    top: 25%;
+    left: 3%;
+}
+
+
+
+
+/* Make the button rectangular*/
+
+.ui-btn-corner-tl {
+    -moz-border-radius-topleft: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-top-left-radius: 0.1em /*{global-radii-buttons}*/;
+    border-top-left-radius: 0.1em /*{global-radii-buttons}*/;
+}
+.ui-btn-corner-tr {
+    -moz-border-radius-topright: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-top-right-radius: 0.1em /*{global-radii-buttons}*/;
+    border-top-right-radius: 0.1em /*{global-radii-buttons}*/;
+}
+.ui-btn-corner-bl {
+    -moz-border-radius-bottomleft: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-bottom-left-radius: 0.1em /*{global-radii-buttons}*/;
+    border-bottom-left-radius: 0.1em /*{global-radii-buttons}*/;
+}
+.ui-btn-corner-br {
+    -moz-border-radius-bottomright: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-bottom-right-radius: 0.1em /*{global-radii-buttons}*/;
+    border-bottom-right-radius: 0.1em /*{global-radii-buttons}*/;
+}
+.ui-btn-corner-top {
+    -moz-border-radius-topleft: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-top-left-radius: 0.1em /*{global-radii-buttons}*/;
+    border-top-left-radius: 0.1em /*{global-radii-buttons}*/;
+    -moz-border-radius-topright: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-top-right-radius: 0.1em /*{global-radii-buttons}*/;
+    border-top-right-radius: 0.1em /*{global-radii-buttons}*/;
+}
+.ui-btn-corner-bottom {
+    -moz-border-radius-bottomleft: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-bottom-left-radius: 0.1em /*{global-radii-buttons}*/;
+    border-bottom-left-radius: 0.1em /*{global-radii-buttons}*/;
+    -moz-border-radius-bottomright: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-bottom-right-radius: 0.1em /*{global-radii-buttons}*/;
+    border-bottom-right-radius: 0.1em /*{global-radii-buttons}*/;
+}
+.ui-btn-corner-right {
+    -moz-border-radius-topright: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-top-right-radius: 0.1em /*{global-radii-buttons}*/;
+    border-top-right-radius: 0.1em /*{global-radii-buttons}*/;
+    -moz-border-radius-bottomright: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-bottom-right-radius: 0.1em /*{global-radii-buttons}*/;
+    border-bottom-right-radius: 0.1em /*{global-radii-buttons}*/;
+}
+.ui-btn-corner-left {
+    -moz-border-radius-topleft: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-top-left-radius: 0.1em /*{global-radii-buttons}*/;
+    border-top-left-radius: 0.1em /*{global-radii-buttons}*/;
+    -moz-border-radius-bottomleft: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-bottom-left-radius: 0.1em /*{global-radii-buttons}*/;
+    border-bottom-left-radius: 0.1em /*{global-radii-buttons}*/;
+}
+.ui-btn-corner-all {
+    -moz-border-radius: 0.1em /*{global-radii-buttons}*/;
+    -webkit-border-radius: 0.1em /*{global-radii-buttons}*/;
+    border-radius: 0.1em /*{global-radii-buttons}*/;
 }
