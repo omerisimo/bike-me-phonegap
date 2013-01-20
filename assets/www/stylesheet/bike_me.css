@@ -55,6 +55,8 @@ body {
 #search-image {
   text-align: center;
   bottom: 0;
+  background: #e2e2e3;
+  border: none;
 }
 
 #backButton {
