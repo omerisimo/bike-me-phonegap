@@ -29,17 +29,11 @@
     <icon src="images/search_navigate_icon.png" />
   </head>
   <body>
-
     <div data-role='page' id='search'>
       <div data-theme='a' data-role='header' data-position='fixed' class="header">
         <img src="images/bikeme_header.png">
       </div>
       <div id='search-box' data-role='content'>
-        <span>
-          <div data-role='fieldcontain' id='location-button'>
-            <img src="images/search_navigate_icon.png">
-          </div>
-        </span>
         <span>
           <div data-role='fieldcontain'>
             <input name='from' id='from' placeholder='From: Current location' value='' type='text' />
@@ -55,6 +49,9 @@
             <input id='search-button' type='submit' data-theme='b' data-transition='none' value='Go' />
           </div>
         </span>
+      </div>
+      <div id='search-image' data-theme='a' data-role='image' class="footer">
+        <img src='images/search_image.png'/>
       </div>
     </div>
     <div data-role='page' id='map'>
