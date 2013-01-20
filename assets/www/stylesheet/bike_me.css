@@ -52,3 +52,8 @@ body {
 .hide {
     visibility: hidden;
 }
+
+.current-location_text-input {
+  color: #4674A2;
+  font-weight: bold;
+}
