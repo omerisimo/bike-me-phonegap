@@ -56,6 +56,8 @@ bikeMe.Models.RoutesFinder.prototype = {
       targetStationsLocations.push(targetStation.location);
     });
 
+    // add the destination to the sourceStationsLocations array, so it could calculate a walking route
+    sourceStationsLocations.push(this.destinationLocation);
     this.calculateDistance([this.originLocation], sourceStationsLocations, 'originToStation');
     this.calculateDistance(sourceStationsLocations, targetStationsLocations, 'stationToStation');
     this.calculateDistance(targetStationsLocations, [this.destinationLocation], 'stationToDestination');
@@ -131,9 +133,17 @@ bikeMe.Models.RoutesFinder.prototype = {
 
       var potentialRoutes = this.createRoutesArray(this.originToStation, this.stationToStation, this.stationToTarget);
 
+      //remove the waling route from the potential routes
+      var walkingRoute = potentialRoutes[potentialRoutes.length-1];
+      potentialRoutes.splice(potentialRoutes.length-1,1);
       this.sortedRoutes = (_.sortBy(potentialRoutes, function(route) {
         return route.getRouteTime();
       }));
+
+      // If the walking route is faster, than this is the only ressult
+      if (walkingRoute.getRouteTime() <= this.sortedRoutes[0].routeTime) {
+        this.sortedRoutes = [walkingRoute];
+      }
 
       radio('routesFound').broadcast(this.sortedRoutes);
     }
@@ -158,6 +168,17 @@ bikeMe.Models.RoutesFinder.prototype = {
         ));
       }
     }
+
+    // push walking route
+    routes.push(new bikeMe.Models.Route(
+      {
+      source            : this.originLocation,
+      target            : this.destinationLocation,
+      walkingDistance1  : originToStationsDistances[0][originToStationsDistances[0].length-1],
+      cyclingDistance   : 0,
+      walkingDistance2  : 0
+    }
+    ));
 
     return routes;
   },

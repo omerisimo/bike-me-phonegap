@@ -123,13 +123,16 @@ bikeMe.Views.Map.prototype = {
 
     var start = new google.maps.LatLng(route.source.latitude, route.source.longitude);
     var end   = new google.maps.LatLng(route.target.latitude, route.target.longitude);
-    var startStation = new google.maps.LatLng(route.sourceStation.location.latitude, route.sourceStation.location.longitude);
-    var endStation = new google.maps.LatLng(route.targetStation.location.latitude, route.targetStation.location.longitude);
 
-    var waypts = [{ location: startStation, stopover: true },
-      { location: endStation, stopover: true }
-    ];
+    var waypts = [];
+    if (!_.isUndefined(route.sourceStation) && !_.isUndefined(route.targetStation)) {
+      var startStation = new google.maps.LatLng(route.sourceStation.location.latitude, route.sourceStation.location.longitude);
+      var endStation = new google.maps.LatLng(route.targetStation.location.latitude, route.targetStation.location.longitude);
 
+      waypts = [{ location: startStation, stopover: true },
+        { location: endStation, stopover: true }
+      ];
+    }
     var request = { origin:start,
       destination:end,
       waypoints: waypts,
@@ -140,11 +143,21 @@ bikeMe.Views.Map.prototype = {
     this.googleDirectionsService.route(request, function(result, status) {
       if (status == google.maps.DirectionsStatus.OK) {
         bikeMe.mapView.directionsRenderer.setDirections(result);
-        bikeMe.mapView.renderMarkers(route,
-                            result.routes[0].legs[0].start_location,
-                            result.routes[0].legs[2].end_location,
-                            result.routes[0].legs[0].end_location,
-                            result.routes[0].legs[2].start_location);
+        // In case this is a walking route (no stations to render)
+        if (result.routes[0].legs) {
+          alert('Take a walk!!!')
+          bikeMe.mapView.renderMarkers(route,
+                              result.routes[0].legs[0].start_location,
+                              result.routes[0].legs[0].end_location,
+                              null, null);
+        }
+        else {
+          bikeMe.mapView.renderMarkers(route,
+                              result.routes[0].legs[0].start_location,
+                              result.routes[0].legs[2].end_location,
+                              result.routes[0].legs[0].end_location,
+                              result.routes[0].legs[2].start_location);
+        }
       }
     });
 
@@ -155,16 +168,19 @@ bikeMe.Views.Map.prototype = {
   renderMarkers: function (route, start, end, startStation, endStation){
     this.displayMarker(start, "Origin", this.originIcon, this.originShadow, route.source.address);
     this.displayMarker(end, "Destiantion", this.destinationIcon, this.destinationShadow, route.target.address);
-    this.displayMarker(startStation,
-                        "Origin Station",
-                        this.getStationIcon(route.sourceStation.availableBikes),
-                        this.stationShadow,
-                        this.stationInfoHtml(route.sourceStation));
-    this.displayMarker(endStation,
-                        "Destiantion Station",
-                        this.getStationIcon(route.targetStation.availableDocks),
-                        this.stationShadow,
-                        this.stationInfoHtml(route.targetStation));
+
+    if (!_.isUndefined(route.sourceStation) && !_.isUndefined(route.targetStation)) {
+      this.displayMarker(startStation,
+                          "Origin Station",
+                          this.getStationIcon(route.sourceStation.availableBikes),
+                          this.stationShadow,
+                          this.stationInfoHtml(route.sourceStation));
+      this.displayMarker(endStation,
+                          "Destiantion Station",
+                          this.getStationIcon(route.targetStation.availableDocks),
+                          this.stationShadow,
+                          this.stationInfoHtml(route.targetStation));
+    }
   },
 
   stationInfoHtml: function (station){
