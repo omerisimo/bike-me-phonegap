@@ -13,6 +13,7 @@ bikeMe.Views.Map.prototype = {
     this.$totalTimeInfo = $('#totalTime');
     this.$previousRouteButton = $('#previousRoute');
     this.$nextRouteButton = $('#nextRoute');
+    this.$routesIndexInfo = $('#routesIndex')
 
     this.currentRouteIndex = 0;
     this.routes = [];
@@ -78,6 +79,7 @@ bikeMe.Views.Map.prototype = {
                 arrowSize: 10,
                 borderWidth: 1,
                 borderColor: '#2c2c2c',
+                disableAutoPan: true,
                 hideCloseButton: true,
                 arrowPosition: 40,
                 backgroundClassName: 'infoWindowBackground',
@@ -91,6 +93,8 @@ bikeMe.Views.Map.prototype = {
     this.googleMap.setCenter(this.options.center);
     google.maps.event.trigger(this.googleMap, 'resize');
   },
+
+  routeIndexClasses: ['routeOne', 'routeTwo',  'routeThree',  'routeFour',  'routeFive',  'routeSix',  'routeSeven',  'routeEight',  'routeNine'],
 
   options: {
     center           : new google.maps.LatLng(32.066181,34.77761),
@@ -226,6 +230,9 @@ bikeMe.Views.Map.prototype = {
     } else {
       this.$nextRouteButton.addClass('hide');
     }
+
+    this.$routesIndexInfo.removeClass();
+    this.$routesIndexInfo.addClass('mapInfo routeIndex ' + this.routeIndexClasses[this.currentRouteIndex] + ' ' + this.routeIndexClasses[Math.min(this.routes.length,9)-1])
   },
 
   nextRoute: function () {

@@ -5,6 +5,7 @@
 
     <link rel='stylesheet' type='text/css' href='stylesheet/jquery.mobile-1.2.0.min.css' />
     <link rel='stylesheet' type='text/css' href='stylesheet/bike_me.css'>
+    <link rel='stylesheet' type='text/css' href='stylesheet/map.css'>
 
     <script type='text/javascript' src='phonegap.js'></script>
     <script type='text/javascript'
@@ -61,6 +62,7 @@
         <h1><img src="images/bikeme_header_small.png"></h1>
       </div>
       <div data-role='content'>
+        <div id="routesIndex" class="mapInfo routeIndex">Of</div>
         <div id='googleMap'></div>
         <div id="previousRoute" data-role="button" data-inline="true" class="routeButton hide">
           <img src="images/path_arrow_left.png">
@@ -69,7 +71,7 @@
           <img src="images/path_arrow_right.png">
         </div>
       </div>
-      <div data-role='footer' data-position='fixed' id="routeInfo">
+      <div data-role='footer' data-position='fixed' id="routeInfo" class="mapInfo">
         <span id="walkingDistance" class="routeInfo seperator">0.2 km</span>
         <span id="cyclingDistance" class="routeInfo seperator">2.1 km</span>
         <span id="totalTime" class="routeInfo">22 min</span>
