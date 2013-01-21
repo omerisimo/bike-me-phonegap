@@ -241,7 +241,7 @@ bikeMe.Views.Map.prototype = {
       this.$previousRouteButton.addClass('hide');
     }
 
-    if (this.currentRouteIndex < this.routes.length &&  this.currentRouteIndex < 8) {
+    if (this.currentRouteIndex < this.routes.length-1 &&  this.currentRouteIndex < 8) {
       this.$nextRouteButton.removeClass('hide');
     } else {
       this.$nextRouteButton.addClass('hide');
