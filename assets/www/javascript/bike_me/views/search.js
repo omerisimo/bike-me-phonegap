@@ -23,7 +23,8 @@ bikeMe.Views.Search.prototype = {
   },
 
   search: function () {
-    this.enableAutoCompleteForm();
+    // Disable until we fix the bug of a popup window
+    //this.enableAutoCompleteForm();
 
     var from = this.$from.val();
     var to   = this.$to.val();
