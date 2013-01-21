@@ -29,6 +29,10 @@ body {
     background: #e2e2e3;
 }
 
+.ui-page {
+  z-index: -2;
+}
+
 #location-button {
     /*position: absolute;*/
     position: relative;
