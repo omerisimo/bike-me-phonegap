@@ -43,6 +43,7 @@ bikeMe.Models.Location.prototype = {
       type     : 'GET',
       dataType : 'json',
       data     : data,
+      complete : this.afterCompleteFetching,
       success  : this.onFetchCoordinatesSuccess
     });
   },
@@ -55,7 +56,28 @@ bikeMe.Models.Location.prototype = {
 
     this.found = true;
 
-    radio('locationFound').broadcast();
+  },
+  
+  afterCompleteFetching: function (jqXHR, textStatus) {
+    if (!_.isUndefined(jqXHR)) {
+      var json_result = JSON.parse(jqXHR.responseText);
+      if (json_result["status"] === "OK") {
+        var location_type = json_result["results"][0]["geometry"]["location_type"];
+
+        if (location_type === "APPROXIMATE") {
+          $.mobile.loading('hide');
+          var msg = "The address was not found.";
+          if (navigator.notification) {
+            navigator.notification.alert(msg, null, "Oh Noes!");
+          } else {
+            alert(msg);
+          }
+        }
+        else {
+          radio('locationFound').broadcast();
+        }
+      }
+    }
   },
 
   currentCoordinates: function () {
