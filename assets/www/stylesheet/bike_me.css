@@ -176,3 +176,15 @@ body {
     top: 25%;
     left: 3%;
 }
+
+/* spinner icon */
+.ui-icon-loading {
+/*    background: url(images/ajax-loader.gif);
+    background-size: 46px 46px;*/
+}
+
+.ui-loading .ui-loader{
+/*  color: #C2E;
+  background: #C5E2D4;*/
+
+}
