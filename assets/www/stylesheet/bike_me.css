@@ -30,7 +30,7 @@ body {
 }
 
 .ui-page {
-  z-index: -2;
+  z-index: 2;
 }
 
 #location-button {
