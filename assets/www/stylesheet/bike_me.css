@@ -26,7 +26,7 @@ body {
 
 /* overriding jquery-mobile background color*/
 .ui-body-c, .ui-overlay-c {
-    background: #e2e2e3;
+    background: #dbdbdd;
 }
 
 .ui-page {
@@ -59,7 +59,7 @@ body {
   position: fixed;
   bottom: 0;
   height: 194px;
-  background: #e2e2e3 url(../images/search_image_small.png) center;
+  background: #dbdbdd url(../images/search_image_small.png) center;
   border: none;
 }
 
