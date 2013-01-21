@@ -18,9 +18,11 @@ body {
 
 #search-box {
     margin-top: 10%;
+    top: 0%;
+    position: static;
 }
 
-.ui-field-contain{
+.ui-field-contain {
     text-align: center;
 }
 
@@ -47,7 +49,7 @@ body {
 
 #search-image {
   z-index: -1;
-  position: fixed;
+  position: static;
   bottom: 0;
   height: 194px;
   background: #dbdbdd url(../images/search_image_small.png) center;
