@@ -8,9 +8,14 @@
 }
 
 .routeButton {
+    z-index: 4;
+    background: none;
     position: absolute;
     bottom: 20%;
     margin: 0;
+    border:0px  transparent;
+    box-shadow: 0 0 0 0 transparent;
+    border-radius: 0 0 0 0;
 }
 
 #previousRoute {
@@ -23,6 +28,8 @@
 
 .routeButton span {
     padding: 0;
+    border:0px solid transparent;
+    border-radius: 0 0 0 0;
 }
 
 
@@ -63,6 +70,7 @@
 }
 
 #routesIndex {
+  z-index: 4;
   background: #4D4D4D;
   color: #E6E6E6;
   position: relative;
