@@ -5,6 +5,7 @@
 
     <link rel='stylesheet' type='text/css' href='stylesheet/jquery.mobile-1.2.0.min.css' />
     <link rel='stylesheet' type='text/css' href='stylesheet/bike_me.css'>
+    <link rel='stylesheet' type='text/css' href='stylesheet/map.css'>
 
     <!--  <script type='text/javascript' src='phonegap.js'></script> -->
     <script type='text/javascript'
@@ -29,26 +30,30 @@
     <icon src="images/search_navigate_icon.png" />
   </head>
   <body>
-    <div data-role='page' id='search'>
+    <div data-role='page'>
       <div data-theme='a' data-role='header' data-position='fixed' class="header">
         <h1><img src="images/bikeme_header_small.png"></h1>
       </div>
       <div id='search-box' data-role='content'>
-        <span>
-          <div data-role='fieldcontain'>
-            <input name='from' id='from' placeholder='From' value='Current Location' type='text' />
-          </div>
-        </span>
-        <span>
-          <div data-role='fieldcontain'>
-            <input name='to' id='to' placeholder='To: (e.g. Rothchild 10)' value='' type='text' />
-          </div>
-        </span>
-        <span>
-          <div data-role='fieldcontain'>
-            <input id='search-button' type='submit' data-theme='b' data-transition='none' data-corners='false' value='Go' />
-          </div>
-        </span>
+        <form id='search' autocomplete='on'>
+          <span>
+            <div data-role='fieldcontain'>
+              <input name='from' id='from' placeholder='From:' value='Current Location' type='text' class='current-location_text-input'/>
+            </div>
+          </span>
+          <span>
+            <div data-role='fieldcontain'>
+              <input name='to' id='to' placeholder='To: (e.g. Rothchild 10)' value='' type='text' />
+            </div>
+          </span>
+          <span>
+            <div data-role='fieldcontain'>
+              <input id='search-button' type='submit' data-theme='b' data-transition='none' data-corners='false' value='Go' />
+            </div>
+          </span>
+        </form>
+        <!--This iframe is a hack to enable autocomplete history of the form above. (http://stackoverflow.com/questions/8400269/browser-native-autocomplete-for-ajaxed-forms) -->
+        <iframe id="iframe-for_autocomplete" src="" class="hide" style="width: 0px; height:0px;"></iframe>
       </div>
       <div id='search-image' data-theme='a' data-role="footer" data-position="fixed" class="footer">
         &nbsp;
@@ -61,6 +66,7 @@
         <h1><img src="images/bikeme_header_small.png"></h1>
       </div>
       <div data-role='content'>
+        <div id="routesIndex" class="mapInfo routeIndex">Of</div>
         <div id='googleMap'></div>
         <div id="previousRoute" data-role="button" data-inline="true" class="routeButton hide">
           <img src="images/path_arrow_left.png">
@@ -69,7 +75,7 @@
           <img src="images/path_arrow_right.png">
         </div>
       </div>
-      <div data-role='footer' data-position='fixed' id="routeInfo">
+      <div data-role='footer' data-position='fixed' id="routeInfo" class="mapInfo">
         <span id="walkingDistance" class="routeInfo seperator">0.2 km</span>
         <span id="cyclingDistance" class="routeInfo seperator">2.1 km</span>
         <span id="totalTime" class="routeInfo">22 min</span>

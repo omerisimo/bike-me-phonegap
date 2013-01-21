@@ -1,0 +1,219 @@
+#googleMap {
+    position:absolute;
+    width:100%;
+    height: 100%;
+    left: 0%;
+    top: 0%;
+    z-index: 1;
+}
+
+.routeButton {
+    position: absolute;
+    bottom: 20%;
+    margin: 0;
+}
+
+#previousRoute {
+    left: 0%;
+}
+
+#nextRoute {
+    right: 0%;
+}
+
+.routeButton span {
+    padding: 0;
+}
+
+
+.infoWindowBackground {
+    background: url(../images/path_speach_bubble.png) 100% 0% no-repeat;
+    opacity: 0.85;
+}
+
+.infoWondowText {
+    text-shadow: 0 -1px 0 #000;
+    color: #fff;
+    font-family: Helvetica Neue, Helvetica, arial;
+    font-size: 11px;
+    line-height: 12px;
+    padding: 3px 3px 7px 3px;
+    font-weight: normal;
+    max-width: 150px;
+    /*background: url(../images/arrow.png) 95% 50% no-repeat;*/
+}
+
+.infowWindowHeader {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.mapInfo {
+  z-index: 4;
+  background: #EDEDED;
+  opacity: 0.9;
+  border-color: ;
+  border: 1px solid rgb(202, 202, 202);
+  height: 30px;
+  max-height: 35px;
+  font-family: Helvetica Neue, Helvetica, arial;
+  color: #5A595A;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+#routesIndex {
+  background: #4D4D4D;
+  color: #E6E6E6;
+  position: relative;
+  width: 30%;
+  left: 35%;
+  border-radius: 8px 8px 8px 8px;
+  text-align: center;
+  padding-top: 10px;
+  font-size: 15px;
+  opacity: 0.8;
+}
+
+.routeIndex:before {
+  position: absolute;
+  left: 5%;
+  top: 7.5px;
+}
+
+.routeIndex:after {
+  position: absolute;
+  right: 5%;
+  top: 7.5px;
+}
+
+#routeInfo {
+    border-radius: 8px 8px 0 0;
+    left: 5%;
+    width: 90%;
+    height: 35px;
+    max-height: 35px;
+    bottom: 0%;
+}
+
+
+#routeInfo span.routeInfo {
+    position: relative;
+    float: left;
+    text-align: center;
+    width: 28%;
+    padding-top: 10px;
+    padding-left: 5%;
+}
+
+#routeInfo span.routeInfo#cyclingDistance {
+    padding-left: 6%;
+}
+
+#routeInfo span.seperator {
+    overflow: hidden;
+    height: 70%;
+}
+
+#routeInfo span.seperator:after {
+    content: url(../images/path_tab_seperator.png);
+    position: absolute;
+    right: 0.5%;
+    top: 0%;
+}
+
+#walkingDistance:before {
+    content: url(../images/path_feet_icon.png) 100% 0% no-repeat;
+    display: block;
+    position: absolute;
+    top: 20%;
+    left: 3%;
+}
+
+#cyclingDistance:before {
+    content: url(../images/path_bike_icon.png) 100% 0% no-repeat;
+    display: block;
+    position: absolute;
+    top: 0%;
+    left: 3%;
+}
+
+#totalTime:before {
+    content: url(../images/path_clock_icon.png) 100% 0% no-repeat;
+    display: block;
+    position: absolute;
+    top: 25%;
+    left: 3%;
+}
+
+.routeOne:after {
+  content: url(../images/path_1_icon.png);
+}
+
+.routeTwo:after {
+  content: url(../images/path_2_icon.png);
+}
+
+.routeThree:after {
+  content: url(../images/path_3_icon.png);
+}
+
+.routeFour:after {
+  content: url(../images/path_4_icon.png);
+}
+
+.routeFive:after {
+  content: url(../images/path_5_icon.png);
+}
+
+.routeSix:after {
+  content: url(../images/path_6_icon.png);
+}
+
+.routeSeven:after {
+  content: url(../images/path_7_icon.png);
+}
+
+.routeEight:after {
+  content: url(../images/path_8_icon.png);
+}
+
+.routeNine:after {
+  content: url(../images/path_9_icon.png);
+}
+
+.routeNine:before {
+  content: url(../images/path_9_icon.png);
+}
+
+.routeEight:before {
+  content: url(../images/path_8_icon.png);
+}
+
+.routeSeven:before {
+  content: url(../images/path_7_icon.png);
+}
+
+.routeSix:before {
+  content: url(../images/path_6_icon.png);
+}
+
+.routeFive:before {
+  content: url(../images/path_5_icon.png);
+}
+
+.routeFour:before {
+  content: url(../images/path_4_icon.png);
+}
+
+.routeThree:before {
+  content: url(../images/path_3_icon.png);
+}
+
+.routeTwo:before {
+  content: url(../images/path_2_icon.png);
+}
+
+.routeOne:before {
+  content: url(../images/path_1_icon.png);
+}

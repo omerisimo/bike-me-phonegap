@@ -6,7 +6,7 @@ bikeMe.Models.Route = function (routeData) {
 
 bikeMe.Models.Route.prototype = {
   walkingSpeed: 60.0/5000.0,
-  cyclingSpeed: (60.0/5000.0)/3,
+  cyclingSpeed: (60.0/17000.0),
 
   initialize: function (routeData) {
     this.source = routeData.source;
