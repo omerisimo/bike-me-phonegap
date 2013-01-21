@@ -144,7 +144,7 @@ bikeMe.Views.Map.prototype = {
       if (status == google.maps.DirectionsStatus.OK) {
         bikeMe.mapView.directionsRenderer.setDirections(result);
         // In case this is a walking route (no stations to render)
-        if (result.routes[0].legs) {
+        if (result.routes[0].legs == 1) {
           alert('Take a walk!!!')
           bikeMe.mapView.renderMarkers(route,
                               result.routes[0].legs[0].start_location,
