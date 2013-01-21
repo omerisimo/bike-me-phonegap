@@ -8,14 +8,16 @@
 }
 
 .routeButton {
-    z-index: 4;
+    z-index: 1;
     background: none;
     position: absolute;
     bottom: 20%;
     margin: 0;
     border:0px  transparent;
     box-shadow: 0 0 0 0 transparent;
+    -webkit-box-shadow: 0px 0px 0px 0px transparent;
     border-radius: 0 0 0 0;
+    padding: 0;
 }
 
 #previousRoute {
@@ -32,7 +34,6 @@
     border-radius: 0 0 0 0;
 }
 
-
 .infoWindowBackground {
     background: url(../images/path_speach_bubble.png) 100% 0% no-repeat;
     opacity: 0.85;
@@ -47,7 +48,6 @@
     padding: 3px 3px 7px 3px;
     font-weight: normal;
     max-width: 150px;
-    /*background: url(../images/arrow.png) 95% 50% no-repeat;*/
 }
 
 .infowWindowHeader {
