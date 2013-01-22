@@ -21,6 +21,14 @@ bikeMe = {
 
   onDeviceReady: function() {
     navigator.splashscreen.hide();
+  },
+
+  alert: function (message, title) {
+    if (navigator.notification) {
+      navigator.notification.alert(message, null, title);
+    } else {
+      alert(message);
+    }
   }
 };
 

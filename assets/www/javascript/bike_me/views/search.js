@@ -47,12 +47,7 @@ bikeMe.Views.Search.prototype = {
 
   onRoutingError: function () {
     $.mobile.loading('hide');
-    var msg = "No reasonable route was found.";
-    if (navigator.notification) {
-      navigator.notification.alert(msg, null, "Oh Noes!");
-    } else {
-      alert(msg);
-    }
+    bikeMe.alert("No reasonable route was found.", "Oh Noes!");
   },
 
   unsubscribePreviousSearchModel: function () {

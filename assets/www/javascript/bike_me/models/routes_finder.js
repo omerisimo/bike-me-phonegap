@@ -141,7 +141,7 @@ bikeMe.Models.RoutesFinder.prototype = {
       }));
 
       // If the walking route is faster, than this is the only ressult
-      if (walkingRoute.getRouteTime() <= this.sortedRoutes[0].routeTime) {
+      if (this.sortedRoutes.length > 0 && walkingRoute.getRouteTime() <= this.sortedRoutes[0].routeTime) {
         this.sortedRoutes = [walkingRoute];
       }
 

@@ -16,6 +16,7 @@ bikeMe.Models.Location.prototype = {
 
     this.onFetchCoordinatesSuccess   = _.bind(this.onFetchCoordinatesSuccess, this);
     this.onCurrentCoordinatesSuccess = _.bind(this.onCurrentCoordinatesSuccess, this);
+    this.afterCompleteFetching = _.bind(this.afterCompleteFetching, this);
   },
 
   locate: function () {
@@ -50,12 +51,19 @@ bikeMe.Models.Location.prototype = {
 
   onFetchCoordinatesSuccess: function (data) {
     var result = _.first(data.results);
+    if (data.results.length > 1)
+    {
+      var isCorrectAddress = confirm("Is this the address you were looking for?\n"+ result.formatted_address);
+      if (isCorrectAddress==false){
+        this.found = false;
+        return;
+      }
+    }
 
     this.longitude = result.geometry.location.lng;
     this.latitude  = result.geometry.location.lat;
 
     this.found = true;
-
   },
   
   afterCompleteFetching: function (jqXHR, textStatus) {
@@ -64,14 +72,9 @@ bikeMe.Models.Location.prototype = {
       if (json_result["status"] === "OK") {
         var location_type = json_result["results"][0]["geometry"]["location_type"];
 
-        if (location_type === "APPROXIMATE") {
+        if (location_type === "APPROXIMATE" || !this.found) {
           $.mobile.loading('hide');
-          var msg = "The address was not found.";
-          if (navigator.notification) {
-            navigator.notification.alert(msg, null, "Oh Noes!");
-          } else {
-            alert(msg);
-          }
+          bikeMe.alert("The address was not found.","Oh Noes!");
         }
         else {
           radio('locationFound').broadcast();
