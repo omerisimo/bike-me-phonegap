@@ -5,8 +5,8 @@ bikeMe.Models.Route = function (routeData) {
 };
 
 bikeMe.Models.Route.prototype = {
-  walkingSpeed: 60.0/5000.0,
-  cyclingSpeed: (60.0/17000.0),
+  walkingSpeed: 3600.0/5000.0,
+  cyclingSpeed: (3600.0/17000.0),
 
   initialize: function (routeData) {
     this.source = routeData.source;
@@ -20,24 +20,35 @@ bikeMe.Models.Route.prototype = {
       walkingDistanceFromOrigin    : routeData.walkingDistance1,
       walkingDistanceToDestination : routeData.walkingDistance2
     };
+    this.routeDurations = {
+      cyclingDuration              : routeData.cyclingDuration,
+      walkingDurationFromOrigin    : routeData.walkingDuration1,
+      walkingDurationToDestination : routeData.walkingDuration2
+    };
   },
 
   getRouteTime: function () {
     if (_.isUndefined(this.routeTime)) {
 
-      var cyclingTime = this.calculateTime(
-        this.routeDistances.cyclingDistance, 'cycling'
-      );
+      if (_.isUndefined(this.routeDurations.cyclingDuration)) {
+        this.routeDurations.cyclingDuration = this.calculateTime(
+          this.routeDistances.cyclingDistance, 'cycling'
+        );
+      }
 
-      var walkingTimeFromOrigin = this.calculateTime(
-        this.routeDistances.walkingDistanceFromOrigin
-      );
+      if (_.isUndefined(this.routeDurations.walkingDurationFromOrigin)) {
+        this.routeDurations.walkingDurationFromOrigin = this.calculateTime(
+          this.routeDistances.walkingDistanceFromOrigin
+        );
+      }
 
-      var walkingTimeToDestination = this.calculateTime(
-        this.routeDistances.walkingDistanceToDestination
-      );
+      if (_.isUndefined(this.routeDurations.walkingDurationToDestination)) {
+        this.routeDurations.walkingDurationToDestination = this.calculateTime(
+          this.routeDistances.walkingDistanceToDestination
+        );
+      }
 
-      this.routeTime = walkingTimeFromOrigin + cyclingTime + walkingTimeToDestination;
+      this.routeTime = (this.routeDurations.walkingDurationFromOrigin + this.routeDurations.cyclingDuration + this.routeDurations.walkingDurationToDestination)/60.0;
     }
 
     return this.routeTime;

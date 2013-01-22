@@ -65,16 +65,16 @@ bikeMe.Models.RoutesFinder.prototype = {
 
   calculateDistance: function (sourceLocations, targetLocations, type) {
     function onSuccess (data) {
-      var distanceMeters = [];
+      var distanceMetersAndDuration = [];
       var jsonResult = data;
       _.each(jsonResult.rows, function(sourceData){
-        var distances = [];
+        var results = [];
         _.each(sourceData.elements, function(targetData){
-          distances.push(targetData.distance.value);
+          results.push([targetData.distance.value,targetData.duration.value]);
         });
-        distanceMeters.push(distances);
+        distanceMetersAndDuration.push(results);
       });
-      radio('distanceMetersSuccess').broadcast(distanceMeters, type);
+      radio('distanceMetersSuccess').broadcast(distanceMetersAndDuration, type);
     }
 
     function onError () {
@@ -113,16 +113,16 @@ bikeMe.Models.RoutesFinder.prototype = {
     });
   },
 
-  onDistanceMetersSuccess: function(distanceMeters, type) {
+  onDistanceMetersSuccess: function(distanceMetersAndDuration, type) {
     switch (type) {
       case 'originToStation':
-        this.originToStation = distanceMeters;
+        this.originToStation = distanceMetersAndDuration;
         break;
       case 'stationToStation':
-        this.stationToStation = distanceMeters;
+        this.stationToStation = distanceMetersAndDuration;
         break;
       case 'stationToDestination':
-        this.stationToTarget = distanceMeters;
+        this.stationToTarget = distanceMetersAndDuration;
         break;
       default:
         console.log('Something wrong happened');
@@ -161,9 +161,12 @@ bikeMe.Models.RoutesFinder.prototype = {
           sourceStation     : this.sourceStations[i],
           targetStation     : this.targetStations[j],
           target            : this.destinationLocation,
-          walkingDistance1  : originToStationsDistances[0][i],
-          cyclingDistance   : stationsToStationsDistances[i][j],
-          walkingDistance2  : stationsToTargetDistances[j][0]
+          walkingDistance1  : originToStationsDistances[0][i][0],
+          cyclingDistance   : stationsToStationsDistances[i][j][0],
+          walkingDistance2  : stationsToTargetDistances[j][0][0],
+          cyclingDuration   : stationsToStationsDistances[i][j][1]/3.0,
+          walkingDuration1  : originToStationsDistances[0][i][1],
+          walkingDuration2  : stationsToTargetDistances[j][0][1]
         }
         ));
       }
@@ -174,9 +177,12 @@ bikeMe.Models.RoutesFinder.prototype = {
       {
       source            : this.originLocation,
       target            : this.destinationLocation,
-      walkingDistance1  : originToStationsDistances[0][originToStationsDistances[0].length-1],
+      walkingDistance1  : originToStationsDistances[0][originToStationsDistances[0].length-1][0],
       cyclingDistance   : 0,
-      walkingDistance2  : 0
+      walkingDistance2  : 0,
+      cyclingDuration  :  0,
+      walkingDuration1  : originToStationsDistances[0][originToStationsDistances[0].length-1][1],
+      walkingDuration2  : 0
     }
     ));
 
