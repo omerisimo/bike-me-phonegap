@@ -34,7 +34,7 @@ bikeMe.Models.Station.findNearestStations = function (options) {
     var nearestStations = _.map(stationResults, function (stationResult) {
 
       var station = new bikeMe.Models.Station({
-        address             : $(stationResult).attr('Station_Name'),
+        address             : $(stationResult).attr('Eng_Station_Name'),
         availableBikes      : $(stationResult).attr('NumOfAvailableBikes'),
         availableDocks      : $(stationResult).attr('NumOfAvailableDocks'),
         distanceFromStation : $(stationResult).attr('DistanceFromStationInMeters'),
