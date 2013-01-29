@@ -19,6 +19,9 @@ bikeMe.Views.Search.prototype = {
     this.setCurrentLocationText = _.bind(this.setCurrentLocationText, this);
     this.$from.blur(this.setCurrentLocationText);
 
+    // When clicking the 'clear text' button link, cleasr the 'Current Location' styling
+    this.$from.find('+a').on('touch', this.clearCurrentLocationText);
+
     radio('searchError').subscribe([this.onRoutingError, this]);
   },
 
@@ -69,14 +72,16 @@ bikeMe.Views.Search.prototype = {
   clearCurrentLocationText: function () {
     if (this.$from.val() == bikeMe.Models.Location.CURRENT_LOCATION) {
       this.$from.val('');
-      this.$from.removeClass('current-location_text-input');
     }
+    this.$from.removeClass('current-location_text-input');
+    return false;
   },
 
   setCurrentLocationText: function () {
-    if (this.$from.val().trim() == '') {
+    if (this.$from.val().trim() == '' || this.$from.val() == bikeMe.Models.Location.CURRENT_LOCATION) {
       this.$from.val(bikeMe.Models.Location.CURRENT_LOCATION);
       this.$from.addClass('current-location_text-input');
     }
+    return false;
   },
 };

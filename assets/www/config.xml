@@ -13,8 +13,6 @@
         Awesome Klarna BikeMe! Team
     </author>
 
-    <feature name="http://api.phonegap.com/1.0/device" />
-
     <preference name="phonegap-version" value="2.1.0" />
     <preference name="orientation"      value="portrait" />
     <preference name="target-device"    value="handset" />
@@ -45,4 +43,6 @@
     <access origin="https://google-maps-utility-library-v3.googlecode.com"/>
     
     <feature name="http://api.phonegap.com/1.0/geolocation"/>
+    <feature name="http://api.phonegap.com/1.0/network"/>
+    <feature name="http://api.phonegap.com/1.0/device" />
 </widget>

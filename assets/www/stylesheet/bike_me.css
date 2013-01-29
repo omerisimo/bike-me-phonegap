@@ -8,10 +8,6 @@ body {
     padding : 0;
 }
 
-#from, #to {
-    background: #ffffff;
-}
-
 #search {
   z-index: 1;
 }
@@ -79,4 +75,16 @@ body {
 .current-location_text-input {
   color: #4674A2;
   font-weight: bold;
+}
+
+/* Remove the search icon in the '#from' '#to' search inputmfields*/
+.ui-icon-searchfield::after {
+    display: none !important;
+}
+/* Style the '#from', '#to' input fields to look like normal text input instead of search input */
+.ui-icon-searchfield {
+  padding: 0;
+  background: #ffffff;
+  -webkit-border-radius: .6em;
+  border-radius: .6em;
 }
