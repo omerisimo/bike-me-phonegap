@@ -31,6 +31,10 @@ bikeMe.Views.Search.prototype = {
 
     var from = this.$from.val();
     var to   = this.$to.val();
+    if (from.trim() == '' || to.trim() == '') {
+      bikeMe.alert("Please fill both 'from', and 'to' addresses.", "Sorry.");
+      return false;
+    }
 
     this.unsubscribePreviousSearchModel();
 
