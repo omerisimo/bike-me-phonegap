@@ -88,11 +88,6 @@ bikeMe.Views.Map.prototype = {
 
       var onMapClicked = _.bind(this.closeInfoWindow, this);
       google.maps.event.addListener(this.googleMap, 'click', onMapClicked);
-
-      // This is a hack to prevent the map info header/footer and other elements to disappear when clicking the #googleMap div
-      $('#googleMap').bind('tap', function () {
-        return false;
-      });
     }
 
     this.googleMap.setCenter(this.options.center);
@@ -104,10 +99,10 @@ bikeMe.Views.Map.prototype = {
   options: {
     center           : new google.maps.LatLng(32.066181,34.77761),
     disableDefaultUI : true,
-    zoomControl      : false, //currently zoom control does not work, because of the 'tap' bing of the #googleMap div
+    zoomControl      : true,
     zoomControlOptions: { position: google.maps.ControlPosition.LEFT_CENTER },
     mapTypeId        : google.maps.MapTypeId.ROADMAP,
-    zoom             : 15,
+    zoom             : 15
   },
 
   onSearchSuccess: function (routes) {
