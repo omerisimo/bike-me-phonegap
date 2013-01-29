@@ -116,6 +116,7 @@ bikeMe.Views.Map.prototype = {
     this.options.center = new google.maps.LatLng(routes[0].source.latitude, routes[0].source.longitude);
     this.show();
     this.renderRoute(routes[0]);
+    return false;
   },
 
   show: function () {
@@ -149,9 +150,10 @@ bikeMe.Views.Map.prototype = {
     this.googleDirectionsService.route(request, function(result, status) {
       if (status == google.maps.DirectionsStatus.OK) {
         bikeMe.mapView.directionsRenderer.setDirections(result);
+        bikeMe.mapView.directionsRenderer.setMap(bikeMe.mapView.googleMap);
         // In case this is a walking route (no stations to render)
-        if (result.routes[0].legs == 1) {
-          alert('Take a walk!!!')
+        if (result.routes[0].legs.length == 1) {
+          bikeMe.alert('Take a walk!!!', "Yehh...")
           bikeMe.mapView.renderMarkers(route,
                               result.routes[0].legs[0].start_location,
                               result.routes[0].legs[0].end_location,
@@ -165,6 +167,7 @@ bikeMe.Views.Map.prototype = {
                               result.routes[0].legs[2].start_location);
         }
       }
+      return false;
     });
 
     this.updateRouteInfo(route);
@@ -204,6 +207,7 @@ bikeMe.Views.Map.prototype = {
     var onMarkerClicked = function (event) {
       bikeMe.mapView.infoWindow.setContent('<div class="infoWondowText">'+infoContent+'</div>');
       bikeMe.mapView.infoWindow.open(bikeMe.mapView.googleMap,this);
+      return false;
     }
     onMarkerClicked = _.bind(onMarkerClicked, marker);
 
@@ -226,6 +230,7 @@ bikeMe.Views.Map.prototype = {
     }
     this.mapMarkers = [];
     this.closeInfoWindow();
+    this.directionsRenderer.setMap(null);
   },
 
   closeInfoWindow: function () {
@@ -260,10 +265,12 @@ bikeMe.Views.Map.prototype = {
   nextRoute: function () {
     this.currentRouteIndex = this.currentRouteIndex + 1;
     this.renderRoute(this.routes[this.currentRouteIndex]);
+    return false;
   },
 
   previousRoute: function () {
     this.currentRouteIndex = this.currentRouteIndex - 1;
     this.renderRoute(this.routes[this.currentRouteIndex]);
+    return false;
   }
 };
