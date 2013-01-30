@@ -33,7 +33,6 @@ bikeMe.Views.Map.prototype = {
                               suppressInfoWindows : true
                             };
       this.directionsRenderer = new google.maps.DirectionsRenderer(rendererOptions);
-      this.directionsRenderer.setMap(this.googleMap);
 
       this.stationIcons = { avaliableStation:         new google.maps.MarkerImage("images/path_bike_spot_icon_green.png",
                                                                 new google.maps.Size(25, 39),
@@ -86,8 +85,8 @@ bikeMe.Views.Map.prototype = {
                 arrowStyle: 0
               });
 
-      var onMapClicked = _.bind(this.closeInfoWindow, this);
-      google.maps.event.addListener(this.googleMap, 'click', onMapClicked);
+      this.closeInfoWindow = _.bind(this.closeInfoWindow, this);
+      google.maps.event.addListener(this.googleMap, 'click', this.closeInfoWindow);
     }
 
     this.googleMap.setCenter(this.options.center);
@@ -202,6 +201,7 @@ bikeMe.Views.Map.prototype = {
     var onMarkerClicked = function (event) {
       bikeMe.mapView.infoWindow.setContent('<div class="infoWondowText">'+infoContent+'</div>');
       bikeMe.mapView.infoWindow.open(bikeMe.mapView.googleMap,this);
+      $('.infoWindowBackground').click(bikeMe.mapView.closeInfoWindow);
       return false;
     }
     onMarkerClicked = _.bind(onMarkerClicked, marker);
@@ -226,6 +226,7 @@ bikeMe.Views.Map.prototype = {
     this.mapMarkers = [];
     this.closeInfoWindow();
     this.directionsRenderer.setMap(null);
+    return false;
   },
 
   closeInfoWindow: function () {
