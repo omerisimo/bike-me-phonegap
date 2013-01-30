@@ -170,20 +170,20 @@ bikeMe.Views.Map.prototype = {
   },
 
   renderMarkers: function (route, start, end, startStation, endStation){
-    this.displayMarker(start, "Origin", this.originIcon, this.originShadow, route.source.address);
-    this.displayMarker(end, "Destiantion", this.destinationIcon, this.destinationShadow, route.target.address);
+    this.displayMarker(start, "Origin", this.originIcon, this.originShadow, route.source.address, 0);
+    this.displayMarker(end, "Destiantion", this.destinationIcon, this.destinationShadow, route.target.address, 0);
 
     if (!_.isUndefined(route.sourceStation) && !_.isUndefined(route.targetStation)) {
       this.displayMarker(startStation,
                           "Origin Station",
                           this.getStationIcon(route.sourceStation.availableBikes),
                           this.stationShadow,
-                          this.stationInfoHtml(route.sourceStation));
+                          this.stationInfoHtml(route.sourceStation), 1);
       this.displayMarker(endStation,
                           "Destiantion Station",
                           this.getStationIcon(route.targetStation.availableDocks),
                           this.stationShadow,
-                          this.stationInfoHtml(route.targetStation));
+                          this.stationInfoHtml(route.targetStation), 1);
     }
   },
 
@@ -195,8 +195,8 @@ bikeMe.Views.Map.prototype = {
     <div>Available docks: "+station.availableDocks+"</div>"
   },
 
-  displayMarker: function (position, title, icon, shadow, infoContent) {
-    var marker = new google.maps.Marker({map: this.googleMap, position: position, title: title, icon: icon, shadow: shadow});
+  displayMarker: function (position, title, icon, shadow, infoContent, zIndex) {
+    var marker = new google.maps.Marker({map: this.googleMap, position: position, title: title, icon: icon, shadow: shadow, zIndex: zIndex});
     this.mapMarkers.push(marker);
 
     var onMarkerClicked = function (event) {
