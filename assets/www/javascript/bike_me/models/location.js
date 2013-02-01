@@ -84,7 +84,7 @@ bikeMe.Models.Location.prototype = {
   },
 
   currentCoordinates: function () {
-    navigator.geolocation.getCurrentPosition(this.onCurrentCoordinatesSuccess, function () {});
+    navigator.geolocation.getCurrentPosition(this.onCurrentCoordinatesSuccess, this.onCurrentCoordinatesFailure);
   },
 
   onCurrentCoordinatesSuccess: function (position) {
@@ -94,6 +94,11 @@ bikeMe.Models.Location.prototype = {
     this.found = true;
 
     radio('locationFound').broadcast();
+  },
+
+  onCurrentCoordinatesFailure: function () {
+    $.mobile.loading('hide');
+    bikeMe.alert("The current location was not found.","Oh Noes!");
   },
 
   toString: function () {
