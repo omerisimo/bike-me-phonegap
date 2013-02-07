@@ -29,10 +29,9 @@ bikeMe.Views.Map.prototype = {
     if (_.isUndefined(this.googleMap)){
       this.googleMap = new google.maps.Map(this.$googleMap[0], this.options);
       this.googleDirectionsService = new google.maps.DirectionsService();
-      var rendererOptions = { suppressMarkers     : true,
+      this.rendererOptions = { suppressMarkers     : true,
                               suppressInfoWindows : true
                             };
-      this.directionsRenderer = new google.maps.DirectionsRenderer(rendererOptions);
 
       this.stationIcons = { avaliableStation:         new google.maps.MarkerImage("images/path_bike_spot_icon_green.png",
                                                                 new google.maps.Size(25, 39),
@@ -69,6 +68,7 @@ bikeMe.Views.Map.prototype = {
                                                         new google.maps.Point(0, 0),
                                                         new google.maps.Point(4, 43));
       this.mapMarkers = [];
+      this.directionsRenderers = [];
       this.infoWindow = new InfoBubble({
                 map: this.googleMap,
                 shadowStyle: 1,
@@ -108,20 +108,14 @@ bikeMe.Views.Map.prototype = {
     this.currentRouteIndex = 0;
     this.routes = routes;
     this.options.center = new google.maps.LatLng(routes[0].source.latitude, routes[0].source.longitude);
-    this.show();
+    $.mobile.changePage(this.$el);
+    this.initializeGoogleMap();
     this.renderRoute(routes[0]);
     return false;
   },
 
-  show: function () {
-    $.mobile.changePage(this.$el);
-    this.initializeGoogleMap();
-    this.clearMarkers();
-  },
 
   renderRoute: function (route) {
-    this.clearMarkers();
-
     var start = new google.maps.LatLng(route.source.latitude, route.source.longitude);
     var end   = new google.maps.LatLng(route.target.latitude, route.target.longitude);
 
@@ -143,8 +137,10 @@ bikeMe.Views.Map.prototype = {
 
     this.googleDirectionsService.route(request, function(result, status) {
       if (status == google.maps.DirectionsStatus.OK) {
-        bikeMe.mapView.directionsRenderer.setDirections(result);
-        bikeMe.mapView.directionsRenderer.setMap(bikeMe.mapView.googleMap);
+        bikeMe.mapView.clearMarkers();
+        bikeMe.mapView.directionsRenderers[0] = new google.maps.DirectionsRenderer(bikeMe.mapView.rendererOptions);
+        bikeMe.mapView.directionsRenderers[0].setDirections(result);
+        bikeMe.mapView.directionsRenderers[0].setMap(bikeMe.mapView.googleMap);
         // In case this is a walking route (no stations to render)
         if (result.routes[0].legs.length == 1) {
           bikeMe.alert('Take a walk!!!', "Yehh...")
@@ -160,12 +156,11 @@ bikeMe.Views.Map.prototype = {
                               result.routes[0].legs[0].end_location,
                               result.routes[0].legs[2].start_location);
         }
+        bikeMe.mapView.updateRouteInfo(route);
+        bikeMe.mapView.showRouteButtons();
       }
       return false;
     });
-
-    this.updateRouteInfo(route);
-    this.showRouteButtons();
   },
 
   renderMarkers: function (route, start, end, startStation, endStation){
@@ -221,12 +216,20 @@ bikeMe.Views.Map.prototype = {
 
   clearMarkers: function () {
     for (var i = 0; i < this.mapMarkers.length; i++ ) {
+        this.mapMarkers[i].setVisible(false);
         this.mapMarkers[i].setMap(null);
+        google.maps.event.clearListeners(this.mapMarkers[i], 'click');
     }
-    this.mapMarkers = [];
+    this.mapMarkers.length = 0;
     this.closeInfoWindow();
-    this.directionsRenderer.setMap(null);
-    return false;
+    for (var i = 0; i < this.directionsRenderers.length; i++ ) {
+      this.directionsRenderers[i].setOptions({ suppressPolylines: true,
+                                                suppressMarkers     : true,
+                                                suppressInfoWindows : true });
+      this.directionsRenderers[i].setMap(null);
+    }
+
+    this.directionsRenderers.length = 0;
   },
 
   closeInfoWindow: function () {
