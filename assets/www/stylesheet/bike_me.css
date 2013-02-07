@@ -13,8 +13,7 @@ body {
 }
 
 #search-box {
-    margin-top: 10%;
-    top: 0%;
+    margin-top: 15%;
     position: static;
 }
 
@@ -38,9 +37,20 @@ body {
 }
 
 .header {
-    text-align:center;
-    background: url(../images/search_navigate_bg.png);
-    border-color: #B0AFAB;
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  background: url(../images/search_navigate_bg.png);
+  width: 100%;
+  text-align:center;
+  border: 1px solid #B0AFAB;
+  height: 47px;
+}
+
+.header h1 {
+  margin: 5px;
+  position: absolute;
+  width: 100%;
 }
 
 #search-image {
@@ -52,9 +62,9 @@ body {
   border: none;
 }
 
-#backButton {
-    position: absolute;
-    top: 13%;
+.headerButton {
+    float:left;
+    margin: 8px 0 0 2px;
 }
 
 .hide {
