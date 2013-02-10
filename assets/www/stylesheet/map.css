@@ -69,6 +69,21 @@
   font-size: 13px;
 }
 
+#directionsButton {
+  position: absolute;
+  z-index: 1;
+  background: #4D4D4D;
+  margin: 8px 8px 8px 8px;
+  padding: 4px;
+  top: 11.5%;
+  right: 3%;
+  height: 30px;
+  border-radius: 8px 8px 8px 8px;
+  opacity: 0.8;
+  border: none;
+}
+
+
 #routesIndex {
   background: #4D4D4D;
   color: #E6E6E6;
@@ -226,4 +241,19 @@
 
 .routeOne:before {
   content: url(../images/path_1_icon.png);
+}
+
+.ui-popup-container {
+  width: 80%;
+  padding: 4%;
+}
+
+#directionWrapper {
+  height: 300px;
+  overflow: scroll;
+  padding: 10px;
+}
+
+#directionWrapper div#scroller{
+  padding-bottom: 20px;
 }

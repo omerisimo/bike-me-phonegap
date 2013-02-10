@@ -14,6 +14,8 @@ bikeMe.Views.Map.prototype = {
     this.$previousRouteButton = $('#previousRoute');
     this.$nextRouteButton = $('#nextRoute');
     this.$routesIndexInfo = $('#routesIndex')
+    this.$routesInfoButton = $('#directionsButton');
+    this.popupScroll = new iScroll('directionWrapper');
 
     this.currentRouteIndex = 0;
     this.routes = [];
@@ -23,6 +25,8 @@ bikeMe.Views.Map.prototype = {
     this.$nextRouteButton.on('click', nextRoute);
     var previousRoute = _.bind(this.previousRoute, this);
     this.$previousRouteButton.on('click', previousRoute);
+    var routeInfoPopup = _.bind(this.routeInfoPopup, this);
+    this.$routesInfoButton.on('click', routeInfoPopup);
   },
 
   initializeGoogleMap: function () {
@@ -194,6 +198,15 @@ bikeMe.Views.Map.prototype = {
 
     this.$routesIndexInfo.removeClass();
     this.$routesIndexInfo.addClass('mapInfo routeIndex ' + this.routeIndexClasses[this.currentRouteIndex] + ' ' + this.routeIndexClasses[Math.min(this.routes.length,9)-1])
+  },
+
+  routeInfoPopup: function () {
+    this.directionsRenderer.setPanel($('#directionPopup div#scroller')[0]);
+    $( "#directionPopup" ).popup( "open" );
+    setTimeout(function () {
+    		bikeMe.mapView.popupScroll.refresh();
+    	}, 0);
+    return false;
   },
 
   nextRoute: function () {

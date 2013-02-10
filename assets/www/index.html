@@ -17,6 +17,7 @@
     <script type='text/javascript' src='javascript/plugins/underscore-min.js'></script>
     <script type='text/javascript' src='javascript/plugins/radio.min.js'></script>
     <script type='text/javascript' src='javascript/plugins/infobubble-compiled.js'></script>
+    <script type='text/javascript' src='javascript/plugins/iscroll.js'></script>
 
     <script type='text/javascript' src='javascript/bike_me/app.js'></script>
     <script type='text/javascript' src='javascript/bike_me/views/search.js'></script>
@@ -70,6 +71,7 @@
       <div data-role='content'>
         <div id='googleMap'></div>
         <div id="routesIndex" class="mapInfo routeIndex">Of</div>
+        <a href="#" data-role='button' data-theme="a" id="directionsButton" class="ui-btn ui-btn-up-a ui-shadow ui-btn-corner-all" ><img src="images/directions.png"></a>
         <div id="previousRoute" data-role="button" data-inline="true" class="routeButton hide">
           <img src="images/path_arrow_left.png">
         </div>
@@ -80,6 +82,12 @@
           <span id="walkingDistance" class="routeInfo seperator">0.2 km</span>
           <span id="cyclingDistance" class="routeInfo seperator">2.1 km</span>
           <span id="totalTime" class="routeInfo">22 min</span>
+        </div>
+        <div  id="directionPopup" data-role="popup" data-position-to="origin" data-theme="e" data-overlay-theme="a">
+          <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right ui-btn ui-btn-up-a ui-shadow ui-btn-corner-all ui-btn-icon-notext" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" title="Close"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Close</span><span class="ui-icon ui-icon-delete ui-icon-shadow">&nbsp;</span></span></a>
+          <div id="directionWrapper">
+          	<div id="scroller"></div>
+          </div>
         </div>
       </div>
     </div>
