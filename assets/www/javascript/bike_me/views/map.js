@@ -201,6 +201,12 @@ bikeMe.Views.Map.prototype = {
   },
 
   routeInfoPopup: function () {
+    // Set directions waypoints to be the route addresses
+    this.directionsRenderer.directions.routes[0].legs[0].start_address = this.routes[this.currentRouteIndex].source.address;
+    this.directionsRenderer.directions.routes[0].legs[0].end_address = this.routes[this.currentRouteIndex].sourceStation.location.address + ": Available bikes: " + this.routes[this.currentRouteIndex].sourceStation.availableBikes;
+    this.directionsRenderer.directions.routes[0].legs[1].end_address = this.routes[this.currentRouteIndex].targetStation.location.address + ": Available docks: " + this.routes[this.currentRouteIndex].targetStation.availableDocks;    
+    this.directionsRenderer.directions.routes[0].legs[2].end_address = this.routes[this.currentRouteIndex].target.address;
+
     this.directionsRenderer.setPanel($('#directionPopup div#scroller')[0]);
     $( "#directionPopup" ).popup( "open" );
     setTimeout(function () {
