@@ -28,94 +28,57 @@ bikeMe.Views.Map.prototype = {
   initializeGoogleMap: function () {
     if (_.isUndefined(this.googleMap)){
       this.googleMap = new google.maps.Map(this.$googleMap[0], this.options);
+
       this.googleDirectionsService = new google.maps.DirectionsService();
-      this.rendererOptions = { suppressMarkers     : true,
-                              suppressInfoWindows : true
-                            };
 
-      this.stationIcons = { avaliableStation:         new google.maps.MarkerImage("images/path_bike_spot_icon_green.png",
-                                                                new google.maps.Size(25, 39),
-                                                                new google.maps.Point(0,0),
-                                                                new google.maps.Point(13, 38)),
-                           partiallyAvailableStation: new google.maps.MarkerImage("images/path_bike_spot_icon_orange.png",
-                                                                                    new google.maps.Size(25, 39),
-                                                                                    new google.maps.Point(0,0),
-                                                                                    new google.maps.Point(13, 38)),
-                           noneAvailableStation:      new google.maps.MarkerImage("images/path_bike_spot_icon_red.png",
-                                                                                    new google.maps.Size(25, 39),
-                                                                                    new google.maps.Point(0,0),
-                                                                                    new google.maps.Point(13, 38))
-                          };
+      this.directionsRenderer = new google.maps.DirectionsRenderer(this.rendererOptions);
+      this.directionsRenderer.setMap(this.googleMap);
 
-      this.stationShadow = new google.maps.MarkerImage("images/shadow-path_bike_spot_icon.png",
-                                                        new google.maps.Size(45.0, 39.0),
-                                                        new google.maps.Point(0, 0),
-                                                        new google.maps.Point(10, 38));
-      this.originIcon = new google.maps.MarkerImage("images/path_green_arrow_icon.png",
-                                                      new google.maps.Size(32, 42),
-                                                      new google.maps.Point(0,0),
-                                                      new google.maps.Point(16, 32));
-      this.originShadow = new google.maps.MarkerImage("images/shadow-path_green_arrow_icon.png",
-                                                        new google.maps.Size(45.0, 39.0),
-                                                        new google.maps.Point(0, 0),
-                                                        new google.maps.Point(16, 32));
-      this.destinationIcon = new google.maps.MarkerImage("images/path_flag_icon.png",
-                                                          new google.maps.Size(32, 42),
-                                                          new google.maps.Point(0,0),
-                                                          new google.maps.Point(4, 43));
-      this.destinationShadow = new google.maps.MarkerImage("images/shadow-path_flag_icon.png",
-                                                        new google.maps.Size(45.0, 39.0),
-                                                        new google.maps.Point(0, 0),
-                                                        new google.maps.Point(4, 43));
-      this.mapMarkers = [];
-      this.directionsRenderers = [];
-      this.infoWindow = new InfoBubble({
-                map: this.googleMap,
-                shadowStyle: 1,
-                padding: 0,
-                backgroundColor: 'rgb(57,57,57)',
-                borderRadius: 4,
-                arrowSize: 10,
-                borderWidth: 1,
-                borderColor: '#2c2c2c',
-                disableAutoPan: true,
-                hideCloseButton: true,
-                arrowPosition: 40,
-                backgroundClassName: 'infoWindowBackground',
-                arrowStyle: 0
-              });
-
+      // Create the info window
+      this.infoWindow = new InfoBubble(this.infoWindowOptions);
       this.closeInfoWindow = _.bind(this.closeInfoWindow, this);
       google.maps.event.addListener(this.googleMap, 'click', this.closeInfoWindow);
+
+      // Create markers for the dffierent location
+      this.originMarker = new google.maps.Marker({map: this.googleMap, title: 'Origin', icon: this.originIcon, shadow: this.originShadow, zIndex: 0});
+      this.destinationMarker = new google.maps.Marker({map: this.googleMap, title: 'Destiantion', icon: this.destinationIcon, shadow: this.destinationShadow, zIndex: 0});
+      this.originStationMarker = new google.maps.Marker({map: this.googleMap, title: 'Origin Station', icon: this.getStationIcon(0), shadow: this.stationShadow, zIndex: 1});
+      this.destinationStationMarker = new google.maps.Marker({map: this.googleMap, title: 'Destiantion Station', icon: this.getStationIcon(0), shadow: this.stationShadow, zIndex: 1});
+
+      // Create marker clicked events, that will display the info window with relevant text
+      var onMarkerClicked = function (event) {
+        bikeMe.mapView.infoWindow.setContent('<div class="infoWondowText">'+this.getTitle()+'</div>');
+        bikeMe.mapView.infoWindow.open(bikeMe.mapView.googleMap,this);
+        $('.infoWindowBackground').click(bikeMe.mapView.closeInfoWindow);
+        return false;
+      }
+      onOriginMarkerClicked = _.bind(onMarkerClicked, this.originMarker);
+      onDestinationMarkerClicked = _.bind(onMarkerClicked, this.destinationMarker);
+      onOriginStationMarkerClicked = _.bind(onMarkerClicked, this.originStationMarker);
+      onDestinationStationMarkerClicked = _.bind(onMarkerClicked, this.destinationStationMarker);
+
+      google.maps.event.addListener(this.originMarker, 'click', onOriginMarkerClicked);
+      google.maps.event.addListener(this.destinationMarker, 'click', onDestinationMarkerClicked);
+      google.maps.event.addListener(this.originStationMarker, 'click', onOriginStationMarkerClicked);
+      google.maps.event.addListener(this.destinationStationMarker, 'click', onDestinationStationMarkerClicked);
     }
-
-    this.googleMap.setCenter(this.options.center);
-    google.maps.event.trigger(this.googleMap, 'resize');
-  },
-
-  routeIndexClasses: ['routeOne', 'routeTwo',  'routeThree',  'routeFour',  'routeFive',  'routeSix',  'routeSeven',  'routeEight',  'routeNine'],
-
-  options: {
-    center           : new google.maps.LatLng(32.066181,34.77761),
-    disableDefaultUI : true,
-    zoomControl      : true,
-    zoomControlOptions: { position: google.maps.ControlPosition.LEFT_CENTER },
-    mapTypeId        : google.maps.MapTypeId.ROADMAP,
-    zoom             : 15
   },
 
   onSearchSuccess: function (routes) {
+    // Chage to the map page
+    $.mobile.changePage(this.$el);
+    //triger the map resize event to allow the map to be displayed in full mode
+    google.maps.event.trigger(this.googleMap, 'resize');
+
     this.currentRouteIndex = 0;
     this.routes = routes;
-    this.options.center = new google.maps.LatLng(routes[0].source.latitude, routes[0].source.longitude);
-    $.mobile.changePage(this.$el);
-    this.initializeGoogleMap();
+    // render the first route
     this.renderRoute(routes[0]);
     return false;
   },
 
-
   renderRoute: function (route) {
+    this.closeInfoWindow();
     var start = new google.maps.LatLng(route.source.latitude, route.source.longitude);
     var end   = new google.maps.LatLng(route.target.latitude, route.target.longitude);
 
@@ -137,10 +100,7 @@ bikeMe.Views.Map.prototype = {
 
     this.googleDirectionsService.route(request, function(result, status) {
       if (status == google.maps.DirectionsStatus.OK) {
-        bikeMe.mapView.clearMarkers();
-        bikeMe.mapView.directionsRenderers[0] = new google.maps.DirectionsRenderer(bikeMe.mapView.rendererOptions);
-        bikeMe.mapView.directionsRenderers[0].setDirections(result);
-        bikeMe.mapView.directionsRenderers[0].setMap(bikeMe.mapView.googleMap);
+        bikeMe.mapView.directionsRenderer.setDirections(result);
         // In case this is a walking route (no stations to render)
         if (result.routes[0].legs.length == 1) {
           bikeMe.alert('Take a walk!!!', "Yehh...")
@@ -164,21 +124,29 @@ bikeMe.Views.Map.prototype = {
   },
 
   renderMarkers: function (route, start, end, startStation, endStation){
-    this.displayMarker(start, "Origin", this.originIcon, this.originShadow, route.source.address, 0);
-    this.displayMarker(end, "Destiantion", this.destinationIcon, this.destinationShadow, route.target.address, 0);
+    this.originMarker.setPosition(start);
+    this.originMarker.setTitle(route.source.address);
+
+    this.destinationMarker.setPosition(end);
+    this.destinationMarker.setTitle(route.target.address);
 
     if (!_.isUndefined(route.sourceStation) && !_.isUndefined(route.targetStation)) {
-      this.displayMarker(startStation,
-                          "Origin Station",
-                          this.getStationIcon(route.sourceStation.availableBikes),
-                          this.stationShadow,
-                          this.stationInfoHtml(route.sourceStation), 1);
-      this.displayMarker(endStation,
-                          "Destiantion Station",
-                          this.getStationIcon(route.targetStation.availableDocks),
-                          this.stationShadow,
-                          this.stationInfoHtml(route.targetStation), 1);
+      this.originStationMarker.setPosition(startStation);
+      this.originStationMarker.setIcon(this.getStationIcon(route.sourceStation.availableBikes));
+      this.originStationMarker.setTitle(this.stationInfoHtml(route.sourceStation));
+      this.originStationMarker.setVisible(true);
+
+      this.destinationStationMarker.setPosition(endStation);
+      this.destinationStationMarker.setIcon(this.getStationIcon(route.targetStation.availableDocks));
+      this.destinationStationMarker.setTitle(this.stationInfoHtml(route.targetStation));
+      this.destinationStationMarker.setVisible(true);
     }
+    else {
+      this.originStationMarker.setVisible(false);
+      this.destinationStationMarker.setVisible(false);
+    }
+
+    return false;
   },
 
   stationInfoHtml: function (station){
@@ -189,21 +157,6 @@ bikeMe.Views.Map.prototype = {
     <div>Available docks: "+station.availableDocks+"</div>"
   },
 
-  displayMarker: function (position, title, icon, shadow, infoContent, zIndex) {
-    var marker = new google.maps.Marker({map: this.googleMap, position: position, title: title, icon: icon, shadow: shadow, zIndex: zIndex});
-    this.mapMarkers.push(marker);
-
-    var onMarkerClicked = function (event) {
-      bikeMe.mapView.infoWindow.setContent('<div class="infoWondowText">'+infoContent+'</div>');
-      bikeMe.mapView.infoWindow.open(bikeMe.mapView.googleMap,this);
-      $('.infoWindowBackground').click(bikeMe.mapView.closeInfoWindow);
-      return false;
-    }
-    onMarkerClicked = _.bind(onMarkerClicked, marker);
-
-    google.maps.event.addListener(marker, 'click', onMarkerClicked);
-  },
-
   getStationIcon: function (availableCount) {
     if (availableCount > 2) {
       return this.stationIcons.avaliableStation;
@@ -212,24 +165,6 @@ bikeMe.Views.Map.prototype = {
     } else {
       return this.stationIcons.noneAvailableStation;
     }
-  },
-
-  clearMarkers: function () {
-    for (var i = 0; i < this.mapMarkers.length; i++ ) {
-        this.mapMarkers[i].setVisible(false);
-        this.mapMarkers[i].setMap(null);
-        google.maps.event.clearListeners(this.mapMarkers[i], 'click');
-    }
-    this.mapMarkers.length = 0;
-    this.closeInfoWindow();
-    for (var i = 0; i < this.directionsRenderers.length; i++ ) {
-      this.directionsRenderers[i].setOptions({ suppressPolylines: true,
-                                                suppressMarkers     : true,
-                                                suppressInfoWindows : true });
-      this.directionsRenderers[i].setMap(null);
-    }
-
-    this.directionsRenderers.length = 0;
   },
 
   closeInfoWindow: function () {
@@ -271,5 +206,84 @@ bikeMe.Views.Map.prototype = {
     this.currentRouteIndex = this.currentRouteIndex - 1;
     this.renderRoute(this.routes[this.currentRouteIndex]);
     return false;
-  }
+  },
+
+  routeIndexClasses: ['routeOne', 'routeTwo',  'routeThree',  'routeFour',  'routeFive',  'routeSix',  'routeSeven',  'routeEight',  'routeNine'],
+
+  options: {
+    center           : new google.maps.LatLng(32.066181,34.77761),
+    disableDefaultUI : true,
+    zoomControl      : true,
+    zoomControlOptions: { position: google.maps.ControlPosition.LEFT_CENTER },
+    mapTypeId        : google.maps.MapTypeId.ROADMAP,
+    zoom             : 15
+  },
+
+  rendererOptions: {
+    suppressMarkers     : true,
+    suppressInfoWindows : true
+  },
+
+  stationIcons: {
+    avaliableStation: new google.maps.MarkerImage(
+      "images/path_bike_spot_icon_green.png",
+      new google.maps.Size(25, 39),
+      new google.maps.Point(0,0),
+      new google.maps.Point(13, 38)),
+    partiallyAvailableStation: new google.maps.MarkerImage(
+      "images/path_bike_spot_icon_orange.png",
+      new google.maps.Size(25, 39),
+      new google.maps.Point(0,0),
+      new google.maps.Point(13, 38)),
+    noneAvailableStation: new google.maps.MarkerImage(
+      "images/path_bike_spot_icon_red.png",
+      new google.maps.Size(25, 39),
+      new google.maps.Point(0,0),
+      new google.maps.Point(13, 38))
+    },
+
+    stationShadow: new google.maps.MarkerImage(
+      "images/shadow-path_bike_spot_icon.png",
+      new google.maps.Size(45.0, 39.0),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(10, 38)),
+
+    originIcon: new google.maps.MarkerImage(
+      "images/path_green_arrow_icon.png",
+      new google.maps.Size(32, 42),
+      new google.maps.Point(0,0),
+      new google.maps.Point(16, 32)),
+
+    originShadow: new google.maps.MarkerImage(
+      "images/shadow-path_green_arrow_icon.png",
+      new google.maps.Size(45.0, 39.0),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(16, 32)),
+
+    destinationIcon: new google.maps.MarkerImage(
+      "images/path_flag_icon.png",
+      new google.maps.Size(32, 42),
+      new google.maps.Point(0,0),
+      new google.maps.Point(4, 43)),
+
+    destinationShadow: new google.maps.MarkerImage(
+      "images/shadow-path_flag_icon.png",
+      new google.maps.Size(45.0, 39.0),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(4, 43)),
+
+    infoWindowOptions: {
+      shadowStyle: 1,
+      padding: 0,
+      backgroundColor: 'rgb(57,57,57)',
+      borderRadius: 4,
+      arrowSize: 10,
+      borderWidth: 1,
+      borderColor: '#2c2c2c',
+      disableAutoPan: true,
+      hideCloseButton: true,
+      arrowPosition: 40,
+      backgroundClassName: 'infoWindowBackground',
+      arrowStyle: 0
+    }
 };
