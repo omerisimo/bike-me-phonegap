@@ -216,6 +216,8 @@ bikeMe.Views.Map.prototype = {
 
     this.directionsRenderer.setPanel($('#directionPopup div#scroller')[0]);
     $( "#directionPopup" ).popup( "open" );
+
+    //refresh the popup scroll asynch, to reflect the data rednered on the directions panel
     setTimeout(function () {
     		bikeMe.mapView.popupScroll.refresh();
     	}, 0);
