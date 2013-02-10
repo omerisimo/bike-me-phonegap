@@ -201,11 +201,18 @@ bikeMe.Views.Map.prototype = {
   },
 
   routeInfoPopup: function () {
+    route = this.routes[this.currentRouteIndex];
     // Set directions waypoints to be the route addresses
-    this.directionsRenderer.directions.routes[0].legs[0].start_address = this.routes[this.currentRouteIndex].source.address;
-    this.directionsRenderer.directions.routes[0].legs[0].end_address = this.routes[this.currentRouteIndex].sourceStation.location.address + ": Available bikes: " + this.routes[this.currentRouteIndex].sourceStation.availableBikes;
-    this.directionsRenderer.directions.routes[0].legs[1].end_address = this.routes[this.currentRouteIndex].targetStation.location.address + ": Available docks: " + this.routes[this.currentRouteIndex].targetStation.availableDocks;    
-    this.directionsRenderer.directions.routes[0].legs[2].end_address = this.routes[this.currentRouteIndex].target.address;
+    this.directionsRenderer.directions.routes[0].legs[0].start_address = route.source.address;
+    if (this.directionsRenderer.directions.routes[0].legs.length == 3) {
+      this.directionsRenderer.directions.routes[0].legs[0].end_address = "Take a bike from: " + route.sourceStation.location.address + " [Available bikes: " + route.sourceStation.availableBikes + "]";
+      this.directionsRenderer.directions.routes[0].legs[1].end_address = "Park bike at: " + route.targetStation.location.address + " [Available docks: " + route.targetStation.availableDocks + "]";    
+      this.directionsRenderer.directions.routes[0].legs[2].end_address = route.target.address;
+      // Set the 2nd leg (cycling) with the route's cycling timeduration
+      this.directionsRenderer.directions.routes[0].legs[1].duration.text = route.getCyclingTime().toFixed().toString() + " min";
+    } else {
+      this.directionsRenderer.directions.routes[0].legs[0].end_address = route.target.address;
+    }
 
     this.directionsRenderer.setPanel($('#directionPopup div#scroller')[0]);
     $( "#directionPopup" ).popup( "open" );

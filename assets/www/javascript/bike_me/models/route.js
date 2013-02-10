@@ -30,12 +30,6 @@ bikeMe.Models.Route.prototype = {
   getRouteTime: function () {
     if (_.isUndefined(this.routeTime)) {
 
-      if (_.isUndefined(this.routeDurations.cyclingDuration)) {
-        this.routeDurations.cyclingDuration = this.calculateTime(
-          this.routeDistances.cyclingDistance, 'cycling'
-        );
-      }
-
       if (_.isUndefined(this.routeDurations.walkingDurationFromOrigin)) {
         this.routeDurations.walkingDurationFromOrigin = this.calculateTime(
           this.routeDistances.walkingDistanceFromOrigin
@@ -48,10 +42,23 @@ bikeMe.Models.Route.prototype = {
         );
       }
 
-      this.routeTime = (this.routeDurations.walkingDurationFromOrigin + this.routeDurations.cyclingDuration + this.routeDurations.walkingDurationToDestination)/60.0;
+      this.routeTime = Math.ceil((this.routeDurations.walkingDurationFromOrigin + this.routeDurations.walkingDurationToDestination)/60.0) + this.getCyclingTime();
     }
 
     return this.routeTime;
+  },
+
+  getCyclingTime: function () {
+    if (_.isUndefined(this.cyclingTime)) {
+      if (_.isUndefined(this.routeDurations.cyclingDuration)) {
+        this.routeDurations.cyclingDuration = this.calculateTime(
+          this.routeDistances.cyclingDistance, 'cycling'
+        );
+      }
+      this.cyclingTime = Math.ceil(this.routeDurations.cyclingDuration/60.0);
+    }
+
+    return this.cyclingTime;
   },
 
   calculateTime: function (distanceMeters, transportMode) {
