@@ -12,6 +12,10 @@ body {
   z-index: 1;
 }
 
+#search-page {
+  background: #DBDBDD url(../images/search_image_small_full_screen.png) center bottom repeat-x;
+}
+
 #search-box {
     margin-top: 15%;
     position: static;
@@ -51,15 +55,6 @@ body {
   margin: 5px;
   position: absolute;
   width: 100%;
-}
-
-#search-image {
-  z-index: -1;
-  position: static;
-  bottom: 0;
-  height: 194px;
-  background: #dbdbdd url(../images/search_image_small.png) center;
-  border: none;
 }
 
 .headerButton {

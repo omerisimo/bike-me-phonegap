@@ -31,7 +31,7 @@
     <icon src="images/search_navigate_icon.png" />
   </head>
   <body>
-    <div data-role='page'>
+    <div data-role='page' id='search-page'>
       <div class="header">
         <h1><img src="images/bikeme_header_small.png"></h1>
       </div>
@@ -57,9 +57,6 @@
         </form>
         <!--This iframe is a hack to enable autocomplete history of the form above. (http://stackoverflow.com/questions/8400269/browser-native-autocomplete-for-ajaxed-forms) -->
         <iframe id="iframe-for_autocomplete" src="" class="hide" style="width: 0px; height:0px;"></iframe>
-      </div>
-      <div id='search-image' data-theme='a' data-role="footer" class="footer">
-        &nbsp;
       </div>
     </div>
 
