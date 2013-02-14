@@ -27,6 +27,8 @@ bikeMe.Views.Map.prototype = {
     this.$previousRouteButton.on('click', previousRoute);
     var routeInfoPopup = _.bind(this.routeInfoPopup, this);
     this.$routesInfoButton.on('click', routeInfoPopup);
+
+    this.updateDirections = _.bind(this.updateDirections, this);
   },
 
   initializeGoogleMap: function () {
@@ -102,29 +104,31 @@ bikeMe.Views.Map.prototype = {
       travelMode: google.maps.TravelMode.WALKING
     };
 
-    this.googleDirectionsService.route(request, function(result, status) {
-      if (status == google.maps.DirectionsStatus.OK) {
-        bikeMe.mapView.directionsRenderer.setDirections(result);
-        // In case this is a walking route (no stations to render)
-        if (result.routes[0].legs.length == 1) {
-          bikeMe.alert('Take a walk!!!', "Yehh...")
-          bikeMe.mapView.renderMarkers(route,
-                              result.routes[0].legs[0].start_location,
-                              result.routes[0].legs[0].end_location,
-                              null, null);
-        }
-        else {
-          bikeMe.mapView.renderMarkers(route,
-                              result.routes[0].legs[0].start_location,
-                              result.routes[0].legs[2].end_location,
-                              result.routes[0].legs[0].end_location,
-                              result.routes[0].legs[2].start_location);
-        }
-        bikeMe.mapView.updateRouteInfo(route);
-        bikeMe.mapView.showRouteButtons();
+    this.googleDirectionsService.route(request, this.updateDirections);
+  },
+
+updateDirections: function (result, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      //this.directionsRenderer.setDirections(result);
+      // In case this is a walking route (no stations to render)
+      if (result.routes[0].legs.length == 1) {
+        bikeMe.alert('Take a walk!!!', "Yehh...")
+        this.renderMarkers(this.routes[this.currentRouteIndex],
+                            result.routes[0].legs[0].start_location,
+                            result.routes[0].legs[0].end_location,
+                            null, null);
       }
-      return false;
-    });
+      else {
+        this.renderMarkers(this.routes[this.currentRouteIndex],
+                            result.routes[0].legs[0].start_location,
+                            result.routes[0].legs[2].end_location,
+                            result.routes[0].legs[0].end_location,
+                            result.routes[0].legs[2].start_location);
+      }
+      this.updateRouteInfo(this.routes[this.currentRouteIndex]);
+      this.showRouteButtons();
+    }
+    return false;
   },
 
   renderMarkers: function (route, start, end, startStation, endStation){
