@@ -109,7 +109,7 @@ bikeMe.Views.Map.prototype = {
 
 updateDirections: function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
-      //this.directionsRenderer.setDirections(result);
+      this.directionsRenderer.setDirections(result);
       // In case this is a walking route (no stations to render)
       if (result.routes[0].legs.length == 1) {
         bikeMe.alert('Take a walk!!!', "Yehh...")
