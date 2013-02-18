@@ -224,6 +224,7 @@ updateDirections: function (result, status) {
     //refresh the popup scroll asynch, to reflect the data rednered on the directions panel
     setTimeout(function () {
     		bikeMe.mapView.popupScroll.refresh();
+    		bikeMe.mapView.popupScroll.scrollTo(0, 0, 0);
     	}, 0);
     return false;
   },
