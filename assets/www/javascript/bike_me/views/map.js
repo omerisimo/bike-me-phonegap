@@ -101,6 +101,7 @@ bikeMe.Views.Map.prototype = {
   },
 
   onSearchStationsSuccess: function (origin, destination, originStations, destinationStations) {
+    this.closeInfoWindow();
     // Chage to the map page
     $.mobile.changePage(this.$el);
     //triger the map resize event to allow the map to be displayed in full mode
