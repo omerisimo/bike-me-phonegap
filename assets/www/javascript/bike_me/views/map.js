@@ -8,6 +8,7 @@ bikeMe.Views.Map.prototype = {
   initialize: function () {
     this.$el        = $('#map');
     this.$googleMap = $('#googleMap');
+    this.$routeInfo = $('#routeInfo');
     this.$walkingDistanceInfo = $('#walkingDistance');
     this.$cyclingDistanceInfo = $('#cyclingDistance');
     this.$totalTimeInfo = $('#totalTime');
@@ -21,6 +22,7 @@ bikeMe.Views.Map.prototype = {
     this.routes = [];
 
     radio('searchSuccess').subscribe([this.onSearchSuccess, this]);
+    radio('searchStationsSuccess').subscribe([this.onSearchStationsSuccess, this]);
     var nextRoute = _.bind(this.nextRoute, this);
     this.$nextRouteButton.on('click', nextRoute);
     var previousRoute = _.bind(this.previousRoute, this);
@@ -67,6 +69,20 @@ bikeMe.Views.Map.prototype = {
       google.maps.event.addListener(this.destinationMarker, 'click', onDestinationMarkerClicked);
       google.maps.event.addListener(this.originStationMarker, 'click', onOriginStationMarkerClicked);
       google.maps.event.addListener(this.destinationStationMarker, 'click', onDestinationStationMarkerClicked);
+
+      this.originStationsMarkers = [];
+      for (var i=0;i<4;i++) {
+        this.originStationsMarkers[i] = new google.maps.Marker({map: this.googleMap, title: 'Origin Station', icon: this.getStationIcon(0), shadow: this.stationShadow, zIndex: 1});
+        onOriginStationMarkerClicked = _.bind(onMarkerClicked, this.originStationsMarkers[i]);
+        google.maps.event.addListener(this.originStationsMarkers[i], 'click', onOriginStationMarkerClicked);
+      }
+
+      this.destinationStationsMarkers = [];
+      for (var i=0;i<4;i++) {
+        this.destinationStationsMarkers[i] = new google.maps.Marker({map: this.googleMap, title: 'Destiantion Station', icon: this.getStationIcon(0), shadow: this.stationShadow, zIndex: 1});
+        onDestinationStationMarkerClicked = _.bind(onMarkerClicked, this.destinationStationsMarkers[i]);
+        google.maps.event.addListener(this.destinationStationsMarkers[i], 'click', onDestinationStationMarkerClicked);
+      }
     }
   },
 
@@ -76,10 +92,46 @@ bikeMe.Views.Map.prototype = {
     //triger the map resize event to allow the map to be displayed in full mode
     google.maps.event.trigger(this.googleMap, 'resize');
 
+    this.setMapRoutesControls()
     this.currentRouteIndex = 0;
     this.routes = routes;
     // render the first route
     this.renderRoute(routes[0]);
+    return false;
+  },
+
+  onSearchStationsSuccess: function (origin, destination, originStations, destinationStations) {
+    // Chage to the map page
+    $.mobile.changePage(this.$el);
+    //triger the map resize event to allow the map to be displayed in full mode
+    google.maps.event.trigger(this.googleMap, 'resize');
+
+    this.setMapStationControls();
+    var mapBounds = new google.maps.LatLngBounds();
+
+    this.originMarker.setPosition(origin.getLatLng());
+    this.originMarker.setTitle(origin.address);
+    mapBounds.extend(origin.getLatLng());
+
+    this.destinationMarker.setPosition(destination.getLatLng());
+    this.destinationMarker.setTitle(destination.address);
+    mapBounds.extend(destination.getLatLng());
+
+    for (var i=0;i<this.originStationsMarkers.length;i++) {
+      this.originStationsMarkers[i].setPosition(originStations[i].location.getLatLng());
+      this.originStationsMarkers[i].setIcon(this.getStationIcon(originStations[i].availableBikes));
+      this.originStationsMarkers[i].setTitle(this.stationInfoHtml(originStations[i]));
+      mapBounds.extend(originStations[i].location.getLatLng());
+    }
+
+    for (var i=0;i<this.destinationStationsMarkers.length;i++) {
+      this.destinationStationsMarkers[i].setPosition(destinationStations[i].location.getLatLng());
+      this.destinationStationsMarkers[i].setIcon(this.getStationIcon(destinationStations[i].availableDocks));
+      this.destinationStationsMarkers[i].setTitle(this.stationInfoHtml(destinationStations[i]));
+      mapBounds.extend(destinationStations[i].location.getLatLng());
+    }
+
+    this.googleMap.fitBounds(mapBounds);
     return false;
   },
 
@@ -107,7 +159,7 @@ bikeMe.Views.Map.prototype = {
     this.googleDirectionsService.route(request, this.updateDirections);
   },
 
-updateDirections: function (result, status) {
+  updateDirections: function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
       this.directionsRenderer.setDirections(result);
       // In case this is a walking route (no stations to render)
@@ -238,6 +290,44 @@ updateDirections: function (result, status) {
     this.currentRouteIndex = this.currentRouteIndex - 1;
     this.renderRoute(this.routes[this.currentRouteIndex]);
     return false;
+  },
+
+  setMapStationControls: function () {
+    this.directionsRenderer.setMap(null);
+    this.originStationMarker.setMap(null);
+    this.destinationStationMarker.setMap(null);
+    this.$routeInfo.hide();
+    this.$previousRouteButton.hide();
+    this.$nextRouteButton.hide();
+    this.$routesIndexInfo.hide();
+    this.$routesInfoButton.hide();
+
+    for (var i=0;i<this.originStationsMarkers.length;i++) {
+      this.originStationsMarkers[i].setMap(this.googleMap);
+    }
+
+    for (var i=0;i<this.destinationStationsMarkers.length;i++) {
+      this.destinationStationsMarkers[i].setMap(this.googleMap);
+    }
+  },
+
+  setMapRoutesControls: function () {
+    this.directionsRenderer.setMap(this.googleMap);
+    this.originStationMarker.setMap(this.googleMap);
+    this.destinationStationMarker.setMap(this.googleMap);
+    this.$routeInfo.show();
+    this.$previousRouteButton.show();
+    this.$nextRouteButton.show();
+    this.$routesIndexInfo.show();
+    this.$routesInfoButton.show();
+
+    for (var i=0;i<this.originStationsMarkers.length;i++) {
+      this.originStationsMarkers[i].setMap(null);
+    }
+
+    for (var i=0;i<this.destinationStationsMarkers.length;i++) {
+      this.destinationStationsMarkers[i].setMap(null);
+    }
   },
 
   routeIndexClasses: ['routeOne', 'routeTwo',  'routeThree',  'routeFour',  'routeFive',  'routeSix',  'routeSeven',  'routeEight',  'routeNine'],

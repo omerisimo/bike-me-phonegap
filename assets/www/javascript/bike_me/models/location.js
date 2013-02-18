@@ -113,6 +113,12 @@ bikeMe.Models.Location.prototype = {
 
   unsubscribe: function () {
     // Nothing to unsubscribe from for now.
-  }
+  },
 
+  getLatLng: function() {
+    if (_.isUndefined(this.LatLng)){
+      this.LatLng = new google.maps.LatLng(this.latitude, this.longitude);
+    }
+    return this.LatLng;
+  }
 };

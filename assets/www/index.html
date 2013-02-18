@@ -49,9 +49,18 @@
               <input name='to' id='to' placeholder='To: (e.g. Sderot Rothschild 10)' value='' type='search' dir="auto">
             </div>
           </span>
-          <span>
-            <div data-role='fieldcontain'>
-              <input id='search-button' type='submit' data-theme='b' data-transition='none' data-corners='false' value='Go' />
+          <span id='search-buttons'>
+            <div data-role='controlgroup' data-type='horizontal'>
+              <button  type='button' id='stations_search' data-theme='b' data-transition='none' data-corners='false'>
+                <span>Stations</span>
+                <br>
+                <img src="images/stations.png">
+              </button>
+              <button type='button' id='routes_search' data-theme='b' data-transition='none' data-corners='false'>
+                <span>Routes</span>
+                <br>
+                <img src="images/routes.png">
+              </button>
             </div>
           </span>
         </form>
@@ -59,7 +68,6 @@
         <iframe id="iframe-for_autocomplete" src="" class="hide" style="width: 0px; height:0px;"></iframe>
       </div>
     </div>
-
     <div data-role='page' id='map'>
       <div class="header">
         <a href="#" data-mini="true" data-role='button' data-icon='arrow-l' data-rel='back' data-theme="a" id="backButton" class="headerButton">Back</a>
