@@ -21,6 +21,14 @@ body {
     position: static;
 }
 
+#search-buttons {
+  text-align: center;
+}
+
+#search-buttons div.ui-btn{
+  border: 1px solid black;
+}
+
 .ui-field-contain {
     text-align: center;
 }
