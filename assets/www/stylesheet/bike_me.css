@@ -55,12 +55,12 @@ body {
   background: url(../images/search_navigate_bg.png);
   width: 100%;
   text-align:center;
-  border: 1px solid #B0AFAB;
+  border-bottom: 1px solid #B0AFAB;
   height: 47px;
 }
 
 .header h1 {
-  margin: 5px;
+  margin: 5px 0 5px 0;
   position: absolute;
   width: 100%;
 }
