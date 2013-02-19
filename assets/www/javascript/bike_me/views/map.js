@@ -132,13 +132,30 @@ updateDirections: function (result, status) {
   },
 
   renderMarkers: function (route, start, end, startStation, endStation){
-    this.originMarker.setPosition(start);
-    this.originMarker.setTitle(route.source.address);
 
-    this.destinationMarker.setPosition(end);
-    this.destinationMarker.setTitle(route.target.address);
+    /* ADDED THIS */
+    this.originMarker.setMap(null);
+    this.destinationMarker.setMap(null);
+    this.originStationMarker.setMap(null);
+    this.destinationStationMarker.setMap(null);
+
+
+    this.originMarker = new google.maps.Marker({position: start, map: this.googleMap, title: route.source.address, icon: this.originIcon, shadow: this.originShadow, zIndex: 0});
+    this.destinationMarker = new google.maps.Marker({position: end, map: this.googleMap, title: route.target.address, icon: this.destinationIcon, shadow: this.destinationShadow, zIndex: 0});
+    /********************/
+
+    // this.originMarker.setPosition(start);
+    // this.originMarker.setTitle(route.source.address);
+
+    // this.destinationMarker.setPosition(end);
+    // this.destinationMarker.setTitle(route.target.address);
 
     if (!_.isUndefined(route.sourceStation) && !_.isUndefined(route.targetStation)) {
+      /* AND THIS */
+      this.originStationMarker = new google.maps.Marker({map: this.googleMap, title: 'Origin Station', icon: this.getStationIcon(0), shadow: this.stationShadow, zIndex: 1});
+      this.destinationStationMarker = new google.maps.Marker({map: this.googleMap, title: 'Destiantion Station', icon: this.getStationIcon(0), shadow: this.stationShadow, zIndex: 1});
+      /*************/
+
       this.originStationMarker.setPosition(startStation);
       this.originStationMarker.setIcon(this.getStationIcon(route.sourceStation.availableBikes));
       this.originStationMarker.setTitle(this.stationInfoHtml(route.sourceStation));
