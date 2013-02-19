@@ -46,27 +46,10 @@ bikeMe.Views.Map.prototype = {
       google.maps.event.addListener(this.googleMap, 'click', this.closeInfoWindow);
 
       // Create markers for the dffierent location
-      this.originMarker = new google.maps.Marker({map: this.googleMap, title: 'Origin', icon: this.originIcon, shadow: this.originShadow, zIndex: 0});
-      this.destinationMarker = new google.maps.Marker({map: this.googleMap, title: 'Destiantion', icon: this.destinationIcon, shadow: this.destinationShadow, zIndex: 0});
-      this.originStationMarker = new google.maps.Marker({map: this.googleMap, title: 'Origin Station', icon: this.getStationIcon(0), shadow: this.stationShadow, zIndex: 1});
-      this.destinationStationMarker = new google.maps.Marker({map: this.googleMap, title: 'Destiantion Station', icon: this.getStationIcon(0), shadow: this.stationShadow, zIndex: 1});
-
-      // Create marker clicked events, that will display the info window with relevant text
-      var onMarkerClicked = function (event) {
-        bikeMe.mapView.infoWindow.setContent('<div class="infoWondowText">'+this.getTitle()+'</div>');
-        bikeMe.mapView.infoWindow.open(bikeMe.mapView.googleMap,this);
-        $('.infoWindowBackground').click(bikeMe.mapView.closeInfoWindow);
-        return false;
-      }
-      onOriginMarkerClicked = _.bind(onMarkerClicked, this.originMarker);
-      onDestinationMarkerClicked = _.bind(onMarkerClicked, this.destinationMarker);
-      onOriginStationMarkerClicked = _.bind(onMarkerClicked, this.originStationMarker);
-      onDestinationStationMarkerClicked = _.bind(onMarkerClicked, this.destinationStationMarker);
-
-      google.maps.event.addListener(this.originMarker, 'click', onOriginMarkerClicked);
-      google.maps.event.addListener(this.destinationMarker, 'click', onDestinationMarkerClicked);
-      google.maps.event.addListener(this.originStationMarker, 'click', onOriginStationMarkerClicked);
-      google.maps.event.addListener(this.destinationStationMarker, 'click', onDestinationStationMarkerClicked);
+      this.originMarker = this.createMarker('Origin', this.originIcon, this.originShadow, 0);
+      this.destinationMarker = this.createMarker('Destiantion', this.destinationIcon, this.destinationShadow, 0);
+      this.originStationMarker = this.createMarker('Origin Station', this.getStationIcon(0), this.stationShadow, 1);
+      this.destinationStationMarker = this.createMarker('Destiantion Station', this.getStationIcon(0), this.stationShadow, 1);
     }
   },
 
@@ -136,40 +119,59 @@ bikeMe.Views.Map.prototype = {
 
   renderMarkers: function (route, start, end, startStation, endStation) {
 
-    this.originMarker = new google.maps.Marker({position: start, map: this.googleMap, title: route.source.address, icon: this.originIcon, shadow: this.originShadow, zIndex: 0});
-    this.destinationMarker = new google.maps.Marker({position: end, map: this.googleMap, title: route.target.address, icon: this.destinationIcon, shadow: this.destinationShadow, zIndex: 0});
+    this.originMarker       = this.createMarker(route.source.address, this.originIcon,      this.originShadow,      0, start);
+    this.destinationMarker  = this.createMarker(route.target.address, this.destinationIcon, this.destinationShadow, 0, end  );
 
     if (!_.isUndefined(route.sourceStation) && !_.isUndefined(route.targetStation)) {
-      this.originStationMarker = new google.maps.Marker({
-                                                          map       : this.googleMap,
-                                                          position  : startStation,
-                                                          title     : this.stationInfoHtml(route.sourceStation),
-                                                          icon      : this.getStationIcon(route.sourceStation.availableBikes),
-                                                          shadow    : this.stationShadow,
-                                                          zIndex    : 1
-                                                        });
-      this.destinationStationMarker = new google.maps.Marker({
-                                                          map     : this.googleMap,
-                                                          position  : endStation,
-                                                          title   : this.stationInfoHtml(route.targetStation),
-                                                          icon    : this.getStationIcon(route.targetStation.availableDocks),
-                                                          shadow  : this.stationShadow,
-                                                          zIndex  : 1
-                                                        });
+      this.originStationMarker      = this.createMarker(
+                                                          this.stationInfoHtml(route.sourceStation),
+                                                          this.getStationIcon(route.sourceStation.availableBikes),
+                                                          this.stationShadow,
+                                                          1,
+                                                          startStation
+                                                        );
+      this.destinationStationMarker = this.createMarker(
+                                                          this.stationInfoHtml(route.targetStation),
+                                                          this.getStationIcon(route.targetStation.availableDocks),
+                                                          this.stationShadow,
+                                                          1,
+                                                          endStation
+                                                        );
     }
     return false;
   },
 
   clearOverlay: function () {
+    // Clrear the directionsRenderer by setting the map to null, and suppressing polyline
     this.directionsRenderer.setOptions({
                                           suppressPolylines: true,
                                           polylineOptions: { visible: false },
                                           map: null
                                         });
+    // Clear markers by removing click listener, ans setting map to null
+    google.maps.event.clearListeners(this.originMarker, 'click');
     this.originMarker.setMap(null);
+    google.maps.event.clearListeners(this.destinationMarker, 'click');
     this.destinationMarker.setMap(null);
+    google.maps.event.clearListeners(this.originStationMarker, 'click');
     this.originStationMarker.setMap(null);
+    google.maps.event.clearListeners(this.destinationStationMarker, 'click');
     this.destinationStationMarker.setMap(null);
+  },
+
+  createMarker: function (title, icon, shadow, zIndex, position) {
+    var marker = new google.maps.Marker({map: this.googleMap, title: title, icon: icon, shadow: shadow, zIndex: zIndex, position: position});
+    var onMarkerClicked = _.bind(this.onMarkerClicked, marker);
+    google.maps.event.addListener(marker, 'click', onMarkerClicked);
+    return marker;
+  },
+
+  onMarkerClicked: function (event) {
+    // 'this. will be binded to the marker object
+    bikeMe.mapView.infoWindow.setContent('<div class="infoWondowText">'+this.getTitle()+'</div>');
+    bikeMe.mapView.infoWindow.open(bikeMe.mapView.googleMap,this);
+    $('.infoWindowBackground').click(bikeMe.mapView.closeInfoWindow);
+    return false;
   },
 
   stationInfoHtml: function (station){
