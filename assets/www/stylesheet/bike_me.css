@@ -91,7 +91,7 @@ body {
 }
 
 /* Remove the search icon in the '#from' '#to' search inputmfields*/
-.ui-icon-searchfield::after {
+.ui-icon-searchfield:after {
     display: none !important;
 }
 /* Style the '#from', '#to' input fields to look like normal text input instead of search input */

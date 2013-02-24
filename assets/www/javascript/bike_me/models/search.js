@@ -13,9 +13,11 @@ bikeMe.Models.Search.prototype = {
 
     radio('locationFound').subscribe([this.onLocationFound, this]);
     radio('routesFound').subscribe([this.onRoutesFound, this]);
+    radio('stationsFound').subscribe([this.onStationsFound, this]);
   },
 
-  find: function() {
+  find: function(searchType) {
+    this.searchType = searchType;
     this.originLocation = new bikeMe.Models.Location({
       address: this.originString
     });
@@ -37,7 +39,7 @@ bikeMe.Models.Search.prototype = {
         this.destinationLocation
       );
 
-      this.routeFinder.find();
+      this.routeFinder.find(this.searchType );
     }
   },
 
@@ -51,9 +53,18 @@ bikeMe.Models.Search.prototype = {
     }
   },
 
+  onStationsFound: function () {
+    if (this.routeFinder.sourceStations.length === 0 || this.routeFinder.targetStations.length == 0) {
+      radio('searchError').broadcast();
+    } else {
+      radio('searchStationsSuccess').broadcast(this.routeFinder.originLocation, this.routeFinder.destinationLocation, this.routeFinder.sourceStations, this.routeFinder.targetStations);
+    }
+  },
+
   unsubscribe: function () {
     radio('locationFound').unsubscribe(this.onLocationFound);
     radio('routesFound').unsubscribe(this.onRoutesFound);
+    radio('stationsFound').unsubscribe(this.onStationsFound);
 
     if (!_.isUndefined(this.originLocation)) {
       this.originLocation.unsubscribe();

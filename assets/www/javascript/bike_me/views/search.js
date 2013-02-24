@@ -9,9 +9,14 @@ bikeMe.Views.Search.prototype = {
     this.$el = $('#search');
     this.$from = this.$el.find('input#from');
     this.$to = this.$el.find('input#to');
+    this.$routesSearchButton = this.$el.find('button#routes_search');
+    this.$stationsSearchButton = this.$el.find('button#stations_search');
 
-    this.search = _.bind(this.search, this);
-    this.$el.submit(this.search);
+    this.routesSearch = _.bind(this.routesSearch, this);
+    this.$routesSearchButton.on('click', this.routesSearch);
+
+    this.stationsSearch = _.bind(this.stationsSearch, this);
+    this.$stationsSearchButton.on('click', this.stationsSearch);
 
     this.clearCurrentLocationText = _.bind(this.clearCurrentLocationText, this);
     this.$from.focus(this.clearCurrentLocationText);
@@ -25,10 +30,17 @@ bikeMe.Views.Search.prototype = {
     radio('searchError').subscribe([this.onRoutingError, this]);
   },
 
-  search: function () {
-    // Disable until we fix the bug of a popup window
-    //this.enableAutoCompleteForm();
+  routesSearch: function () {
+    this.search('routes');
+    return false;
+  },
 
+  stationsSearch: function() {
+    this.search('stations');
+    return false;
+  },
+
+  search: function(searchType) {
     var from = this.$from.val();
     var to   = this.$to.val();
     if (from.trim() == '' || to.trim() == '') {
@@ -39,10 +51,9 @@ bikeMe.Views.Search.prototype = {
     this.unsubscribePreviousSearchModel();
 
     this.searchModel = new bikeMe.Models.Search(from, to);
-    this.searchModel.find();
+    this.searchModel.find(searchType);
 
     this.showLoadingIndicator();
-    return false;
   },
 
   showLoadingIndicator: function () {

@@ -8,6 +8,7 @@ bikeMe.Views.Map.prototype = {
   initialize: function () {
     this.$el        = $('#map');
     this.$googleMap = $('#googleMap');
+    this.$routeInfo = $('#routeInfo');
     this.$walkingDistanceInfo = $('#walkingDistance');
     this.$cyclingDistanceInfo = $('#cyclingDistance');
     this.$totalTimeInfo = $('#totalTime');
@@ -21,6 +22,7 @@ bikeMe.Views.Map.prototype = {
     this.routes = [];
 
     radio('searchSuccess').subscribe([this.onSearchSuccess, this]);
+    radio('searchStationsSuccess').subscribe([this.onSearchStationsSuccess, this]);
     var nextRoute = _.bind(this.nextRoute, this);
     this.$nextRouteButton.on('click', nextRoute);
     var previousRoute = _.bind(this.previousRoute, this);
@@ -48,6 +50,16 @@ bikeMe.Views.Map.prototype = {
       this.destinationMarker = new google.maps.Marker();
       this.originStationMarker = new google.maps.Marker();
       this.destinationStationMarker = new google.maps.Marker();
+
+      this.originStationsMarkers = [];
+      for (var i=0;i<4;i++) {
+        this.originStationsMarkers[i] = new google.maps.Marker();
+      }
+
+      this.destinationStationsMarkers = [];
+      for (var i=0;i<4;i++) {
+        this.destinationStationsMarkers[i] = new google.maps.Marker();
+      }
     }
   },
 
@@ -55,11 +67,64 @@ bikeMe.Views.Map.prototype = {
     // Chage to the map page
     $.mobile.changePage(this.$el);
 
+    this.setMapRoutesControls()
     this.currentRouteIndex = 0;
     this.routes = routes;
     // render the first route
     this.renderRoute(routes[0]);
     return false;
+  },
+
+  onSearchStationsSuccess: function (origin, destination, originStations, destinationStations) {
+    // Chage to the map page
+    $.mobile.changePage(this.$el);
+    this.setMapStationControls();
+    $.mobile.loading('show', {
+      text        : 'Loading route...',
+      textVisible : true
+    });
+    this.closeInfoWindow();
+    this.clearOverlay();
+    this.createNewMap();
+
+    var mapBounds = new google.maps.LatLngBounds();
+
+    this.originMarker = this.createMarker(origin.address, this.originIcon,      this.originShadow,      0, origin.getLatLng());
+    mapBounds.extend(origin.getLatLng());
+
+    this.destinationMarker  = this.createMarker(destination.address, this.destinationIcon, this.destinationShadow, 0, destination.getLatLng());
+    mapBounds.extend(destination.getLatLng());
+
+    for (var i=0;i<this.originStationsMarkers.length;i++) {
+      this.originStationsMarkers[i] = this.createMarker(this.stationInfoHtml(originStations[i]),
+                                                        this.getStationIcon(originStations[i].availableBikes),
+                                                        this.stationShadow,
+                                                        1,
+                                                        originStations[i].location.getLatLng()
+                                                       );
+      mapBounds.extend(originStations[i].location.getLatLng());
+    }
+
+    for (var i=0;i<this.destinationStationsMarkers.length;i++) {
+      this.destinationStationsMarkers[i] = this.createMarker(this.stationInfoHtml(destinationStations[i]),
+                                                              this.getStationIcon(destinationStations[i].availableDocks),
+                                                              this.stationShadow,
+                                                              1,
+                                                              destinationStations[i].location.getLatLng()
+                                                             );
+      mapBounds.extend(destinationStations[i].location.getLatLng());
+    }
+
+    this.googleMap.fitBounds(mapBounds);
+    return false;
+  },
+
+  createNewMap: function () {
+    this.googleMap = new google.maps.Map(this.$googleMap[0], this.options);
+    google.maps.event.addListener(this.googleMap, 'click', this.closeInfoWindow);
+    google.maps.event.addListenerOnce(this.googleMap, 'idle', function(){
+      $.mobile.loading('hide');
+    });
   },
 
   renderRoute: function (route) {
@@ -69,19 +134,15 @@ bikeMe.Views.Map.prototype = {
     });
     this.closeInfoWindow();
     this.clearOverlay();
+    this.createNewMap();
     this.options.zoom = this.googleMap.getZoom();
-    this.googleMap = new google.maps.Map(this.$googleMap[0], this.options);
-    google.maps.event.addListener(this.googleMap, 'click', this.closeInfoWindow);
-    google.maps.event.addListenerOnce(this.googleMap, 'idle', function(){
-      $.mobile.loading('hide');
-    });
-    var start = new google.maps.LatLng(route.source.latitude, route.source.longitude);
-    var end   = new google.maps.LatLng(route.target.latitude, route.target.longitude);
+    var start = route.source.getLatLng();
+    var end   = route.target.getLatLng();
 
     var waypts = [];
     if (!_.isUndefined(route.sourceStation) && !_.isUndefined(route.targetStation)) {
-      var startStation = new google.maps.LatLng(route.sourceStation.location.latitude, route.sourceStation.location.longitude);
-      var endStation = new google.maps.LatLng(route.targetStation.location.latitude, route.targetStation.location.longitude);
+      var startStation = route.sourceStation.location.getLatLng();
+      var endStation = route.targetStation.location.getLatLng();
 
       waypts = [{ location: startStation, stopover: true },
         { location: endStation, stopover: true }
@@ -163,6 +224,17 @@ bikeMe.Views.Map.prototype = {
     this.originStationMarker.setMap(null);
     google.maps.event.clearListeners(this.destinationStationMarker, 'click');
     this.destinationStationMarker.setMap(null);
+
+    for (var i=0;i<this.originStationsMarkers.length;i++) {
+      google.maps.event.clearListeners(this.originStationsMarkers[i], 'click');
+      this.originStationsMarkers[i].setMap(null);
+    }
+
+    for (var i=0;i<this.destinationStationsMarkers.length;i++) {
+      google.maps.event.clearListeners(this.destinationStationsMarkers[i], 'click');
+      this.destinationStationsMarkers[i].setMap(null);
+    }
+
   },
 
   createMarker: function (title, icon, shadow, zIndex, position) {
@@ -262,6 +334,24 @@ bikeMe.Views.Map.prototype = {
     this.currentRouteIndex = this.currentRouteIndex - 1;
     this.renderRoute(this.routes[this.currentRouteIndex]);
     return false;
+  },
+
+  setMapStationControls: function () {
+    this.clearOverlay();
+    this.$routeInfo.hide();
+    this.$previousRouteButton.hide();
+    this.$nextRouteButton.hide();
+    this.$routesIndexInfo.hide();
+    this.$routesInfoButton.hide();
+  },
+
+  setMapRoutesControls: function () {
+    this.clearOverlay();
+    this.$routeInfo.show();
+    this.$previousRouteButton.show();
+    this.$nextRouteButton.show();
+    this.$routesIndexInfo.show();
+    this.$routesInfoButton.show();
   },
 
   routeIndexClasses: ['routeOne', 'routeTwo',  'routeThree',  'routeFour',  'routeFive',  'routeSix',  'routeSeven',  'routeEight',  'routeNine'],

@@ -13,7 +13,8 @@ bikeMe.Models.RoutesFinder.prototype = {
     radio('distanceMetersSuccess').subscribe([this.onDistanceMetersSuccess, this]);
   },
 
-  find: function () {
+  find: function (findType) {
+    this.findType = findType;
     this.findNearestStations();
   },
 
@@ -39,7 +40,11 @@ bikeMe.Models.RoutesFinder.prototype = {
     }
 
     if (this.sourceStations && this.targetStations) {
-      this.calculateBestRoutes();
+      if (this.findType == 'stations') {
+        radio('stationsFound').broadcast();
+      } else {
+        this.calculateBestRoutes();
+      }
     }
   },
 
