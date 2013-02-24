@@ -43,7 +43,7 @@ bikeMe.Views.Search.prototype = {
   search: function(searchType) {
     var from = this.$from.val();
     var to   = this.$to.val();
-    if (from.trim() == '' || to.trim() == '') {
+    if (to.trim() == '') {
       bikeMe.alert("Please fill both 'from', and 'to' addresses.", "Sorry.");
       return false;
     }
