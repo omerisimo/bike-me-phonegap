@@ -37,27 +37,23 @@ bikeMe.Views.Map.prototype = {
 
       this.googleDirectionsService = new google.maps.DirectionsService();
 
-      this.directionsRenderer = new google.maps.DirectionsRenderer(this.rendererOptions);
-      this.directionsRenderer.setMap(this.googleMap);
+      this.directionsRenderer = new google.maps.DirectionsRenderer();
 
       // Create the info window
       this.infoWindow = new InfoBubble(this.infoWindowOptions);
       this.closeInfoWindow = _.bind(this.closeInfoWindow, this);
-      google.maps.event.addListener(this.googleMap, 'click', this.closeInfoWindow);
 
       // Create markers for the dffierent location
-      this.originMarker = this.createMarker('Origin', this.originIcon, this.originShadow, 0);
-      this.destinationMarker = this.createMarker('Destiantion', this.destinationIcon, this.destinationShadow, 0);
-      this.originStationMarker = this.createMarker('Origin Station', this.getStationIcon(0), this.stationShadow, 1);
-      this.destinationStationMarker = this.createMarker('Destiantion Station', this.getStationIcon(0), this.stationShadow, 1);
+      this.originMarker = new google.maps.Marker();
+      this.destinationMarker = new google.maps.Marker();
+      this.originStationMarker = new google.maps.Marker();
+      this.destinationStationMarker = new google.maps.Marker();
     }
   },
 
   onSearchSuccess: function (routes) {
     // Chage to the map page
     $.mobile.changePage(this.$el);
-    //triger the map resize event to allow the map to be displayed in full mode
-    google.maps.event.trigger(this.googleMap, 'resize');
 
     this.currentRouteIndex = 0;
     this.routes = routes;
@@ -67,7 +63,18 @@ bikeMe.Views.Map.prototype = {
   },
 
   renderRoute: function (route) {
+    $.mobile.loading('show', {
+      text        : 'Loading route...',
+      textVisible : true
+    });
     this.closeInfoWindow();
+    this.clearOverlay();
+    this.options.zoom = this.googleMap.getZoom();
+    this.googleMap = new google.maps.Map(this.$googleMap[0], this.options);
+    google.maps.event.addListener(this.googleMap, 'click', this.closeInfoWindow);
+    google.maps.event.addListenerOnce(this.googleMap, 'idle', function(){
+      $.mobile.loading('hide');
+    });
     var start = new google.maps.LatLng(route.source.latitude, route.source.longitude);
     var end   = new google.maps.LatLng(route.target.latitude, route.target.longitude);
 
@@ -92,7 +99,6 @@ bikeMe.Views.Map.prototype = {
 
   updateDirections: function (result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
-      this.clearOverlay();
       this.directionsRenderer = new google.maps.DirectionsRenderer(this.rendererOptions);
       this.directionsRenderer.setMap(this.googleMap);
       this.directionsRenderer.setDirections(result);
@@ -227,7 +233,7 @@ bikeMe.Views.Map.prototype = {
     this.directionsRenderer.directions.routes[0].legs[0].start_address = route.source.address;
     if (this.directionsRenderer.directions.routes[0].legs.length == 3) {
       this.directionsRenderer.directions.routes[0].legs[0].end_address = "Take a bike from: " + route.sourceStation.location.address + " [Available bikes: " + route.sourceStation.availableBikes + "]";
-      this.directionsRenderer.directions.routes[0].legs[1].end_address = "Park bike at: " + route.targetStation.location.address + " [Available docks: " + route.targetStation.availableDocks + "]";    
+      this.directionsRenderer.directions.routes[0].legs[1].end_address = "Park bike at: " + route.targetStation.location.address + " [Available docks: " + route.targetStation.availableDocks + "]";
       this.directionsRenderer.directions.routes[0].legs[2].end_address = route.target.address;
       // Set the 2nd leg (cycling) with the route's cycling timeduration
       this.directionsRenderer.directions.routes[0].legs[1].duration.text = route.getCyclingTime().toFixed().toString() + " min";
