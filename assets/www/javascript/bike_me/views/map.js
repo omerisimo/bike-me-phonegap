@@ -80,7 +80,7 @@ bikeMe.Views.Map.prototype = {
     $.mobile.changePage(this.$el);
     this.setMapStationControls();
     $.mobile.loading('show', {
-      text        : 'Loading route...',
+      text        : 'Loading stations...',
       textVisible : true
     });
     this.closeInfoWindow();
