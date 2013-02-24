@@ -120,6 +120,8 @@ bikeMe.Views.Map.prototype = {
   },
 
   createNewMap: function () {
+    this.options.zoom = this.googleMap.getZoom();
+    this.options.center = this.googleMap.getCenter();
     this.googleMap = new google.maps.Map(this.$googleMap[0], this.options);
     google.maps.event.addListener(this.googleMap, 'click', this.closeInfoWindow);
     google.maps.event.addListenerOnce(this.googleMap, 'idle', function(){
@@ -135,7 +137,6 @@ bikeMe.Views.Map.prototype = {
     this.closeInfoWindow();
     this.clearOverlay();
     this.createNewMap();
-    this.options.zoom = this.googleMap.getZoom();
     var start = route.source.getLatLng();
     var end   = route.target.getLatLng();
 
