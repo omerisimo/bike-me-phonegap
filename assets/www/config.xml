@@ -13,7 +13,7 @@
         Awesome Klarna BikeMe! Team
     </author>
 
-    <preference name="phonegap-version" value="2.1.0" />
+    <preference name="phonegap-version" value="2.3.0" />
     <preference name="orientation"      value="portrait" />
     <preference name="target-device"    value="handset" />
     <preference name="fullscreen"       value="false" />
