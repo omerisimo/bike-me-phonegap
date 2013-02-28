@@ -83,6 +83,7 @@ bikeMe.Models.RoutesFinder.prototype = {
     }
 
     function onError () {
+      $.mobile.loading('hide');
       alert('Error');
     }
 

@@ -50,6 +50,7 @@ bikeMe.Models.Station.findNearestStations = function (options) {
   }
 
   function onError () {
+    $.mobile.loading('hide');
     alert('error');
   }
 
