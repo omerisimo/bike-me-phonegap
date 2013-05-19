@@ -76,7 +76,7 @@ bikeMe.Views.Map.prototype = {
   },
 
   onSearchStationsSuccess: function (origin, destination, originStations, destinationStations) {
-    // Chage to the map page
+    // Change to the map page
     $.mobile.changePage(this.$el);
     this.setMapStationControls();
     $.mobile.loading('show', {
