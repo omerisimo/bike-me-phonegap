@@ -20,9 +20,24 @@ bikeMe.Models.RoutesFinder.prototype = {
   },
 
   load_from_cache: function() {
-    function parse_station(attributes) {return new bikeMe.Models.Station(attributes); }
+    var me = this;
+    function parse_station(attributes) {
+      return new bikeMe.Models.Station(attributes);
+    }
+    function parse_route(attributes) {
+      attributes.source = me.originLocation;
+      attributes.target = me.destinationLocation;
+      attributes.sourceStation = parse_station(attributes.sourceStation);
+      attributes.targetStation = parse_station(attributes.targetStation);
+      var route = new bikeMe.Models.Route(attributes);
+      route.getRouteTime(); // expected to be pre-calculated
+      return route;
+    }
+
     var sourceStations = JSON.parse(window.localStorage.getItem("sourceStations")),
-        targetStations = JSON.parse(window.localStorage.getItem("targetStations"));
+        targetStations = JSON.parse(window.localStorage.getItem("targetStations")),
+        sortedRoutes   = JSON.parse(window.localStorage.getItem("routes"));
+
     this.findType            = window.localStorage.getItem("findType");
 
     this.sourceStations      = _.map(sourceStations, parse_station);
@@ -32,6 +47,9 @@ bikeMe.Models.RoutesFinder.prototype = {
 
     if (this.findType == 'stations') {
         radio('stationsFound').broadcast();
+    } else {
+      this.sortedRoutes = _.map(sortedRoutes, parse_route);
+      radio('routesFound').broadcast(this.sortedRoutes);
     }
   },
 
@@ -170,6 +188,7 @@ bikeMe.Models.RoutesFinder.prototype = {
         this.sortedRoutes = [walkingRoute];
       }
 
+      window.localStorage.setItem("routes", JSON.stringify(this.sortedRoutes));
       radio('routesFound').broadcast(this.sortedRoutes);
     }
 
