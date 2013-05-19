@@ -16,6 +16,16 @@ bikeMe.Models.Search.prototype = {
     radio('stationsFound').subscribe([this.onStationsFound, this]);
   },
 
+  load_from_cache: function(){
+
+    this.originLocation = new bikeMe.Models.Location(JSON.parse(
+                                    window.localStorage.getItem("originLocation")));
+    this.destinationLocation = new bikeMe.Models.Location(JSON.parse(
+                                    window.localStorage.getItem("destinationLocation")));
+    this.routeFinder = new bikeMe.Models.RoutesFinder(this.originLocation, this.destinationLocation);
+    this.routeFinder.load_from_cache();
+  },
+
   find: function(searchType) {
     this.searchType = searchType;
     this.originLocation = new bikeMe.Models.Location({
@@ -33,6 +43,9 @@ bikeMe.Models.Search.prototype = {
 
   onLocationFound: function () {
     if (this.originLocation.found && this.destinationLocation.found) {
+
+      window.localStorage.setItem("originLocation", JSON.stringify(this.originLocation));
+      window.localStorage.setItem("destinationLocation", JSON.stringify(this.destinationLocation));
 
       this.routeFinder = new bikeMe.Models.RoutesFinder(
         this.originLocation,

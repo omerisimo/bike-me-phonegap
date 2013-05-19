@@ -8,14 +8,31 @@ bikeMe.Models.RoutesFinder.prototype = {
   initialize: function (origin, destination) {
     this.originLocation      = origin;
     this.destinationLocation = destination;
-
+    
     radio('nearestStationsFound').subscribe([this.onNearestStationsFound, this]);
     radio('distanceMetersSuccess').subscribe([this.onDistanceMetersSuccess, this]);
   },
 
   find: function (findType) {
     this.findType = findType;
+    window.localStorage.setItem("findType", this.findType);
     this.findNearestStations();
+  },
+
+  load_from_cache: function() {
+    function parse_station(attributes) {return new bikeMe.Models.Station(attributes); }
+    var sourceStations = JSON.parse(window.localStorage.getItem("sourceStations")),
+        targetStations = JSON.parse(window.localStorage.getItem("targetStations"));
+    this.findType            = window.localStorage.getItem("findType");
+
+    this.sourceStations      = _.map(sourceStations, parse_station);
+    this.targetStations      = _.map(targetStations, parse_station);
+
+    console.log(this);
+
+    if (this.findType == 'stations') {
+        radio('stationsFound').broadcast();
+    }
   },
 
   findNearestStations: function () {
@@ -35,8 +52,10 @@ bikeMe.Models.RoutesFinder.prototype = {
   onNearestStationsFound: function(nearestStations, type) {
     if (type === 'source') {
       this.sourceStations = nearestStations;
+      window.localStorage.setItem("sourceStations", JSON.stringify(nearestStations));
     } else {
       this.targetStations = nearestStations;
+      window.localStorage.setItem("targetStations", JSON.stringify(nearestStations));
     }
 
     if (this.sourceStations && this.targetStations) {

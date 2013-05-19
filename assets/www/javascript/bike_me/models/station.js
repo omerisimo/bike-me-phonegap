@@ -11,11 +11,15 @@ bikeMe.Models.Station.prototype = {
     this.distanceFromStation = attributes.distanceFromStation;
     this.id                  = attributes.id;
 
-    this.location = new bikeMe.Models.Location({
-      address   : attributes.address,
-      latitude  : attributes.latitude,
-      longitude : attributes.longitude
-    });
+    if (attributes.location) {
+      this.location = new bikeMe.Models.Location(attributes.location);
+    } else {
+      this.location = new bikeMe.Models.Location({
+        address   : attributes.address,
+        latitude  : attributes.latitude,
+        longitude : attributes.longitude
+      });
+    }
   },
 
   unsubscribe: function () {
