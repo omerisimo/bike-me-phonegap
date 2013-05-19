@@ -8,7 +8,7 @@ bikeMe.Models.RoutesFinder.prototype = {
   initialize: function (origin, destination) {
     this.originLocation      = origin;
     this.destinationLocation = destination;
-    
+
     radio('nearestStationsFound').subscribe([this.onNearestStationsFound, this]);
     radio('distanceMetersSuccess').subscribe([this.onDistanceMetersSuccess, this]);
   },
@@ -42,8 +42,6 @@ bikeMe.Models.RoutesFinder.prototype = {
 
     this.sourceStations      = _.map(sourceStations, parse_station);
     this.targetStations      = _.map(targetStations, parse_station);
-
-    console.log(this);
 
     if (this.findType == 'stations') {
         radio('stationsFound').broadcast();
