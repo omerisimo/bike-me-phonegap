@@ -15,7 +15,40 @@ bikeMe.Models.RoutesFinder.prototype = {
 
   find: function (findType) {
     this.findType = findType;
+    window.localStorage.setItem("findType", this.findType);
     this.findNearestStations();
+  },
+
+  load_from_cache: function() {
+    var me = this;
+    function parse_station(attributes) {
+      return new bikeMe.Models.Station(attributes);
+    }
+    function parse_route(attributes) {
+      attributes.source = me.originLocation;
+      attributes.target = me.destinationLocation;
+      attributes.sourceStation = parse_station(attributes.sourceStation);
+      attributes.targetStation = parse_station(attributes.targetStation);
+      var route = new bikeMe.Models.Route(attributes);
+      route.getRouteTime(); // expected to be pre-calculated
+      return route;
+    }
+
+    var sourceStations = JSON.parse(window.localStorage.getItem("sourceStations")),
+        targetStations = JSON.parse(window.localStorage.getItem("targetStations")),
+        sortedRoutes   = JSON.parse(window.localStorage.getItem("routes"));
+
+    this.findType            = window.localStorage.getItem("findType");
+
+    this.sourceStations      = _.map(sourceStations, parse_station);
+    this.targetStations      = _.map(targetStations, parse_station);
+
+    if (this.findType == 'stations') {
+        radio('stationsFound').broadcast();
+    } else {
+      this.sortedRoutes = _.map(sortedRoutes, parse_route);
+      radio('routesFound').broadcast(this.sortedRoutes);
+    }
   },
 
   findNearestStations: function () {
@@ -35,8 +68,10 @@ bikeMe.Models.RoutesFinder.prototype = {
   onNearestStationsFound: function(nearestStations, type) {
     if (type === 'source') {
       this.sourceStations = nearestStations;
+      window.localStorage.setItem("sourceStations", JSON.stringify(nearestStations));
     } else {
       this.targetStations = nearestStations;
+      window.localStorage.setItem("targetStations", JSON.stringify(nearestStations));
     }
 
     if (this.sourceStations && this.targetStations) {
@@ -151,6 +186,7 @@ bikeMe.Models.RoutesFinder.prototype = {
         this.sortedRoutes = [walkingRoute];
       }
 
+      window.localStorage.setItem("routes", JSON.stringify(this.sortedRoutes));
       radio('routesFound').broadcast(this.sortedRoutes);
     }
 

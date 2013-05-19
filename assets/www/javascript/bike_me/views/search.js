@@ -11,9 +11,13 @@ bikeMe.Views.Search.prototype = {
     this.$to = this.$el.find('input#to');
     this.$routesSearchButton = this.$el.find('button#routes_search');
     this.$stationsSearchButton = this.$el.find('button#stations_search');
+    this.$lastSearchButton = this.$el.find('button#last_search');
 
     this.routesSearch = _.bind(this.routesSearch, this);
     this.$routesSearchButton.on('click', this.routesSearch);
+
+    this.lastSearch = _.bind(this.lastSearch, this);
+    this.$lastSearchButton.on('click', this.lastSearch);
 
     this.stationsSearch = _.bind(this.stationsSearch, this);
     this.$stationsSearchButton.on('click', this.stationsSearch);
@@ -41,10 +45,19 @@ bikeMe.Views.Search.prototype = {
     return false;
   },
 
+  lastSearch: function() {
+    this.unsubscribePreviousSearchModel();
+
+    this.searchModel = new bikeMe.Models.Search(null, null);
+    this.showLoadingIndicator();
+    this.searchModel.load_from_cache();
+    return false;
+  },
+
   search: function(searchType) {
     var from = this.$from.val();
     var to   = this.$to.val();
-    if (to.trim() == '') {
+    if (to.trim() === '') {
       bikeMe.alert("Please fill both 'from', and 'to' addresses.", "Sorry.");
       return false;
     }
