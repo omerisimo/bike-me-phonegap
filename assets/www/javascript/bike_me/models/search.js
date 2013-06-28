@@ -17,6 +17,10 @@ bikeMe.Models.Search.prototype = {
   },
 
   find: function(searchType) {
+    // Cache interest points
+    window.localStorage.setItem("originString", this.originString);
+    window.localStorage.setItem("destinationString", this.destinationString);
+
     this.searchType = searchType;
     this.originLocation = new bikeMe.Models.Location({
       address: this.originString
@@ -77,3 +81,10 @@ bikeMe.Models.Search.prototype = {
     }
   }
 };
+
+bikeMe.Models.Search.loadLastSearch = function() {
+  return {
+    originString: window.localStorage.getItem("originString"),
+    destinationString: window.localStorage.getItem("destinationString")
+  }
+}

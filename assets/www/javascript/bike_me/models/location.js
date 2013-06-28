@@ -90,7 +90,7 @@ bikeMe.Models.Location.prototype = {
   },
 
   currentCoordinates: function () {
-    var options = {maximumAge: 1000, timeout: 7000, enableHighAccuracy: true};
+    var options = {maximumAge: 1000, timeout: 15000, enableHighAccuracy: true};
     navigator.geolocation.getCurrentPosition(this.onCurrentCoordinatesSuccess, this.onCurrentCoordinatesFailure, options);
   },
 

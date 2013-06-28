@@ -11,6 +11,7 @@ bikeMe.Views.Search.prototype = {
     this.$to = this.$el.find('input#to');
     this.$routesSearchButton = this.$el.find('button#routes_search');
     this.$stationsSearchButton = this.$el.find('button#stations_search');
+    this.$switchDirectionsButton = this.$el.find('#switchDirections>a');
 
     this.routesSearch = _.bind(this.routesSearch, this);
     this.$routesSearchButton.on('click', this.routesSearch);
@@ -29,6 +30,27 @@ bikeMe.Views.Search.prototype = {
     this.$from.find('+a').on('touch', this.clearCurrentLocationText);
 
     radio('searchError').subscribe([this.onRoutingError, this]);
+
+    this.switchDirections = _.bind(this.switchDirections, this);
+    this.$switchDirectionsButton.on('click', this.switchDirections);
+    this.loadFromCache();
+  },
+
+  loadFromCache: function() {
+    var previousSearch = bikeMe.Models.Search.loadLastSearch();
+    if (!_.isUndefined(previousSearch)) {
+      if (previousSearch.originString != null && previousSearch.originString != bikeMe.Models.Location.CURRENT_LOCATION) {
+        this.$from.val(previousSearch.originString);
+        if(previousSearch.originString == bikeMe.Models.Location.CURRENT_LOCATION) {
+          this.$from.addClass('current-location_text-input');
+        } else {
+          this.$from.removeClass('current-location_text-input');
+        }
+      }
+      if (previousSearch.destinationString != null) {
+        this.$to.val(previousSearch.destinationString);
+      }
+    }
   },
 
   routesSearch: function () {
@@ -90,4 +112,16 @@ bikeMe.Views.Search.prototype = {
     }
     return false;
   },
+
+  switchDirections: function(){
+    var originString = this.$from.val();
+    var destinationString = this.$to.val();
+    this.$to.val(originString);
+    this.$from.val(destinationString);
+    if(destinationString == bikeMe.Models.Location.CURRENT_LOCATION) {
+      this.$from.addClass('current-location_text-input');
+    } else {
+      this.$from.removeClass('current-location_text-input');
+    }
+  }
 };
