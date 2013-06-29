@@ -6,9 +6,10 @@ bikeMe.Views.Search = function () {
 
 bikeMe.Views.Search.prototype = {
   initialize: function () {
+    //members
     this.autocompleteService = new google.maps.places.AutocompleteService();
-    $('form').submit(_.bind(this.handleFormSubmit, this));
 
+    //page elements
     this.$page = $('#search-page');
     this.$el = $('#search');
     this.$from = this.$el.find('#from').prev().find('input');
@@ -19,31 +20,23 @@ bikeMe.Views.Search.prototype = {
     this.$autoComplete = this.$el.find('.autocomplete');
     this.$recentTripsList = this.$el.find('#history ul');
 
-    this.routesSearch = _.bind(this.routesSearch, this);
-    this.$routesSearchButton.on('click', this.routesSearch);
-
-    this.stationsSearch = _.bind(this.stationsSearch, this);
-    this.$stationsSearchButton.on('click', this.stationsSearch);
-    this.$el.submit(this.stationsSearch);
-
-    this.clearCurrentLocationText = _.bind(this.clearCurrentLocationText, this);
-    this.$from.focus(this.clearCurrentLocationText);
-
-    this.setCurrentLocationText = _.bind(this.setCurrentLocationText, this);
-    this.$from.blur(this.setCurrentLocationText);
-
-    // When clicking the 'clear text' button link, cleasr the 'Current Location' styling
-    this.$from.find('+a').on('touch', this.clearCurrentLocationText);
-
-    radio('searchError').subscribe([this.onRoutingError, this]);
-
-    this.switchDirections = _.bind(this.switchDirections, this);
-    this.$switchDirectionsButton.on('click', this.switchDirections);
-
-    this.$autoComplete.on("listviewbeforefilter", this.autoComplete);
+    //events handlers
     this.$page.click(_.bind(this.hideAutoComplete, this));
     this.$page.on("pagebeforeshow", _.bind(this.beforeShow, this));
+    $('form').submit(_.bind(this.handleFormSubmit, this));
+    this.$el.submit(_.bind(this.stationsSearch, this));
+    this.$routesSearchButton.on('click', _.bind(this.routesSearch, this));
+    this.$stationsSearchButton.on('click', _.bind(this.stationsSearch, this));
+    this.$from.focus(_.bind(this.clearCurrentLocationText, this));
+    this.$from.blur(_.bind(this.setCurrentLocationText, this));
+    this.$from.find('+a').on('touch', this.clearCurrentLocationText); // When clicking the 'clear text' button link, clears the 'Current Location' styling
+    this.$switchDirectionsButton.on('click', _.bind(this.switchDirections, this));
+    this.$autoComplete.on("listviewbeforefilter", this.autoComplete);
 
+    //events subscriptions
+    radio('searchError').subscribe([this.onRoutingError, this]);
+
+    //load recent trips from cache
     this.loadFromCache();
   },
 
