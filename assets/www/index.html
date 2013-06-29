@@ -9,7 +9,7 @@
 
     <script type='text/javascript' src='phonegap.js'></script>
     <script type='text/javascript'
-      src='https://maps.googleapis.com/maps/api/js?key=AIzaSyC3hcE64s1Bes_khW9GMLmWdwtOqjMdBkY&sensor=true'>
+      src='https://maps.googleapis.com/maps/api/js?key=AIzaSyC3hcE64s1Bes_khW9GMLmWdwtOqjMdBkY&sensor=true&libraries=places'>
     </script>
 
     <script type='text/javascript' src='javascript/plugins/jquery-1.8.3.min.js'></script>
@@ -20,7 +20,7 @@
     <script type='text/javascript' src='javascript/plugins/iscroll.js'></script>
 
     <script type='text/javascript' src='javascript/bike_me/app.js'></script>
-    <script type='text/javascript' src='javascript/bike_me/views/search.js'></script>
+    <script type='text/javascript' src='javascript/bike_me/views/search.js' charset="utf-8"></script>
     <script type='text/javascript' src='javascript/bike_me/views/map.js'></script>
     <script type='text/javascript' src='javascript/bike_me/models/location.js'></script>
     <script type='text/javascript' src='javascript/bike_me/models/search.js'></script>
@@ -39,8 +39,7 @@
         <form id='search' autocomplete='on'>
           <span>
             <div data-role='fieldcontain'>
-              <!--Set the input type as 'search' to enable JQuery Mobile 'clear text button' feature-->
-              <input name='from' id='from' placeholder='From: (Leave empty for "Current Location")' value='' type='search' class='current-location_text-input' dir="auto"/>
+              <ul name='from' id='from' class="autocomplete" data-role="listview" data-inset="true" data-filter="true" data-filter-placeholder='From: (Leave empty for "Current Location")' data-filter-theme="d"></ul>
             </div>
           </span>
           <span id='switchDirections'>
@@ -48,8 +47,7 @@
           </span>
           <span>
             <div data-role='fieldcontain'>
-              <!--Set the input type as 'search' to enable JQuery Mobile 'clear text button' feature-->
-              <input name='to' id='to' placeholder='To: (e.g. Dizengoff 99)' value='' type='search' dir="auto">
+              <ul name='to' id='to' class="autocomplete" data-role="listview" data-inset="true" data-filter="true" data-filter-placeholder="To: (e.g. Dizengoff 99)" data-filter-theme="d"></ul>
             </div>
           </span>
           <span id='search-buttons'>
@@ -65,6 +63,11 @@
                 <img src="images/routes.png">
               </button>
             </div>
+          </span>
+          <span id="history">
+            <ul data-role="listview" data-inset="true" data-divider-theme="d">
+                <li data-role="list-divider">Recent trips</li>
+            </ul>
           </span>
         </form>
       </div>

@@ -6,12 +6,17 @@ bikeMe.Views.Search = function () {
 
 bikeMe.Views.Search.prototype = {
   initialize: function () {
+    this.autocompleteService = new google.maps.places.AutocompleteService();
+
+    this.$page = $('#search-page');
     this.$el = $('#search');
-    this.$from = this.$el.find('input#from');
-    this.$to = this.$el.find('input#to');
+    this.$from = this.$el.find('#from').prev().find('input');
+    this.$to = this.$el.find('#to').prev().find('input');
     this.$routesSearchButton = this.$el.find('button#routes_search');
     this.$stationsSearchButton = this.$el.find('button#stations_search');
     this.$switchDirectionsButton = this.$el.find('#switchDirections>a');
+    this.$autoComplete = this.$el.find('.autocomplete');
+    this.$recentTripsList = this.$el.find('#history ul');
 
     this.routesSearch = _.bind(this.routesSearch, this);
     this.$routesSearchButton.on('click', this.routesSearch);
@@ -33,23 +38,28 @@ bikeMe.Views.Search.prototype = {
 
     this.switchDirections = _.bind(this.switchDirections, this);
     this.$switchDirectionsButton.on('click', this.switchDirections);
+
+    this.$autoComplete.on("listviewbeforefilter", this.autoComplete);
+    this.$page.click(_.bind(this.hideAutoComplete, this));
+    this.$page.on("pagebeforeshow", _.bind(this.beforeShow, this));
+    this.$el.find('.recent_trip').click(_.bind(this.selectRecentTrip, this));
+
+    this.loadFromCache();
+  },
+
+  beforeShow: function(){
     this.loadFromCache();
   },
 
   loadFromCache: function() {
-    var previousSearch = bikeMe.Models.Search.loadLastSearch();
-    if (!_.isUndefined(previousSearch)) {
-      if (previousSearch.originString != null && previousSearch.originString != bikeMe.Models.Location.CURRENT_LOCATION) {
-        this.$from.val(previousSearch.originString);
-        if(previousSearch.originString == bikeMe.Models.Location.CURRENT_LOCATION) {
-          this.$from.addClass('current-location_text-input');
-        } else {
-          this.$from.removeClass('current-location_text-input');
-        }
-      }
-      if (previousSearch.destinationString != null) {
-        this.$to.val(previousSearch.destinationString);
-      }
+    var recentTrips = bikeMe.Models.Search.recentTrips();
+    var $recentTripsList = this.$recentTripsList;
+    $recentTripsList.find(".recent_trip").remove();
+    if (!_.isUndefined(recentTrips) && recentTrips.length > 0) {
+      _.each(recentTrips, function(trip) {
+        var tripHTML = '<li class="recent_trip"><a href=""#"" data-from="'+trip.from+'" data-to="'+trip.to+'">'+trip.from+' -&gt; '+trip.to+'</a></li>'
+        $recentTripsList.append(tripHTML).listview('refresh');
+      });
     }
   },
 
@@ -123,5 +133,52 @@ bikeMe.Views.Search.prototype = {
     } else {
       this.$from.removeClass('current-location_text-input');
     }
+  },
+
+  autoComplete: function(e, data) {
+    var $ul = $(this),
+      $input = $( data.input ),
+      value = $input.val(),
+      html = "";
+
+    function callback(predictions, status){
+      function choose(){
+        var value = this.innerHTML;
+        $ul.html("");
+        $input.select().val(value);
+      };
+
+      $.each(predictions, function ( i, val ) {
+        if(val.terms.length > 1 && (val.terms[1].value == "Tel Aviv" || val.terms[1].value == "תל אביב יפו")){
+          html += "<li class='suggestion'>" + val.terms[0].value + "</li>";
+        }
+      });
+      $ul.html(html);
+      $ul.listview("refresh");
+      $ul.trigger("updatelayout");
+
+      $ul.find('.suggestion').on('click', choose);
+    };
+
+    if ($input.is(':focus') == false){
+      return false;
+    }
+
+    $ul.html("");
+    if ( value && value.length > 2 ) {
+      $ul.html( "<li><div class='ui-loader'><span class='ui-icon ui-icon-loading'></span></div></li>" );
+      $ul.listview( "refresh" );
+
+      bikeMe.searchView.autocompleteService.getQueryPredictions({input: value, location: new google.maps.LatLng(32.066181,34.77761), radius: 8000, componentRestrictions: {country: "il"}}, callback);
+    }
+  },
+
+  hideAutoComplete: function(e, data){
+    this.$autoComplete.html("");
+  },
+
+  selectRecentTrip: function(e, data){
+    this.$from.val($(e.target).data('from')).blur();
+    this.$to.val($(e.target).data('to')).blur();
   }
 };

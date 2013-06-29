@@ -116,3 +116,15 @@ body {
   -webkit-border-radius: .6em;
   border-radius: .6em;
 }
+
+.ui-listview-filter-inset {
+    margin-top: 0;
+}
+
+#history ul {
+  opacity: 0.55;
+}
+
+#history ul a {
+  color: black;
+}

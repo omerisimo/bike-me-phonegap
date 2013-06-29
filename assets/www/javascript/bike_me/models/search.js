@@ -18,8 +18,7 @@ bikeMe.Models.Search.prototype = {
 
   find: function(searchType) {
     // Cache interest points
-    window.localStorage.setItem("originString", this.originString);
-    window.localStorage.setItem("destinationString", this.destinationString);
+    bikeMe.Models.Search.cacheRecentTrips(this.originString, this.destinationString)
 
     this.searchType = searchType;
     this.originLocation = new bikeMe.Models.Location({
@@ -82,9 +81,28 @@ bikeMe.Models.Search.prototype = {
   }
 };
 
-bikeMe.Models.Search.loadLastSearch = function() {
-  return {
-    originString: window.localStorage.getItem("originString"),
-    destinationString: window.localStorage.getItem("destinationString")
+bikeMe.Models.Search.recentTripsArray = null;
+
+bikeMe.Models.Search.recentTrips = function() {
+  if (bikeMe.Models.Search.recentTripsArray == null){
+    bikeMe.Models.Search.recentTripsArray = JSON.parse(window.localStorage.getItem("recentTripsArray")) || [];
   }
-}
+  return bikeMe.Models.Search.recentTripsArray;
+};
+
+bikeMe.Models.Search.cacheRecentTrips = function(originString, destinationString) {
+  var max_size = 4;
+  var updatedRecentTrips = [];
+  var currentTrip = {from: originString, to:destinationString};
+  updatedRecentTrips.push(currentTrip);
+  i = 0;
+  while (updatedRecentTrips.length < max_size && i < bikeMe.Models.Search.recentTrips().length){
+    if (!_.isEqual(currentTrip, bikeMe.Models.Search.recentTrips()[i]) && !_.isEqual({from: destinationString, to:originString}, bikeMe.Models.Search.recentTrips()[i])){
+      updatedRecentTrips.push(bikeMe.Models.Search.recentTrips()[i]);
+    }
+    i++;
+  }
+
+  bikeMe.Models.Search.recentTripsArray = updatedRecentTrips;
+  window.localStorage.setItem("recentTripsArray", JSON.stringify(updatedRecentTrips));
+};
