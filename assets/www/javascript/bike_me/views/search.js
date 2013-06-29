@@ -7,6 +7,7 @@ bikeMe.Views.Search = function () {
 bikeMe.Views.Search.prototype = {
   initialize: function () {
     this.autocompleteService = new google.maps.places.AutocompleteService();
+    $('form').submit(_.bind(this.handleFormSubmit, this));
 
     this.$page = $('#search-page');
     this.$el = $('#search');
@@ -46,6 +47,19 @@ bikeMe.Views.Search.prototype = {
     this.loadFromCache();
   },
 
+  handleFormSubmit: function(e,data){
+    e.preventDefault();
+    this.$from.blur();
+    this.$to.blur();
+    if ($(e.target).find('input')[0] ==  this.$from[0]){
+      this.hideAutoComplete();
+      this.$to.focus();
+    } else {
+      this.hideAutoComplete();
+      this.stationsSearch();
+    }
+  },
+
   beforeShow: function(){
     this.loadFromCache();
   },
@@ -74,6 +88,7 @@ bikeMe.Views.Search.prototype = {
   },
 
   search: function(searchType) {
+    this.hideAutoComplete();
     var from = this.$from.val();
     var to   = this.$to.val();
     if (to.trim() == '') {
@@ -163,6 +178,7 @@ bikeMe.Views.Search.prototype = {
     if ($input.is(':focus') == false){
       return false;
     }
+    bikeMe.searchView.hideAutoComplete();
 
     $ul.html("");
     if ( value && value.length > 2 ) {
