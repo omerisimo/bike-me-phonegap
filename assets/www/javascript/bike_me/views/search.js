@@ -42,7 +42,6 @@ bikeMe.Views.Search.prototype = {
     this.$autoComplete.on("listviewbeforefilter", this.autoComplete);
     this.$page.click(_.bind(this.hideAutoComplete, this));
     this.$page.on("pagebeforeshow", _.bind(this.beforeShow, this));
-    this.$el.find('.recent_trip').click(_.bind(this.selectRecentTrip, this));
 
     this.loadFromCache();
   },
@@ -61,6 +60,7 @@ bikeMe.Views.Search.prototype = {
         $recentTripsList.append(tripHTML).listview('refresh');
       });
     }
+    this.$el.find('.recent_trip').click(_.bind(this.selectRecentTrip, this));
   },
 
   routesSearch: function () {
