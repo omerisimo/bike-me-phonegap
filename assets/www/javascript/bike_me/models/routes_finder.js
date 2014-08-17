@@ -102,7 +102,7 @@ bikeMe.Models.RoutesFinder.prototype = {
 
     targetsParam = targetsParam.substring(0, targetsParam.length - 1);
 
-    var url = 'http://maps.googleapis.com/maps/api/distancematrix/json';
+    var url = 'https://maps.googleapis.com/maps/api/distancematrix/json';
 
     $.ajax({
       data: {
