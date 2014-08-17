@@ -39,5 +39,7 @@
     <access origin="https://google-maps-utility-library-v3.googlecode.com"/>
     <access origin="http://54.77.12.242:8088"/>
 
+    <preference name="permissions" value="none"/>
+
     <gap:plugin name="org.apache.cordova.geolocation" version="0.3.7" />
 </widget>
