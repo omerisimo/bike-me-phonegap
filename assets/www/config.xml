@@ -2,28 +2,30 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "co.il.bikeme.www"
-        version   = "1.3.0">
+        version   = "1.4.0">
     <name>BikeMe!</name>
 
     <description>
         Helps you find the best route when using TLV telOfan shared bikes project
     </description>
 
-    <author href="http://phonegap.com" email="support@phonegap.com">
+    <author href="http://bikeme.co.il/" email="bikemeisrael@gmail.com">
         Awesome Klarna BikeMe! Team
     </author>
 
-    <preference name="phonegap-version" value="2.3.0" />
+    <gap:platform name="android" />
+
+    <preference name="phonegap-version" value="3.5.0" />
     <preference name="orientation"      value="portrait" />
     <preference name="target-device"    value="handset" />
     <preference name="fullscreen"       value="false" />
     <preference name="splash-screen-duration" value="10000" />
 
     <icon src="icon.png"/>
-    <icon src="res/icon/android/mdpi.png"   gap:platform="android"    gap:density="ldpi" />
-    <icon src="res/icon/android/mdpi.png"   gap:platform="android"    gap:density="mdpi" />
-    <icon src="res/icon/android/hdpi.png"   gap:platform="android"    gap:density="hdpi" />
-    <icon src="res/icon/android/xhdpi.png"   gap:platform="android"    gap:density="xhdpi" />
+    <icon src="res/icon/android/mdpi.png"   gap:platform="android"    gap:qualifier="ldpi" />
+    <icon src="res/icon/android/mdpi.png"   gap:platform="android"    gap:qualifier="mdpi" />
+    <icon src="res/icon/android/hdpi.png"   gap:platform="android"    gap:qualifier="hdpi" />
+    <icon src="res/icon/android/xhdpi.png"  gap:platform="android"    gap:qualifier="xhdpi" />
 
     <splash src="splash_screen.png" />
     <gap:splash src="res/screen/android/splash_screen200x320.png"  gap:platform="android" gap:density="ldpi" />
@@ -35,8 +37,7 @@
     <access origin="https://*.googleapis.com"/>
     <access origin="https://*.gstatic.com"/>
     <access origin="https://google-maps-utility-library-v3.googlecode.com"/>
-    
-    <feature name="http://api.phonegap.com/1.0/geolocation"/>
-    <feature name="http://api.phonegap.com/1.0/network"/>
-    <feature name="http://api.phonegap.com/1.0/device" />
+    <access origin="http://54.77.12.242:8088"/>
+
+    <gap:plugin name="org.apache.cordova.geolocation" version="0.3.7" />
 </widget>
