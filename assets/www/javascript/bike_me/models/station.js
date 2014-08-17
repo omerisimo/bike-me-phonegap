@@ -51,7 +51,7 @@ bikeMe.Models.Station.findNearestStations = function (options) {
 
   function onError () {
     $.mobile.loading('hide');
-    alert('error');
+    alert('Sorry, Error in Tel-O-Fun service!');
   }
 
   var data = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">\

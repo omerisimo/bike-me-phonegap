@@ -52,6 +52,11 @@ bikeMe.Models.Location.prototype = {
 
   onFetchCoordinatesSuccess: function (data) {
     var result = _.first(data.results);
+    if(_.isUndefined(result))
+    {
+      this.onFetchCoordinatesError();
+      return false;
+    }
     if (data.results.length > 1)
     {
       var isCorrectAddress = confirm("Is this the address you were looking for?\n"+ result.formatted_address);
@@ -76,9 +81,7 @@ bikeMe.Models.Location.prototype = {
     if ((textStatus === 'success') && (!_.isUndefined(jqXHR))) {
       var json_result = JSON.parse(jqXHR.responseText);
       if (json_result["status"] === "OK") {
-        var location_type = json_result["results"][0]["geometry"]["location_type"];
-
-        if (location_type === "APPROXIMATE" || !this.found) {
+        if (!this.found) {
           $.mobile.loading('hide');
           bikeMe.alert("The address was not found.","Oh Noes!");
         }
