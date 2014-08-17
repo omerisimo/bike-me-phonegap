@@ -21,13 +21,13 @@ bikeMe.Models.RoutesFinder.prototype = {
   findNearestStations: function () {
     bikeMe.Models.Station.findNearestStations({
       location   : this.originLocation,
-      maxResults : 4,
+      maxResults : bikeMe.MAX_RESULTS,
       type       : 'source'
     });
 
     bikeMe.Models.Station.findNearestStations({
       location   : this.destinationLocation,
-      maxResults : 4,
+      maxResults : bikeMe.MAX_RESULTS,
       type       : 'target'
     });
   },

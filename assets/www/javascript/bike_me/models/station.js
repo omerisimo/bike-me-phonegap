@@ -25,7 +25,7 @@ bikeMe.Models.Station.prototype = {
 
 bikeMe.Models.Station.findNearestStations = function (options) {
   var location   = options.location;
-  var maxResults = options.maxResults || 5;
+  var maxResults = options.maxResults || bikeMe.MAX_RESULTS;
   var type       = options.type;
 
   function onSuccess (data) {
@@ -73,7 +73,7 @@ bikeMe.Models.Station.findNearestStations = function (options) {
     error       : onError,
     success     : onSuccess,
     type        : 'POST',
-    url         : 'http://www.tel-o-fun.co.il:2470/ExternalWS/Geo.asmx'
+    url         : 'http://54.77.12.242:8088/ExternalWS/Geo.asmx'
   });
 };
 

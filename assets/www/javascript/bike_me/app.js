@@ -3,6 +3,7 @@ function createNamespace (namespace, context) {
 }
 
 bikeMe = {
+  MAX_RESULTS: 5,
   initialize: function () {
     document.addEventListener('deviceready', this.onDeviceReady, false);
     this.setJqueryMobileDefaults();

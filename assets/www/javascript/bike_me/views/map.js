@@ -52,12 +52,12 @@ bikeMe.Views.Map.prototype = {
       this.destinationStationMarker = new google.maps.Marker();
 
       this.originStationsMarkers = [];
-      for (var i=0;i<4;i++) {
+      for (var i=0;i<bikeMe.MAX_RESULTS;i++) {
         this.originStationsMarkers[i] = new google.maps.Marker();
       }
 
       this.destinationStationsMarkers = [];
-      for (var i=0;i<4;i++) {
+      for (var i=0;i<bikeMe.MAX_RESULTS;i++) {
         this.destinationStationsMarkers[i] = new google.maps.Marker();
       }
     }
