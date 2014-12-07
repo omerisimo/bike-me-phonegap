@@ -17,6 +17,7 @@ bikeMe.Views.Map.prototype = {
     this.$routesIndexInfo = $('#routesIndex')
     this.$routesInfoButton = $('#directionsButton');
     this.$locationButton = $('#mapLocationButton');
+    this.$backButton = $('#backButton');
     this.popupScroll = new iScroll('directionWrapper');
 
     this.currentRouteIndex = 0;
@@ -31,6 +32,7 @@ bikeMe.Views.Map.prototype = {
     var routeInfoPopup = _.bind(this.routeInfoPopup, this);
     this.$routesInfoButton.on('click', routeInfoPopup);
     this.$locationButton.on('click', _.bind(this.watchLocation, this));
+    this.$backButton.on('click', _.bind(this.pauseMap, this));
 
     this.updateDirections = _.bind(this.updateDirections, this);
   },
@@ -133,8 +135,26 @@ bikeMe.Views.Map.prototype = {
 
   watchLocation: function() {
     this.clearLocation();
+    $.mobile.loading('show', {
+      text        : 'Waiting for location',
+      textVisible : true
+    });
     this.geoMarker = new GeolocationMarker(this.googleMap);
-    this.geoMarker.setPositionOptions({enableHighAccuracy: true, maximumAge: 5000});
+    this.geoMarker.setPositionOptions({ enableHighAccuracy: true, maximumAge: 5000, timeout: 3000});
+    
+    google.maps.event.addListenerOnce(this.geoMarker, 'position_changed', function(e) {
+      $.mobile.loading('hide');
+    });
+
+    var geolocationError = function () {
+      if(!bikeMe.mapView.geoMarker.position) {
+        $.mobile.loading('hide');
+        bikeMe.alert('There was an error obtaining your location.');
+        bikeMe.mapView.geoMarker = undefined;
+      }
+    };
+    google.maps.event.addListener(this.geoMarker, 'geolocation_error', geolocationError);
+    setTimeout(geolocationError, 3000);
   },
 
   clearLocation: function() {
@@ -144,13 +164,17 @@ bikeMe.Views.Map.prototype = {
   },
 
   resumeMap: function() {
-    if(this.geoMarker) {
+    if(this.geoMarker && this.isActive()) {
       this.watchLocation();
     }
   },
 
   pauseMap: function() {
     this.clearLocation();
+  },
+
+  isActive: function() {
+    return this.$el.is(":visible");
   },
 
   renderRoute: function (route) {

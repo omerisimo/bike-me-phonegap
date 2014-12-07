@@ -8,6 +8,7 @@ bikeMe = {
     document.addEventListener('deviceready', this.onDeviceReady, false);
     document.addEventListener('pause', this.onPause, false);
     document.addEventListener('resume', this.onResume, false);
+    document.addEventListener("backbutton", this.onBack, false);
     this.setJqueryMobileDefaults();
 
     this.searchView = new bikeMe.Views.Search();
@@ -35,6 +36,15 @@ bikeMe = {
 
   onResume: function() {
     bikeMe.mapView.resumeMap();
+  },
+
+  onBack: function() {
+    if($.mobile.activePage.is('#search-page')){
+      navigator.app.exitApp();
+    } else {
+      navigator.app.backHistory();
+      bikeMe.mapView.pauseMap();
+    }
   },
 
   alert: function (message, title) {
