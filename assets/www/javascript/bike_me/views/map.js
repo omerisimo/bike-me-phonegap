@@ -154,7 +154,7 @@ bikeMe.Views.Map.prototype = {
       }
     };
     google.maps.event.addListener(this.geoMarker, 'geolocation_error', geolocationError);
-    setTimeout(geolocationError, 3000);
+    setTimeout(geolocationError, 15000);
   },
 
   clearLocation: function() {
