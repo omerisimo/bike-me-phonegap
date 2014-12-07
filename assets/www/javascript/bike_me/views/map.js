@@ -127,6 +127,8 @@ bikeMe.Views.Map.prototype = {
     google.maps.event.addListenerOnce(this.googleMap, 'idle', function(){
       $.mobile.loading('hide');
     });
+
+    this.geoMarker = new GeolocationMarker(this.googleMap);
   },
 
   renderRoute: function (route) {
