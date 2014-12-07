@@ -16,6 +16,7 @@ bikeMe.Views.Map.prototype = {
     this.$nextRouteButton = $('#nextRoute');
     this.$routesIndexInfo = $('#routesIndex')
     this.$routesInfoButton = $('#directionsButton');
+    this.$locationButton = $('#mapLocationButton');
     this.popupScroll = new iScroll('directionWrapper');
 
     this.currentRouteIndex = 0;
@@ -29,6 +30,7 @@ bikeMe.Views.Map.prototype = {
     this.$previousRouteButton.on('click', previousRoute);
     var routeInfoPopup = _.bind(this.routeInfoPopup, this);
     this.$routesInfoButton.on('click', routeInfoPopup);
+    this.$locationButton.on('click', _.bind(this.watchLocation, this));
 
     this.updateDirections = _.bind(this.updateDirections, this);
   },
@@ -127,8 +129,28 @@ bikeMe.Views.Map.prototype = {
     google.maps.event.addListenerOnce(this.googleMap, 'idle', function(){
       $.mobile.loading('hide');
     });
+  },
 
+  watchLocation: function() {
+    this.clearLocation();
     this.geoMarker = new GeolocationMarker(this.googleMap);
+    this.geoMarker.setPositionOptions({enableHighAccuracy: true, maximumAge: 5000});
+  },
+
+  clearLocation: function() {
+    if(this.geoMarker) {
+      this.geoMarker.setMap();
+    }
+  },
+
+  resumeMap: function() {
+    if(this.geoMarker) {
+      this.watchLocation();
+    }
+  },
+
+  pauseMap: function() {
+    this.clearLocation();
   },
 
   renderRoute: function (route) {

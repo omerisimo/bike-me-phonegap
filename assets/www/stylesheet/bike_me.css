@@ -128,3 +128,15 @@ body {
 #history ul a {
   color: black;
 }
+
+.locationButton {
+  float:right;
+  margin: 4px 8px 0 0;
+  background: #4D4D4D;
+  padding: 4px;
+  height: 30px;
+  width: 30px;
+  border-radius: 8px 8px 8px 8px;
+  opacity: 0.8;
+  border: none;
+}

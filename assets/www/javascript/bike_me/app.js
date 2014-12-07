@@ -6,6 +6,8 @@ bikeMe = {
   MAX_RESULTS: 5,
   initialize: function () {
     document.addEventListener('deviceready', this.onDeviceReady, false);
+    document.addEventListener('pause', this.onPause, false);
+    document.addEventListener('resume', this.onResume, false);
     this.setJqueryMobileDefaults();
 
     this.searchView = new bikeMe.Views.Search();
@@ -25,6 +27,14 @@ bikeMe = {
     if(navigator.splashscreen) {
       navigator.splashscreen.hide();
     }
+  },
+
+  onPause: function() {
+    bikeMe.mapView.pauseMap();
+  },
+
+  onResume: function() {
+    bikeMe.mapView.resumeMap();
   },
 
   alert: function (message, title) {
