@@ -150,12 +150,11 @@ bikeMe.Views.Map.prototype = {
       $.mobile.loading('hide');
       if(e) {
         bikeMe.alert('There was an error obtaining your location. Message:' + e.message);
-        bikeMe.mapView.geoMarker.setMap();
-        bikeMe.mapView.geoMarker = undefined;
+        bikeMe.mapView.clearLocation();
       }
     };
     google.maps.event.addListener(this.geoMarker, 'geolocation_error', geolocationError);
-    setTimeout(geolocationError, 3000);
+    setTimeout(geolocationError, 3000); // In case the geolocation timeout did not fire.
   },
 
   clearLocation: function() {
@@ -164,18 +163,8 @@ bikeMe.Views.Map.prototype = {
     }
   },
 
-  resumeMap: function() {
-    if(this.geoMarker && this.isActive()) {
-      this.watchLocation();
-    }
-  },
-
   pauseMap: function() {
     this.clearLocation();
-  },
-
-  isActive: function() {
-    return this.$el.is(":visible");
   },
 
   renderRoute: function (route) {

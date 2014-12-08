@@ -7,7 +7,6 @@ bikeMe = {
   initialize: function () {
     document.addEventListener('deviceready', this.onDeviceReady, false);
     document.addEventListener('pause', this.onPause, false);
-    document.addEventListener('resume', this.onResume, false);
     document.addEventListener("backbutton", this.onBack, false);
     this.setJqueryMobileDefaults();
 
@@ -32,10 +31,6 @@ bikeMe = {
 
   onPause: function() {
     bikeMe.mapView.pauseMap();
-  },
-
-  onResume: function() {
-    bikeMe.mapView.resumeMap();
   },
 
   onBack: function() {
