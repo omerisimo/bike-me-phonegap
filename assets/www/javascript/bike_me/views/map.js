@@ -25,6 +25,7 @@ bikeMe.Views.Map.prototype = {
 
     radio('searchSuccess').subscribe([this.onSearchSuccess, this]);
     radio('searchStationsSuccess').subscribe([this.onSearchStationsSuccess, this]);
+    radio('nearbyStationsSuccess').subscribe([this.onNearbyStationsSuccess, this]);
     var nextRoute = _.bind(this.nextRoute, this);
     this.$nextRouteButton.on('click', nextRoute);
     var previousRoute = _.bind(this.previousRoute, this);
@@ -63,6 +64,11 @@ bikeMe.Views.Map.prototype = {
       this.destinationStationsMarkers = [];
       for (var i=0;i<bikeMe.MAX_RESULTS;i++) {
         this.destinationStationsMarkers[i] = new google.maps.Marker();
+      }
+
+      this.nearbyStationsMarkers = [];
+      for (var i=0;i<bikeMe.MAX_RESULTS*2;i++) {
+        this.nearbyStationsMarkers[i] = new google.maps.Marker();
       }
     }
   },
@@ -120,6 +126,36 @@ bikeMe.Views.Map.prototype = {
     }
 
     this.googleMap.fitBounds(mapBounds);
+    return false;
+  },
+
+  onNearbyStationsSuccess: function (location, nearbyStations) {
+    // Chage to the map page
+    $.mobile.changePage(this.$el);
+    this.setMapStationControls();
+    $.mobile.loading('show', {
+      text        : 'Loading stations...',
+      textVisible : true
+    });
+    this.closeInfoWindow();
+    this.clearOverlay();
+    this.createNewMap();
+
+    var mapBounds = new google.maps.LatLngBounds();
+    mapBounds.extend(location.getLatLng());
+
+    for (var i=0;i<this.nearbyStationsMarkers.length;i++) {
+      this.nearbyStationsMarkers[i] = this.createMarker(this.stationInfoHtml(nearbyStations[i]),
+                                                        this.getStationIcon(nearbyStations[i].availableBikes),
+                                                        this.stationShadow,
+                                                        1,
+                                                        nearbyStations[i].location.getLatLng()
+                                                       );
+      mapBounds.extend(nearbyStations[i].location.getLatLng());
+    }
+
+    this.googleMap.fitBounds(mapBounds);
+    this.watchLocation();
     return false;
   },
 
@@ -274,6 +310,10 @@ bikeMe.Views.Map.prototype = {
       this.destinationStationsMarkers[i].setMap(null);
     }
 
+    for (var i=0;i<this.nearbyStationsMarkers.length;i++) {
+      google.maps.event.clearListeners(this.nearbyStationsMarkers[i], 'click');
+      this.nearbyStationsMarkers[i].setMap(null);
+    }
   },
 
   createMarker: function (title, icon, shadow, zIndex, position) {

@@ -34,8 +34,34 @@ bikeMe.Models.Search.prototype = {
     this.destinationLocation.locate();
   },
 
+  nearBy: function() {
+    this.searchType = 'nearby';
+    this.originLocation = new bikeMe.Models.Location({
+      address: bikeMe.Models.Location.CURRENT_LOCATION
+    });
+
+    this.originLocation.locate();
+  },
+
+  searchNearbyStations: function() {
+    radio('nearestStationsFound').subscribe([this.onNearbyStationsFound, this]);
+    bikeMe.Models.Station.findNearestStations({
+      location   : this.originLocation,
+      maxResults : bikeMe.MAX_RESULTS*2,
+      type       : 'source'
+    });
+  },
+
+  onNearbyStationsFound: function(nearbyStations, type) {
+    radio('nearestStationsFound').unsubscribe(this.onNearbyStationsFound);
+    radio('nearbyStationsSuccess').broadcast(this.originLocation, nearbyStations);
+  },
+
   onLocationFound: function () {
-    if (this.originLocation.found && this.destinationLocation.found) {
+    if(this.searchType == 'nearby') {
+      this.searchNearbyStations();
+    }
+    else if (this.originLocation.found && this.destinationLocation.found) {
 
       this.routeFinder = new bikeMe.Models.RoutesFinder(
         this.originLocation,
@@ -69,10 +95,10 @@ bikeMe.Models.Search.prototype = {
     radio('routesFound').unsubscribe(this.onRoutesFound);
     radio('stationsFound').unsubscribe(this.onStationsFound);
 
-    if (!_.isUndefined(this.originLocation)) {
+    if (this.originLocation) {
       this.originLocation.unsubscribe();
     }
-    if (!_.isUndefined(this.destinationLocation)) {
+    if (this.destinationLocation) {
       this.destinationLocation.unsubscribe();
     }
     if (!_.isUndefined(this.routeFinder)) {

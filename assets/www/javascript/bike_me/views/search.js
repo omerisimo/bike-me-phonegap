@@ -19,6 +19,7 @@ bikeMe.Views.Search.prototype = {
     this.$switchDirectionsButton = this.$el.find('#switchDirections>a');
     this.$autoComplete = this.$el.find('.autocomplete');
     this.$recentTripsList = this.$el.find('#history ul');
+    this.$aroundMeButton = this.$page.find('#around_me');
 
     //events handlers
     this.$page.click(_.bind(this.hideAutoComplete, this));
@@ -32,6 +33,7 @@ bikeMe.Views.Search.prototype = {
     this.$from.find('+a').on('touch', this.clearCurrentLocationText); // When clicking the 'clear text' button link, clears the 'Current Location' styling
     this.$switchDirectionsButton.on('click', _.bind(this.switchDirections, this));
     this.$autoComplete.on("listviewbeforefilter", this.autoComplete);
+    this.$aroundMeButton.on('click', _.bind(this.nearbyStation, this))
 
     //events subscriptions
     radio('searchError').subscribe([this.onRoutingError, this]);
@@ -189,5 +191,14 @@ bikeMe.Views.Search.prototype = {
   selectRecentTrip: function(e, data){
     this.$from.val($(e.target).data('from')).blur();
     this.$to.val($(e.target).data('to')).blur();
+  },
+
+  nearbyStation: function() {
+    this.unsubscribePreviousSearchModel();
+
+    this.searchModel = new bikeMe.Models.Search();
+    this.searchModel.nearBy();
+
+    this.showLoadingIndicator();
   }
 };
