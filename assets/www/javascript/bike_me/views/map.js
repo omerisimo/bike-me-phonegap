@@ -146,15 +146,16 @@ bikeMe.Views.Map.prototype = {
       $.mobile.loading('hide');
     });
 
-    var geolocationError = function () {
-      if(!bikeMe.mapView.geoMarker.position) {
-        $.mobile.loading('hide');
-        bikeMe.alert('There was an error obtaining your location.');
+    var geolocationError = function (e) {
+      $.mobile.loading('hide');
+      if(e) {
+        bikeMe.alert('There was an error obtaining your location. Message:' + e.message);
+        bikeMe.mapView.geoMarker.setMap();
         bikeMe.mapView.geoMarker = undefined;
       }
     };
     google.maps.event.addListener(this.geoMarker, 'geolocation_error', geolocationError);
-    setTimeout(geolocationError, 15000);
+    setTimeout(geolocationError, 3000);
   },
 
   clearLocation: function() {
