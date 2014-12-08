@@ -97,13 +97,13 @@ bikeMe.Views.Map.prototype = {
     this.clearOverlay();
     this.createNewMap();
 
-    var mapBounds = new google.maps.LatLngBounds();
+    this.mapBounds = new google.maps.LatLngBounds();
 
     this.originMarker = this.createMarker(origin.address, this.originIcon,      this.originShadow,      0, origin.getLatLng());
-    mapBounds.extend(origin.getLatLng());
+    this.mapBounds.extend(origin.getLatLng());
 
     this.destinationMarker  = this.createMarker(destination.address, this.destinationIcon, this.destinationShadow, 0, destination.getLatLng());
-    mapBounds.extend(destination.getLatLng());
+    this.mapBounds.extend(destination.getLatLng());
 
     for (var i=0;i<this.originStationsMarkers.length;i++) {
       this.originStationsMarkers[i] = this.createMarker(this.stationInfoHtml(originStations[i]),
@@ -112,7 +112,7 @@ bikeMe.Views.Map.prototype = {
                                                         1,
                                                         originStations[i].location.getLatLng()
                                                        );
-      mapBounds.extend(originStations[i].location.getLatLng());
+      this.mapBounds.extend(originStations[i].location.getLatLng());
     }
 
     for (var i=0;i<this.destinationStationsMarkers.length;i++) {
@@ -122,10 +122,10 @@ bikeMe.Views.Map.prototype = {
                                                               1,
                                                               destinationStations[i].location.getLatLng()
                                                              );
-      mapBounds.extend(destinationStations[i].location.getLatLng());
+      this.mapBounds.extend(destinationStations[i].location.getLatLng());
     }
 
-    this.googleMap.fitBounds(mapBounds);
+    this.googleMap.fitBounds(this.mapBounds);
     return false;
   },
 
@@ -141,8 +141,8 @@ bikeMe.Views.Map.prototype = {
     this.clearOverlay();
     this.createNewMap();
 
-    var mapBounds = new google.maps.LatLngBounds();
-    mapBounds.extend(location.getLatLng());
+    this.mapBounds = new google.maps.LatLngBounds();
+    this.mapBounds.extend(location.getLatLng());
 
     for (var i=0;i<this.nearbyStationsMarkers.length;i++) {
       this.nearbyStationsMarkers[i] = this.createMarker(this.stationInfoHtml(nearbyStations[i]),
@@ -151,10 +151,10 @@ bikeMe.Views.Map.prototype = {
                                                         1,
                                                         nearbyStations[i].location.getLatLng()
                                                        );
-      mapBounds.extend(nearbyStations[i].location.getLatLng());
+      this.mapBounds.extend(nearbyStations[i].location.getLatLng());
     }
 
-    this.googleMap.fitBounds(mapBounds);
+    this.googleMap.fitBounds(this.mapBounds);
     this.watchLocation();
     return false;
   },
@@ -179,6 +179,9 @@ bikeMe.Views.Map.prototype = {
     this.geoMarker.setPositionOptions({ enableHighAccuracy: true, maximumAge: 5000, timeout: 3000});
     
     google.maps.event.addListenerOnce(this.geoMarker, 'position_changed', function(e) {
+      bikeMe.mapView.googleMap.setCenter(this.getPosition());
+      bikeMe.mapView.mapBounds.extend(this.getPosition());
+      bikeMe.mapView.googleMap.fitBounds(bikeMe.mapView.mapBounds);
       $.mobile.loading('hide');
     });
 
