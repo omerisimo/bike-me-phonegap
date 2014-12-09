@@ -34,7 +34,7 @@ bikeMe.Models.Search.prototype = {
     this.destinationLocation.locate();
   },
 
-  nearBy: function() {
+  nearby: function() {
     this.searchType = 'nearby';
     this.originLocation = new bikeMe.Models.Location({
       address: bikeMe.Models.Location.CURRENT_LOCATION

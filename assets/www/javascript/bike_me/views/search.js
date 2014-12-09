@@ -96,12 +96,24 @@ bikeMe.Views.Search.prototype = {
     this.searchModel = new bikeMe.Models.Search(from, to);
     this.searchModel.find(searchType);
 
-    this.showLoadingIndicator();
+    this.showLoadingIndicator(searchType);
   },
 
-  showLoadingIndicator: function () {
+  showLoadingIndicator: function (searchType) {
+    switch(searchType) {
+    case 'stations':
+      message = 'Looking for stations'
+      break;
+    case 'routes':
+      message = 'Looking for the best route'
+      break;
+    case 'nearby':
+      message = 'Looking for stations around you'
+      break;
+    }
+
     $.mobile.loading('show', {
-      text        : 'Looking for the best route',
+      text        : message,
       textVisible : true
     });
   },
@@ -197,8 +209,8 @@ bikeMe.Views.Search.prototype = {
     this.unsubscribePreviousSearchModel();
 
     this.searchModel = new bikeMe.Models.Search();
-    this.searchModel.nearBy();
+    this.searchModel.nearby();
 
-    this.showLoadingIndicator();
+    this.showLoadingIndicator('nearby');
   }
 };
