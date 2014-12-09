@@ -24,7 +24,7 @@
     <preference name="splash-screen-duration" value="10000" />
 
     <icon src="icon.png"/>
-    <icon src="res/icon/android/mdpi.png"   gap:platform="android"    gap:qualifier="ldpi" />
+    <icon src="res/icon/android/ldpi.png"   gap:platform="android"    gap:qualifier="ldpi" />
     <icon src="res/icon/android/mdpi.png"   gap:platform="android"    gap:qualifier="mdpi" />
     <icon src="res/icon/android/hdpi.png"   gap:platform="android"    gap:qualifier="hdpi" />
     <icon src="res/icon/android/xhdpi.png"  gap:platform="android"    gap:qualifier="xhdpi" />
