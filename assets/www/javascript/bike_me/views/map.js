@@ -381,6 +381,7 @@ bikeMe.Views.Map.prototype = {
   },
 
   routeInfoPopup: function () {
+    $('#directionPopup div#scroller')[0].innerHTML = ''
     route = this.routes[this.currentRouteIndex];
     // Set directions waypoints to be the route addresses
     this.directionsRenderer.directions.routes[0].legs[0].start_address = route.source.address;
