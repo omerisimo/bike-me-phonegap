@@ -29,12 +29,12 @@
     <icon src="res/icon/android/hdpi.png"   gap:platform="android"    gap:qualifier="hdpi" />
     <icon src="res/icon/android/xhdpi.png"  gap:platform="android"    gap:qualifier="xhdpi" />
 
-    <splash src="splash_screen.png" />
-    <gap:splash src="res/screen/android/splash_screen200x320.png"  gap:platform="android" gap:density="ldpi" />
-    <gap:splash src="res/screen/android/splash_screen320x480.png"  gap:platform="android" gap:density="mdpi" />
-    <gap:splash src="res/screen/android/splash_screen480x800.png"  gap:platform="android" gap:density="hdpi" />
-    <gap:splash src="res/screen/android/splash_screen720x1280.png" gap:platform="android" gap:density="xhdpi" />
-    
+    <gap:splash src="splash.png" />
+    <gap:splash src="res/screen/android/splash_screen200x320.png"  gap:platform="android" gap:qualifier="ldpi" />
+    <gap:splash src="res/screen/android/splash_screen320x480.png"  gap:platform="android" gap:qualifier="mdpi" />
+    <gap:splash src="res/screen/android/splash_screen480x800.png"  gap:platform="android" gap:qualifier="hdpi" />
+    <gap:splash src="res/screen/android/splash_screen720x1280.png" gap:platform="android" gap:qualifier="xhdpi" />
+
     <access origin="https://*.google.com"/>
     <access origin="https://*.googleapis.com"/>
     <access origin="https://*.gstatic.com"/>
