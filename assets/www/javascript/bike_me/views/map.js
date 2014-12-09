@@ -179,7 +179,6 @@ bikeMe.Views.Map.prototype = {
     this.geoMarker.setPositionOptions({ enableHighAccuracy: true, maximumAge: 5000, timeout: 3000});
     
     google.maps.event.addListenerOnce(this.geoMarker, 'position_changed', function(e) {
-      bikeMe.mapView.googleMap.setCenter(this.getPosition());
       bikeMe.mapView.mapBounds.extend(this.getPosition());
       bikeMe.mapView.googleMap.fitBounds(bikeMe.mapView.mapBounds);
       $.mobile.loading('hide');
