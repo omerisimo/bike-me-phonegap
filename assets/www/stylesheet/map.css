@@ -147,7 +147,7 @@
 }
 
 #walkingDistance:before {
-    content: url(../images/path_feet_icon.png) 100% 0% no-repeat;
+    content: url(../images/path_feet_icon.png);
     display: block;
     position: absolute;
     top: 20%;
@@ -155,7 +155,7 @@
 }
 
 #cyclingDistance:before {
-    content: url(../images/path_bike_icon.png) 100% 0% no-repeat;
+    content: url(../images/path_bike_icon.png);
     display: block;
     position: absolute;
     top: 0%;
@@ -163,7 +163,7 @@
 }
 
 #totalTime:before {
-    content: url(../images/path_clock_icon.png) 100% 0% no-repeat;
+    content: url(../images/path_clock_icon.png);
     display: block;
     position: absolute;
     top: 25%;

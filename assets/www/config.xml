@@ -13,27 +13,36 @@
         Awesome Klarna BikeMe! Team
     </author>
 
-    <gap:platform name="android" />
+    <gap:platform name="android">
+        <icon src="res/icon/android/ldpi.png"   gap:platform="android"    gap:qualifier="ldpi" />
+        <icon src="res/icon/android/mdpi.png"   gap:platform="android"    gap:qualifier="mdpi" />
+        <icon src="res/icon/android/hdpi.png"   gap:platform="android"    gap:qualifier="hdpi" />
+        <icon src="res/icon/android/xhdpi.png"  gap:platform="android"    gap:qualifier="xhdpi" />
 
-    <preference name="phonegap-version" value="3.6.3" />
+        <gap:splash src="res/screen/android/splash_screen200x320.png"  gap:platform="android" gap:qualifier="ldpi" />
+        <gap:splash src="res/screen/android/splash_screen320x480.png"  gap:platform="android" gap:qualifier="mdpi" />
+        <gap:splash src="res/screen/android/splash_screen480x800.png"  gap:platform="android" gap:qualifier="hdpi" />
+        <gap:splash src="res/screen/android/splash_screen720x1280.png" gap:platform="android" gap:qualifier="xhdpi" />
+    </gap:platform>
+
+    <preference name="phonegap-version" value="cli-5.2.0" />
     <preference name="android-minSdkVersion" value="8" />
     <preference name="android-targetSdkVersion" value="19" />
     <preference name="orientation"      value="portrait" />
     <preference name="target-device"    value="handset" />
     <preference name="fullscreen"       value="false" />
-    <preference name="splash-screen-duration" value="10000" />
+
+    <!-- cordova-plugin-splashscreen preferences -->
+    <preference name="SplashScreen" value="splash.png" />
+    <preference name="SplashScreenDelay" value="10000" />
+    <preference name="SplashMaintainAspectRatio" value="true" />
+    <preference name="SplashShowOnlyFirstTime" value="false" />
+    <preference name="FadeSplashScreenDuration" value="800"/>
+    <preference name="ShowSplashScreenSpinner" value="false"/>
 
     <icon src="icon.png"/>
-    <icon src="res/icon/android/ldpi.png"   gap:platform="android"    gap:qualifier="ldpi" />
-    <icon src="res/icon/android/mdpi.png"   gap:platform="android"    gap:qualifier="mdpi" />
-    <icon src="res/icon/android/hdpi.png"   gap:platform="android"    gap:qualifier="hdpi" />
-    <icon src="res/icon/android/xhdpi.png"  gap:platform="android"    gap:qualifier="xhdpi" />
 
     <gap:splash src="splash.png" />
-    <gap:splash src="res/screen/android/splash_screen200x320.png"  gap:platform="android" gap:qualifier="ldpi" />
-    <gap:splash src="res/screen/android/splash_screen320x480.png"  gap:platform="android" gap:qualifier="mdpi" />
-    <gap:splash src="res/screen/android/splash_screen480x800.png"  gap:platform="android" gap:qualifier="hdpi" />
-    <gap:splash src="res/screen/android/splash_screen720x1280.png" gap:platform="android" gap:qualifier="xhdpi" />
 
     <access origin="https://*.google.com"/>
     <access origin="https://*.googleapis.com"/>
@@ -43,5 +52,8 @@
 
     <preference name="permissions" value="none"/>
 
-    <gap:plugin name="org.apache.cordova.geolocation" version="0.3.7" />
+    <gap:plugin name="cordova-plugin-geolocation" spec="1.0.1" source="pgb" />
+    <gap:plugin name="cordova-plugin-whitelist" spec="1.1.0" source="npm" />
+    <gap:plugin name="cordova-plugin-splashscreen" spec="3.2.0" source="npm" />
+
 </widget>
