@@ -33,16 +33,16 @@
     <preference name="fullscreen"       value="false" />
 
     <!-- cordova-plugin-splashscreen preferences -->
-    <preference name="SplashScreen" value="res/splash.png" />
+    <preference name="SplashScreen" value="splash.png" />
     <preference name="SplashScreenDelay" value="10000" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="FadeSplashScreenDuration" value="800"/>
     <preference name="ShowSplashScreenSpinner" value="false"/>
 
-    <icon src="res/icon.png"/>
+    <icon src="icon.png"/>
 
-    <gap:splash src="res/splash.png" />
+    <gap:splash src="splash.png" />
 
     <access origin="https://*.google.com"/>
     <access origin="https://*.googleapis.com"/>
